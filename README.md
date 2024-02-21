@@ -1,8 +1,37 @@
 ## Setup
 ### Prerequisites
 - node
-- yarn (optional)
+- yarn
 - docker
+
+### Install Node ###
+Visit this website to install node
+```
+https://nodejs.org/en/download
+```
+
+Once node is installed, make sure to add it as a alias to use it via terminal/console
+You can test if it is install correctly you should be able to run this command
+```
+node --version
+
+output:
+20.11.1
+```
+
+### Install yarn ###
+To install yarn, we will use node, make to to add on -g to make it a global instance
+```
+npm install -g yarn
+```
+
+To check that yarn is install run
+```
+yarn --version
+
+output: 
+1.22.21
+```
 
 ### Install dependencies
 In the root of the project run
@@ -22,12 +51,7 @@ yarn
 Create a new file called `.env` in the root of the project and copy the contents of `.env.example` into it.
 Change the values of the variables to fit your application.
 
-### Setup the database
-In the root of the project run
-```bash
-docker compose up -d
-# -d starts the container in the background
-```
+
 
 ## Running the application
 In the root of the project run
@@ -46,7 +70,15 @@ Visit your application at `http://localhost:3000` (or whatever port you specifie
 
 NOTE: YOU MUST BE RUNNING BOTH THE CLIENT AND SERVER
 
-## Other Useful Commands
+## Other Useful Commands (Dont worry about these for now)
+
+### Setup the database 
+In the root of the project run
+```bash
+docker compose up -d
+# -d starts the container in the background
+```
+
 ### Generate and run migrations
 ```bash
 yarn migrate-dev
