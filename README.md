@@ -1,6 +1,3 @@
-# USU CS 4610 Starter App
-You are welcome to use this app as a starting point for any projects in this course.
-
 ## Setup
 ### Prerequisites
 - node
