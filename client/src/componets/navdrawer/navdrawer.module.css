@@ -1,0 +1,27 @@
+.container {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    right: 50%;
+    top: 0;
+    bottom: 0;
+    padding: 20px;
+    background-color: rgba(177, 177, 177, 0.95);
+    animation: slideRight 0.5s 1 forwards ease-in-out;
+}
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}

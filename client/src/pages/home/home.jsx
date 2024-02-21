@@ -6,7 +6,6 @@ function Home() {
 
     return (
         <section className={classes.container}>
-
             {/* Navigation Bar */}
             <Navbar title="Home"></Navbar>
 
@@ -26,6 +25,7 @@ function Home() {
                     </section>
                 </section>
             </section>
+
             {/* Container for Daily Notifications */}
             <p className="label">Daily Notifications</p>
             <DailyNotification title="Be Yourself" body="Authenticity is attractive. Don't try to be someone you're not just to.." />
