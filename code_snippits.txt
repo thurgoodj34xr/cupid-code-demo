@@ -1,0 +1,117 @@
+{
+	"rcomment": {
+		"scope": "javascriptreact",
+		"prefix": "React Comment",
+		"body": [
+			"{/* $1 */}",
+		],
+		"description": "Create a comment in react"
+	},
+	"reffect": {
+		"scope": "javascriptreact",
+		"prefix": "React Effect",
+		"body": [
+			"useEffect(() => { ",
+			"	$1",
+			"}, [])",
+		]
+	},
+	"rimport": {
+		"scope": "javascriptreact",
+		"prefix": "React Import",
+		"body": [
+			"import $1 from '$2';",
+		]
+	},
+	"rdimport": {
+		"scope": "javascriptreact",
+		"prefix": "React Effect Imports",
+		"body": [
+			"import { useEffect, useState } from 'react';",
+		]
+	},
+	"rconsole": {
+		"scope": "javascriptreact",
+		"prefix": "React Console Log",
+		"body": [
+			"console.log($1);",
+		]
+	},
+	"rfunction": {
+		"scope": "javascriptreact",
+		"prefix": "React Named Function",
+		"body": [
+			"const $1 = () => {",
+			"",
+			"};"
+		]
+	},
+	"rnavigate": {
+		"scope": "javascriptreact",
+		"prefix": "React Navigator",
+		"body": [
+			"import { useNavigate } from 'react-router-dom';",
+			"let navigate = useNavigate(); // move this into the function"
+		]
+	},
+	"rstate": {
+		"scope": "javascriptreact",
+		"prefix": "React State",
+		"body": [
+			"const [$1, $2] = useState($3);",
+		]
+	},
+	"rstyle": {
+		"scope": "javascriptreact",
+		"prefix": "React Stylesheet import",
+		"body": [
+			"import classes from ./$1",
+		]
+	},
+	"rsection": {
+		"scope": "javascriptreact",
+		"prefix": "React Section",
+		"body": [
+			"<section className={classes.$1}>",
+			"$2",
+			"</section>",
+		]
+	},
+	"rlabel": {
+		"scope": "javascriptreact",
+		"prefix": "React Label",
+		"body": [
+			"<p className='label'>$1</p>",
+		]
+	},
+	"rcomponet": {
+		"scope": "javascriptreact",
+		"prefix": "React Componet",
+		"body": [
+			"import classes from './$1.module.css'",
+			"import { useEffect, useState } from 'react';",
+			"",
+			"function $1() {",
+			"    return (",
+			"        <div>",
+			"",
+			"        </div>",
+			"    )",
+			"}",
+			"",
+			"export default $1;",
+		]
+	},
+	"container": {
+		"scope": "css",
+		"prefix": "Container boilerplate",
+		"body": [
+			".container {",
+			"	text-align: right;",
+			"	display: flex;",
+			"	flex-direction: column;",
+			"	justify-content: space-between;",
+			"}"
+		]
+	},
+}
