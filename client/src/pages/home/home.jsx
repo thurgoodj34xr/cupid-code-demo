@@ -1,6 +1,8 @@
+import Navbar from "../../componets/navbar/navbar";
+import classes from "./home.module.css";
 function Home() {
     return (
-        <h1>This is the home page</h1>
+        <Navbar title="Home"></Navbar>
     )
 }
 

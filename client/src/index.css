@@ -38,6 +38,8 @@ body {
   max-width: 800px;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 h1 {
