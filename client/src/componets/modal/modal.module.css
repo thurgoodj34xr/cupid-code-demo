@@ -1,0 +1,70 @@
+.modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 20px;
+    background-color: rgba(177, 177, 177, 0.6);
+}
+
+.tile {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px !important;
+}
+
+.second {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tile h3 {
+    margin: 0px;
+}
+
+
+.tile_container {
+    width: 100%;
+    padding: 20px;
+}
+
+.tile {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px 10px 10px 10px;
+    width: 80%;
+    max-width: 450px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.tile h1 {
+    margin: 0;
+}
+
+.tileHeader {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0%;
+}
+
+.border {
+    border-bottom: 2px solid gray;
+}
+
+.tileAddress {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.star {
+    margin-left: auto;
+    cursor: pointer;
+}

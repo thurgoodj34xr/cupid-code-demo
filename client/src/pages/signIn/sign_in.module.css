@@ -1,0 +1,9 @@
+.sign_in {
+    padding: 20px;
+    width: 100%;
+    border-width: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+}
