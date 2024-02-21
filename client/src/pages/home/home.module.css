@@ -1,1 +1,29 @@
-.home {}
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.budget {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    text-align: left;
+    padding: 10px;
+}
+
+hr {
+    border: 1px solid grey;
+    width: 100%;
+}
+
+.balance {
+    display: flex;
+}
+
+.balance div {
+    width: 50%;
+}

@@ -1,7 +1,7 @@
 :root {
   font-family: 'Poppins';
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 100;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -11,6 +11,33 @@
 
 h1 {
   margin: 0px;
+}
+
+h2 {
+  margin: 0px;
+  font-size: 26px;
+}
+
+h3 {
+  margin: 0px;
+}
+
+p {
+  margin: 0px;
+}
+
+hr {
+  margin: 0px
+}
+
+.label {
+  color: rgba(60, 60, 60, .67);
+  font-size: 17px;
+  font-weight: lighter;
+}
+
+p {
+  font-size: 17px;
 }
 
 a {

@@ -6,7 +6,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons"
 function Navbar({ title }) {
     return (
         <div className={classes.main}>
-            <h1>{title}</h1>
+            <h2>{title}</h2>
             <FontAwesomeIcon icon={faBars} size="2xl" />
         </div>
     )
