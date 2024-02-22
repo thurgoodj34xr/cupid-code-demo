@@ -1,35 +1,82 @@
-import { useEffect, useState } from "react"
-import styles from "./sign_up.module.css"
-import Input from "../../componets/inputs/input"
-import Button from "../../componets/button/button"
-import BackButton from "../backButton/backButton"
+import { useEffect, useState } from "react";
+import classes from "./sign_up.module.css";
+import Input from "../../componets/inputs/input";
+import Button from "../../componets/button/button";
+import { useNavigate } from "react-router-dom";
 
+function SignUp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState();
 
-export default function SignUp({ notificationFunc, backButtonFunc }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  let navigate = useNavigate();
 
-    function handleSignUp() {
-        notificationFunc()
+  function handleEmail(email) {
+    setEmail(email);
+  }
 
+  function handlePassword(password) {
+    setPassword(password);
+  }
 
-        function handleEmail(email) {
-            setEmail(email)
-        }
-
-        function handlePassword(password) {
-            setPassword(password)
-        }
-
-        return (
-            <>
-                <BackButton onClickFunc={backButtonFunc}></BackButton>
-                <div className={`${styles.sign_in}`}>
-                    <h1>Sign Up</h1>
-                    <Input text='Email' placeholder='Enter Email' onChangeFunc={handleEmail}></Input>
-                    <Input text='Password' inputType="password" placeholder='Enter Password' onChangeFunc={handlePassword}></Input>
-                    <Button text='Sign Up' onClickFunc={handleSignUp}></Button>
-                </div>
-            </>
-        )
+  const signUp = async () => {
+    const res = await fetch("/signup", {
+      method: "post",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password,
+      }),
+    }).then((resp) => resp.json());
+    if (res.error) {
+      setError(res.error);
+    } else {
+      navigate("/home");
     }
+  };
+
+  const signIn = () => {
+    navigate("/");
+  };
+
+  return (
+    <section className={classes.container}>
+      <h1>Sign Up</h1>
+      {error && <p className="error">{error}</p>}
+      <Input
+        text="First Name"
+        inputType="text"
+        placeholder="Enter First Name"
+        onChangeFunc={(name) => setFirstName(name)}
+      />
+      <Input
+        text="Last Name"
+        inputType="text"
+        placeholder="Enter Last Name"
+        onChangeFunc={(name) => setLastName(name)}
+      />
+      <Input
+        text="Email"
+        inputType="email"
+        placeholder="Enter Email"
+        onChangeFunc={handleEmail}
+      />
+      <Input
+        text="Password"
+        inputType="password"
+        placeholder="Enter Password"
+        onChangeFunc={handlePassword}
+      />
+      <p onClick={signIn}>Already have an account? Sign In</p>
+      <Button text="Sign Up" onClickFunc={signUp}></Button>
+    </section>
+  );
+}
+
+export default SignUp;

@@ -51,7 +51,8 @@
 		"prefix": "React Navigator",
 		"body": [
 			"import { useNavigate } from 'react-router-dom';",
-			"let navigate = useNavigate(); // move this into the function"
+			"let navigate = useNavigate(); // move this into the function",
+			"navigate('/') // syntax for navigating to a different page",
 		]
 	},
 	"rstate": {
@@ -84,6 +85,46 @@
 			"<p className='label'>$1</p>",
 		]
 	},
+	"rfa": {
+		"scope": "javascriptreact",
+		"prefix": "React Font Awesome Import",
+		"body": [
+			"import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';",
+			"import { $1 } from '@fortawesome/free-solid-svg-icons';",
+		]
+	},
+	"ricon": {
+		"scope": "javascriptreact",
+		"prefix": "React Font Awesome Icon",
+		"body": [
+			"<FontAwesomeIcon icon={$1} size='2xl' />",
+		]
+	},
+	"rtimeout": {
+		"scope": "javascriptreact",
+		"prefix": "React Timeout Func",
+		"body": [
+			"setTimeout(() => {",
+			"	$1",
+			"});"
+		]
+	},
+	"rfetch": {
+		"scope": "javascriptreact",
+		"prefix": "React Fetch",
+		"body": [
+			"const res = await fetch('', {",
+			"	method: 'get',",
+			"	headers: {"
+			"		'Content-type': 'application/json',",
+			"	},",
+			"	body: JSON.stringify(({",
+			"		",
+			"	}))",
+			"}).then((resp) => resp.json());",
+			"console.log(res)",
+		]
+	},
 	"rcomponet": {
 		"scope": "javascriptreact",
 		"prefix": "React Componet",
@@ -93,9 +134,9 @@
 			"",
 			"function $1() {",
 			"    return (",
-			"        <div>",
-			"",
-			"        </div>",
+			"		<section className={classes.container}>",
+			"			$2",
+			"		</section>",
 			"    )",
 			"}",
 			"",
