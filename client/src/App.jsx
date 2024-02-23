@@ -26,7 +26,7 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (location.pathname == "/home") {
+    if (location.pathname == "/home" && user == null) {
       navigate("/");
     }
   }, [user]);
