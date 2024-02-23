@@ -4,7 +4,7 @@ import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+function SignUp({ setuser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -37,6 +37,7 @@ function SignUp() {
     if (res.error) {
       setError(res.error);
     } else {
+      setuser(res);
       navigate("/home");
     }
   };
