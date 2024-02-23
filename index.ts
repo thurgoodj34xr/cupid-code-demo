@@ -38,7 +38,7 @@ if (!DEBUG) {
 }
 
 app.post("/signin", async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   const ct = await db.user.count({
     where: {
       email
@@ -46,7 +46,7 @@ app.post("/signin", async (req, res) => {
   });
 
   if (ct == 0) {
-    res.send({error: "Invalid Email/Password combo"});
+    res.send({ error: "Invalid Email/Password combo" });
     return;
   }
 
@@ -58,22 +58,23 @@ app.post("/signin", async (req, res) => {
   console.log(user)
 
   if (user == null) {
-    res.send({error: "Invalid Email/Password combo"});
+    res.send({ error: "Invalid Email/Password combo" });
     return;
   }
 
-  bcrypt.compare(user.password, password, (err, _) => {
-    if (err) {
-      res.send({error: "Invalid Email/Password combo"});
+  bcrypt.compare(password, user.password, (err, result) => {
+    if (err || !result) {
+      res.send({ error: "Invalid Email/Password combo" });
       return;
     }
+    // Password matches, send user response
     res.send(user)
     return;
   })
 })
 
 app.post("/signup", async (req, res) => {
-  const {firstName, lastName, email, password} = req.body;
+  const { firstName, lastName, email, password } = req.body;
   let ct = await db.user.count({
     where: {
       email
@@ -81,11 +82,11 @@ app.post("/signup", async (req, res) => {
   });
 
   if (ct > 0) {
-    res.send({error: "Email already exists"})
+    res.send({ error: "Email already exists" })
     return;
   }
   const user = await db.user.create({
-    data : {
+    data: {
       firstName,
       lastName,
       email,
