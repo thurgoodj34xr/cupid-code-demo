@@ -19,7 +19,7 @@ export function generateRefreshToken(user: any, jti: any) {
   }
 
 
-export function generateTokens(user: any, jti: string): { accessToken: any; refreshToken: any; } {
+export function generateTokens(user: any, jti: string): { accessToken: string; refreshToken: string; } {
   const accessToken = generateAccessToken(user);
       const refreshToken = generateRefreshToken(user, jti);
     

@@ -12,14 +12,11 @@ function App() {
   const [tokens, setTokens] = useState(null);
 
   useEffect(() => {
-    console.log({
-      user,
-      tokens,
-    });
     if (tokens?.accessToken) {
       localStorage.setItem("token", tokens.refreshToken);
+      localStorage.setItem("id", tokens.hashToken.id);
     }
-  }, [user, tokens]);
+  }, [tokens]);
 
   function updateUser(user) {
     setUser(user);
@@ -37,10 +34,27 @@ function App() {
     return tokens;
   }
 
+  function AccessToken() {
+    return tokens.accessToken;
+  }
+
+  function RefreshToken() {
+    return tokens.refreshToken;
+  }
+
   function updateAccessToken(t) {
     setTokens({
       refreshToken: tokens.refreshToken,
       accessToken: t,
+      hashToken: tokens.hashToken,
+    });
+  }
+
+  function updateHashToken(t) {
+    setTokens({
+      refreshToken: tokens.refreshToken,
+      accessToken: tokens.accessToken,
+      hashToken: t,
     });
   }
 
@@ -50,6 +64,9 @@ function App() {
     updateTokens,
     getTokens,
     updateAccessToken,
+    updateHashToken,
+    AccessToken,
+    RefreshToken,
   };
 
   return (

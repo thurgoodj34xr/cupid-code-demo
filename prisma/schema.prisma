@@ -15,14 +15,14 @@ datasource db {
 // updatedAt DateTime @updatedAt
 
 model User {
-  id            Int            @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   firstName     String
   lastName      String
-  email         String         @unique
+  email         String        @unique
   password      String
-  refreshTokens RefreshToken[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   profile       Profile?
 }
 
@@ -47,5 +47,5 @@ model RefreshToken {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      Int      @unique
 }

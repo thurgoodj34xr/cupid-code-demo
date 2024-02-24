@@ -7,8 +7,8 @@ import AppContext from "../../componets/app_context";
 
 function NavDrawer({ onExit }) {
   const context = useContext(AppContext);
-  const [user, setUser] = useState(context.getUser());
   const [c, setC] = useState(`${classes.modal} ${classes.slideRight}`);
+  const user = context.getUser();
   let navigate = useNavigate();
 
   const close = () => {
@@ -23,7 +23,10 @@ function NavDrawer({ onExit }) {
   };
 
   const signout = () => {
+    localStorage.removeItem("id");
+    localStorage.removeItem("token");
     context.updateUser(null);
+    context.updateTokens(null);
   };
 
   return (

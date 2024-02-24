@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import { engine } from 'express-handlebars';
 import fs from "fs";
 import * as dotenv from "dotenv";
@@ -9,9 +8,7 @@ import * as Auth from "./services/auth";
 import * as Jwt from "./utils/jwt";
 import jwt from "jsonwebtoken";
 import {v4 as uuid} from "uuid";
-import db from "./utils/prisma";
 import bcrypt from "bcryptjs";
-import { tokenToString } from "typescript";
 dotenv.config();
 
 const DEBUG = process.env.NODE_ENV !== "production";
@@ -40,6 +37,17 @@ if (!DEBUG) {
     }
   });
 }
+app.get(['/'], (req, res) => {
+  res.render('index', {
+    debug: DEBUG,
+    jsBundle: DEBUG ? "" : MANIFEST["src/main.jsx"]["file"],
+    cssBundle: DEBUG ? "" : MANIFEST["src/main.jsx"]["css"][0],
+    assetUrl: process.env.ASSET_URL,
+    layout: false
+  });
+});
+
+// ***************** Signin Endpoint ******************
 
 app.post("/signin", async (req, res) => {
   const {email, password} = req.body;
@@ -57,31 +65,40 @@ app.post("/signin", async (req, res) => {
   })
   const jti = uuid();
   const { accessToken, refreshToken } = Jwt.generateTokens(existingUser, jti);
-  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
-  res.send({user: existingUser, tokens: {accessToken, refreshToken}}); 
+  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
+  res.send({user: existingUser, tokens: {accessToken, refreshToken, hashToken}}); 
 })
 
+// ***************** Sign in With Token Endpoint *****************
+
 app.post("/signinwithtoken", async (req, res) => {
-  const {refreshToken} = req.body;
+  
+  const {refreshToken, id} = req.body;
   if (!refreshToken) {
     res.send({error: "Access Denied"})
     return;
   }
-  
-  console.log(refreshToken);
-  const token = await Auth.findRefreshTokenById(refreshToken);
-  console.log(token)
+  const token = await Auth.findRefreshTokenById(id);
   if (!token) {
     res.send({error: "Access Denied"})
     return;
   }
+
   const user = await User.findUserById(token.userId);
   if (!user) {
     res.send({error: "Access Denied"})
     return;
   }
-  console.log(user);
+  
+  const jti = uuid();
+  const tokens = Jwt.generateTokens(user, jti);
+  const newRefresh = tokens.refreshToken;
+  const newAccess = tokens.accessToken;
+  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken: tokens.refreshToken, userId: user.id });
+  res.send({user, tokens: {accessToken: newAccess, refreshToken: newRefresh, hashToken}});
 })
+
+// ******************* Sign up Endpoint *************************
 
 app.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -99,42 +116,41 @@ app.post("/signup", async (req, res) => {
   res.send({success: true});
 })
 
-app.get(['/'], (req, res) => {
-  res.render('index', {
-    debug: DEBUG,
-    jsBundle: DEBUG ? "" : MANIFEST["src/main.jsx"]["file"],
-    cssBundle: DEBUG ? "" : MANIFEST["src/main.jsx"]["css"][0],
-    assetUrl: process.env.ASSET_URL,
-    layout: false
-  });
-});
 
 
+// ************** End point to refresh the access token *************
 
-// These are protectded routes and jwt is required
-
-// First need a way to refresh the access token
 app.post("/refreshToken", async (req, res) => {
   const {user, refreshToken} = req.body;
+
   if (!user || !refreshToken) {
     res.send({error: "Access Denied"})
     return;
   }
-  console.log(refreshToken)
+
   if (await !Auth.findRefreshTokenById(refreshToken)) {
     res.send({error: "Access Denied"})
     return;
   }
 
   const newToken = Jwt.generateAccessToken(user);
-  const jti = uuid();
   
-  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+  const jti = uuid();
+  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
   console.log("New Token Generated!");
-  res.send({accessToken: newToken});
+
+  res.send({tokens: {accessToken: newToken, refreshToken, hashToken}});
 })
 
-// Now we can check if the request has a valid access token
+// ************** Protected Routes ************************
+
+app.use(["/home"], (req, res, next) => {
+  const authorization = req.headers;
+  if (!authorization.host) next();
+  res.redirect("/");
+})
+
+// ********** Middleware to validate the access token ***************
 
 app.use((req, res, next) => {
   const { authorization } = req.headers;
@@ -153,12 +169,20 @@ app.use((req, res, next) => {
     res.send({error: err})
     return;
   }
-});
+})
+
+// ************** Protected Endpoints ***************
 
 let n=0;
 app.get("/number", (req,res) => {
   n += 1;
   res.send({number: n})
+})
+
+app.post("/number", (req, res) => {
+  const {inc} = req.body;
+  n += inc;
+  res.send({number: n});
 })
 
 app.listen(process.env.PORT || 3000, () => {

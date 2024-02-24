@@ -3,16 +3,32 @@ import classes from "./home.module.css";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import { useContext, useEffect } from "react";
 import AppContext from "../../componets/app_context";
+import * as Api from "../../hook/api";
 
 function Home() {
   const context = useContext(AppContext);
   const user = context.getUser();
 
+  const handleCounter = () => {
+    Api.GetWithAuth("/number", context).then((resp) => console.log(resp));
+  };
+
+  const handleIncrement = () => {
+    Api.PostWithAuth(
+      "/number",
+      {
+        inc: 5,
+      },
+      context
+    ).then((resp) => console.log(resp));
+  };
+
   return (
     <section className={classes.container}>
       {/* Navigation Bar */}
       <Navbar title="Home"></Navbar>
-
+      <button onClick={handleCounter}>Counter</button>
+      <button onClick={handleIncrement}>Increment</button>
       {/* Container for Budget */}
       <section className={classes.budget}>
         <h2>Good Morning,</h2>

@@ -4,6 +4,7 @@ import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../componets/app_context";
+import * as Api from "../../hook/api";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -14,21 +15,23 @@ export default function SignIn() {
 
   let navigate = useNavigate();
 
-  useEffect(() => {
+  const SigninWithToken = async () => {
     const refreshToken = localStorage.getItem("token");
-    if (refreshToken) {
-      fetch("/signinwithtoken", {
-        method: "post",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          refreshToken,
-        }),
-      })
-        .then((resp) => resp.json())
-        .then((resp) => console.log(resp));
-    }
+    const id = localStorage.getItem("id");
+    if (!refreshToken || !id) return;
+    const resp = await Api.Post("/signinwithtoken", {
+      refreshToken,
+      id,
+    });
+
+    if (!resp.user) return;
+    context.updateUser(resp.user);
+    context.updateTokens(resp.tokens);
+    navigate("/home");
+  };
+
+  useEffect(() => {
+    SigninWithToken();
   }, []);
 
   {
@@ -50,24 +53,18 @@ export default function SignIn() {
     /* After a user has entered their email and password and has submited the login, this function will handle the logic */
   }
   const handleSignIn = async () => {
-    const res = await fetch("/signin", {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    }).then((resp) => resp.json());
+    const res = await Api.Post("/signin", {
+      email,
+      password,
+    });
 
     if (res.error) {
       setError(res.error);
-    } else {
-      context.updateUser(res.user);
-      context.updateTokens(res.tokens);
-      navigate("/home");
     }
+
+    context.updateUser(res.user);
+    context.updateTokens(res.tokens);
+    navigate("/home");
   };
 
   const signUp = () => {

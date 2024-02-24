@@ -2,11 +2,13 @@ import db from "../utils/prisma"
 import hashToken from "../utils/hashToken";
 
 // used when we create a refresh token.
-export function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: {
+export async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: {
   jti: any,
   refreshToken: string,
   userId: number
 }) {
+  const users = await deleteRefreshTokenByUser(userId);
+  console.log(users)
   return db.refreshToken.create({
     data: {
       id: jti,
@@ -34,6 +36,16 @@ export function deleteRefreshToken(id: any) {
     data: {
       revoked: true
     }
+  });
+}
+
+// soft delete tokens after usage.
+export function deleteRefreshTokenByUser(userId: any) {
+  console.log(`Deleting ${userId}`)
+  return db.refreshToken.deleteMany({
+    where: {
+      userId: userId,
+    },
   });
 }
 

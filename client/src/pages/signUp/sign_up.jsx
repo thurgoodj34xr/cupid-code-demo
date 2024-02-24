@@ -3,10 +3,9 @@ import classes from "./sign_up.module.css";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
-import AppContext from "../../componets/app_context";
+import * as Api from "../../hook/api";
 
 function SignUp() {
-  const context = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -24,24 +23,17 @@ function SignUp() {
   }
 
   const signUp = async () => {
-    const res = await fetch("/signup", {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        password,
-      }),
-    }).then((resp) => resp.json());
+    const res = await Api.Post("/signup", {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+
     if (res.error) {
       setError(res.error);
-    } else {
-      context.updateUser(res);
-      navigate("/");
     }
+    navigate("/");
   };
 
   const signIn = () => {
