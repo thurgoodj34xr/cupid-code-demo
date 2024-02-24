@@ -15,7 +15,11 @@ async function main() {
       lastName: "ADMIN",
       email: "admin@gmail.com",
       password: bcryptjs.hashSync('admin'),
-      profile: {},
+      profile: {
+        create: {
+          
+        }
+      },
     },
     update: {
       email: "admin@gmail.com"

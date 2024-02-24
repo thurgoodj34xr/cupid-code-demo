@@ -2,11 +2,13 @@ import classes from "./navdrawer.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
+import AppContext from "../../componets/app_context";
 
-function NavDrawer({ user, onExit }) {
+function NavDrawer({ onExit }) {
+  const context = useContext(AppContext);
+  const [user, setUser] = useState(context.getUser());
   const [c, setC] = useState(`${classes.modal} ${classes.slideRight}`);
-
   let navigate = useNavigate();
 
   const close = () => {
@@ -20,7 +22,7 @@ function NavDrawer({ user, onExit }) {
     navigate("/home");
   };
   const signout = () => {
-    navigate("/");
+    context.updateUser(null);
   };
 
   return (

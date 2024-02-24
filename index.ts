@@ -23,8 +23,6 @@ app.use((req, res, next) => {
   next()
 });
 
-
-
 if (!DEBUG) {
   app.use(express.static('static'));
 } else {
@@ -53,6 +51,9 @@ app.post("/signin", async (req, res) => {
   const user = await db.user.findFirst({
     where: {
       email
+    },
+    include: {
+      profile: true
     },
   });
   console.log(user)
@@ -91,10 +92,18 @@ app.post("/signup", async (req, res) => {
       lastName,
       email,
       password: bcrypt.hashSync(password),
-      profile: {}
+      profile: {
+        create: {}
+      }
     }
   });
-  res.send(user)
+
+  const updatedUser = await db.user.findFirst({
+    where: {
+      id: user.id,
+    },
+  });
+  res.send(updatedUser);
 })
 
 app.get(["/", "/sign_up", '/home'], (req, res) => {

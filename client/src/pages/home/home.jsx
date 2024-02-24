@@ -1,12 +1,16 @@
 import Navbar from "../../componets/navbar/navbar";
 import classes from "./home.module.css";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
+import { useContext } from "react";
+import AppContext from "../../componets/app_context";
 
-function Home({ user }) {
+function Home() {
+  const context = useContext(AppContext);
+  const user = context.getUser();
   return (
     <section className={classes.container}>
       {/* Navigation Bar */}
-      <Navbar title="Home" user={user}></Navbar>
+      <Navbar title="Home"></Navbar>
 
       {/* Container for Budget */}
       <section className={classes.budget}>
@@ -16,11 +20,11 @@ function Home({ user }) {
         <section className={classes.balance}>
           <section>
             <p>Balance</p>
-            <p>$65.32</p>
+            <p>${user.profile.balance}</p>
           </section>
           <section>
             <p>Daily budget</p>
-            <p>$25</p>
+            <p>${user.profile.dailyBudget}</p>
           </section>
         </section>
       </section>
