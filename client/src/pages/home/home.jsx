@@ -1,12 +1,13 @@
 import Navbar from "../../componets/navbar/navbar";
 import classes from "./home.module.css";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AppContext from "../../componets/app_context";
 
 function Home() {
   const context = useContext(AppContext);
   const user = context.getUser();
+
   return (
     <section className={classes.container}>
       {/* Navigation Bar */}

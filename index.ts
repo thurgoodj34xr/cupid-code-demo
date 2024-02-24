@@ -4,8 +4,14 @@ import { engine } from 'express-handlebars';
 import fs from "fs";
 import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
+import * as User from "./services/user";
+import * as Auth from "./services/auth";
+import * as Jwt from "./utils/jwt";
+import jwt from "jsonwebtoken";
+import {v4 as uuid} from "uuid";
 import db from "./utils/prisma";
 import bcrypt from "bcryptjs";
+import { tokenToString } from "typescript";
 dotenv.config();
 
 const DEBUG = process.env.NODE_ENV !== "production";
@@ -36,77 +42,64 @@ if (!DEBUG) {
 }
 
 app.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
-  const ct = await db.user.count({
-    where: {
-      email
-    },
-  });
+  const {email, password} = req.body;
+  const existingUser = await User.findUserByEmail(email);
 
-  if (ct == 0) {
-    res.send({ error: "Invalid Email/Password combo" });
+  if (!existingUser) {
+    res.send({error: "Invalid login credentials."});
     return;
   }
-
-  const user = await db.user.findFirst({
-    where: {
-      email
-    },
-    include: {
-      profile: true
-    },
-  });
-  console.log(user)
-
-  if (user == null) {
-    res.send({ error: "Invalid Email/Password combo" });
-    return;
-  }
-
-  bcrypt.compare(password, user.password, (err, result) => {
+  bcrypt.compare(password, existingUser.password, (err, result) => {
     if (err || !result) {
-      res.send({ error: "Invalid Email/Password combo" });
+      res.send({ error: "Invalid login credentials." });
       return;
     }
-    // Password matches, send user response
-    res.send(user)
-    return;
   })
+  const jti = uuid();
+  const { accessToken, refreshToken } = Jwt.generateTokens(existingUser, jti);
+  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
+  res.send({user: existingUser, tokens: {accessToken, refreshToken}}); 
+})
+
+app.post("/signinwithtoken", async (req, res) => {
+  const {refreshToken} = req.body;
+  if (!refreshToken) {
+    res.send({error: "Access Denied"})
+    return;
+  }
+  
+  console.log(refreshToken);
+  const token = await Auth.findRefreshTokenById(refreshToken);
+  console.log(token)
+  if (!token) {
+    res.send({error: "Access Denied"})
+    return;
+  }
+  const user = await User.findUserById(token.userId);
+  if (!user) {
+    res.send({error: "Access Denied"})
+    return;
+  }
+  console.log(user);
 })
 
 app.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  let ct = await db.user.count({
-    where: {
-      email
-    },
-  });
+  const existingUser = await User.findUserByEmail(email);
 
-  if (ct > 0) {
-    res.send({ error: "Email already exists" })
+  if (existingUser) {
+    res.send({error: "Email already in use"});
     return;
   }
-  const user = await db.user.create({
-    data: {
-      firstName,
-      lastName,
-      email,
-      password: bcrypt.hashSync(password),
-      profile: {
-        create: {}
-      }
-    }
-  });
 
-  const updatedUser = await db.user.findFirst({
-    where: {
-      id: user.id,
-    },
-  });
-  res.send(updatedUser);
+  const user = await User.createUser({firstName, lastName, email, password});
+  const jti = uuid();
+  const { accessToken, refreshToken } = Jwt.generateTokens(user, jti);
+  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+  res.send({success: true});
 })
 
-app.get(["/", "/sign_up", '/home'], (req, res) => {
+app.get(['/'], (req, res) => {
   res.render('index', {
     debug: DEBUG,
     jsBundle: DEBUG ? "" : MANIFEST["src/main.jsx"]["file"],
@@ -115,6 +108,58 @@ app.get(["/", "/sign_up", '/home'], (req, res) => {
     layout: false
   });
 });
+
+
+
+// These are protectded routes and jwt is required
+
+// First need a way to refresh the access token
+app.post("/refreshToken", async (req, res) => {
+  const {user, refreshToken} = req.body;
+  if (!user || !refreshToken) {
+    res.send({error: "Access Denied"})
+    return;
+  }
+  console.log(refreshToken)
+  if (await !Auth.findRefreshTokenById(refreshToken)) {
+    res.send({error: "Access Denied"})
+    return;
+  }
+
+  const newToken = Jwt.generateAccessToken(user);
+  const jti = uuid();
+  
+  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+  console.log("New Token Generated!");
+  res.send({accessToken: newToken});
+})
+
+// Now we can check if the request has a valid access token
+
+app.use((req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.send({error: "Un-Authorized"})
+  }
+  try {
+    const token = authorization;
+    if (!token) return;
+    if (!process.env.JWT_ACCESS_SECRET) return;
+    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    console.log("Access Granted")
+    next();
+  } catch (err) {
+    console.log("Token expired")
+    res.send({error: err})
+    return;
+  }
+});
+
+let n=0;
+app.get("/number", (req,res) => {
+  n += 1;
+  res.send({number: n})
+})
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);

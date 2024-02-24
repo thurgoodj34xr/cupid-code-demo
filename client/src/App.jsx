@@ -9,12 +9,17 @@ import { ConditionalRoute } from "./componets/conditional_route";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [tokens, setTokens] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      console.log(user);
+    console.log({
+      user,
+      tokens,
+    });
+    if (tokens?.accessToken) {
+      localStorage.setItem("token", tokens.refreshToken);
     }
-  }, [user]);
+  }, [user, tokens]);
 
   function updateUser(user) {
     setUser(user);
@@ -24,9 +29,27 @@ function App() {
     return user;
   }
 
+  function updateTokens(t) {
+    setTokens(t);
+  }
+
+  function getTokens() {
+    return tokens;
+  }
+
+  function updateAccessToken(t) {
+    setTokens({
+      refreshToken: tokens.refreshToken,
+      accessToken: t,
+    });
+  }
+
   const userSettings = {
     updateUser,
     getUser,
+    updateTokens,
+    getTokens,
+    updateAccessToken,
   };
 
   return (

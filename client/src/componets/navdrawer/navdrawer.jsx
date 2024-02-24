@@ -21,6 +21,7 @@ function NavDrawer({ onExit }) {
   const home = () => {
     navigate("/home");
   };
+
   const signout = () => {
     context.updateUser(null);
   };

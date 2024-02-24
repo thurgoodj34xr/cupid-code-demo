@@ -14,6 +14,23 @@ export default function SignIn() {
 
   let navigate = useNavigate();
 
+  useEffect(() => {
+    const refreshToken = localStorage.getItem("token");
+    if (refreshToken) {
+      fetch("/signinwithtoken", {
+        method: "post",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          refreshToken,
+        }),
+      })
+        .then((resp) => resp.json())
+        .then((resp) => console.log(resp));
+    }
+  }, []);
+
   {
     /* Enables a user to use the enter key instead of clicking on submit */
   }
@@ -47,7 +64,8 @@ export default function SignIn() {
     if (res.error) {
       setError(res.error);
     } else {
-      context.updateUser(res);
+      context.updateUser(res.user);
+      context.updateTokens(res.tokens);
       navigate("/home");
     }
   };
