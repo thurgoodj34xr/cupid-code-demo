@@ -10,6 +10,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(true);
 
   const context = useContext(AppContext);
 
@@ -18,13 +19,20 @@ export default function SignIn() {
   const SigninWithToken = async () => {
     const refreshToken = localStorage.getItem("token");
     const id = localStorage.getItem("id");
-    if (!refreshToken || !id) return;
+    if (!refreshToken || !id) {
+      setLoading(false);
+      return;
+    }
+
     const resp = await Api.Post("/signinwithtoken", {
       refreshToken,
       id,
     });
 
-    if (!resp.user) return;
+    if (!resp.user) {
+      setLoading(false);
+      return;
+    }
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
     navigate("/home");
@@ -71,7 +79,9 @@ export default function SignIn() {
     navigate("/sign_up");
   };
 
-  return (
+  return loading ? (
+    <div></div>
+  ) : (
     <div className={classes.sign_in}>
       <h1>Log In</h1>
       {error && <p className="error">{error}</p>}
