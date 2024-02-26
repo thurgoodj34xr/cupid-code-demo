@@ -37,6 +37,10 @@ if (!DEBUG) {
     }
   });
 }
+
+// ***************** Un-Protected Routes *******************
+
+
 app.get(['/'], (req, res) => {
   res.render('index', {
     debug: DEBUG,
@@ -46,6 +50,12 @@ app.get(['/'], (req, res) => {
     layout: false
   });
 });
+
+
+
+// ***************** Un-Protected EndPoints ***************
+
+
 
 // ***************** Signin Endpoint ******************
 
@@ -83,7 +93,8 @@ app.post("/signinwithtoken", async (req, res) => {
     res.send({error: "Access Denied"})
     return;
   }
-
+  // Need to look at expired refresh tokens here
+  // Current authentication is always given
   const user = await User.findUserById(token.userId);
   if (!user) {
     res.send({error: "Access Denied"})
@@ -144,7 +155,7 @@ app.post("/refreshToken", async (req, res) => {
 
 // ************** Protected Routes ************************
 
-app.use(["/home"], (req, res, next) => {
+app.use(["/home", "/aiAssistance", "/aiChat", "/selectCupid", "/myAccount", "/cupidCash", "/purchases"], (req, res, next) => {
   const authorization = req.headers;
   if (!authorization.host) next();
   res.redirect("/");
@@ -173,17 +184,6 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
-let n=0;
-app.get("/number", (req,res) => {
-  n += 1;
-  res.send({number: n})
-})
-
-app.post("/number", (req, res) => {
-  const {inc} = req.body;
-  n += inc;
-  res.send({number: n});
-})
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);

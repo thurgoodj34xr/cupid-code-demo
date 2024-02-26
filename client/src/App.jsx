@@ -6,6 +6,12 @@ import SignUp from "./pages/signUp/sign_up";
 import { useState, useEffect } from "react";
 import AppContext from "./componets/app_context";
 import { ConditionalRoute } from "./componets/conditional_route";
+import AiAssistance from "./pages/ai_assistance/ai_assistance";
+import AiChat from "./pages/ai_chat/ai_chat";
+import SelectCupid from "./pages/select_cupid/select_cupid";
+import MyAccount from "./pages/my_account/my_account";
+import CupidCash from "./pages/cupid_cash/cupid_cash";
+import Purchases from "./pages/purchases/purchases";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -58,6 +64,11 @@ function App() {
     });
   }
 
+  /*
+    These functions will be avalible for access on 
+    any of the pages. Feel free to add more of them
+    above to make life easier.
+  */
   const userSettings = {
     updateUser,
     getUser,
@@ -101,7 +112,7 @@ function App() {
             <Route exact path="/" element={<SignIn />} />
             <Route exact path="/sign_up" element={<SignUp />} />
 
-            {/* Home page requires an auth user */}
+            {/* Pages that required an auth user */}
             <Route
               exact
               path="/home"
@@ -109,6 +120,72 @@ function App() {
                 <ConditionalRoute
                   condition={user != null /* Requires an auth user */}
                   componetToRender={<Home />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/aiAssistance"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<AiAssistance />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/aiChat"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<AiChat />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/selectCupid"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<SelectCupid />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/myAccount"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<MyAccount />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/cupidCash"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<CupidCash />}
+                  route={"/" /* Redirects to login if there is no auth user */}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/purchases"
+              element={
+                <ConditionalRoute
+                  condition={user != null /* Requires an auth user */}
+                  componetToRender={<Purchases />}
                   route={"/" /* Redirects to login if there is no auth user */}
                 />
               }

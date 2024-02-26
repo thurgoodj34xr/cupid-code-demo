@@ -1,4 +1,33 @@
 
+/*
+  These functions will give you an easy way to access the
+  backend server. There are 4 functions to use in this file
+
+  ****************** GET REQUESTS ******************
+
+  Get(route)
+    ** Ex: Api.Get("/number");
+ 
+  GetWithAuth(route, context)
+    ** Ex: Api.GetWithAuth("/number", context);
+
+  ******************* POST REQUESTS ***************
+  
+  Post(route, body)
+  ** Ex: Api.Post("/number", {inc: 5});
+
+  PostWithAuth(route, body, context)
+    ** Ex: Api.PostWithAuth("/number", {inc: 5}, context);
+
+
+
+  NOTE: If the server responds with access denied, then
+        most likey the endpoint does not exist on the server.
+*/  
+
+
+
+
 // ------------- GET REQUESTS ------------------
 
 export async function Get(route) {
