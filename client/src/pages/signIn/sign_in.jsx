@@ -68,12 +68,11 @@ export default function SignIn() {
 
     if (res.error) {
       setError(res.error);
-      return;
+    } else {
+      context.updateUser(res.user);
+      context.updateTokens(res.tokens);
+      navigate("/home");
     }
-
-    context.updateUser(res.user);
-    context.updateTokens(res.tokens);
-    navigate("/home");
   };
 
   const signUp = () => {

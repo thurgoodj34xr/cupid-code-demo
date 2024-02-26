@@ -11,6 +11,7 @@ import {v4 as uuid} from "uuid";
 import bcrypt from "bcryptjs";
 dotenv.config();
 
+
 const DEBUG = process.env.NODE_ENV !== "production";
 const MANIFEST: Record<string, any> = DEBUG ? {} : JSON.parse(fs.readFileSync("static/.vite/manifest.json").toString())
 
@@ -32,6 +33,7 @@ if (!DEBUG) {
   app.use((req, res, next) => {
     if (req.url.includes(".")) {
       res.redirect(`${process.env.ASSET_URL}/${req.url}`)
+      return;
     } else {
       next();
     }
@@ -57,6 +59,8 @@ app.get(['/'], (req, res) => {
 
 
 
+
+
 // ***************** Signin Endpoint ******************
 
 app.post("/signin", async (req, res) => {
@@ -67,16 +71,16 @@ app.post("/signin", async (req, res) => {
     res.send({error: "Invalid login credentials."});
     return;
   }
-  bcrypt.compare(password, existingUser.password, (err, result) => {
-    if (err || !result) {
+  bcrypt.compare(password, existingUser.password, async (err, result) => {
+    if (!result) {
       res.send({ error: "Invalid login credentials." });
-      return;
+    } else {
+      const jti = uuid();
+      const { accessToken, refreshToken } = Jwt.generateTokens(existingUser, jti);
+      const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
+      res.send({user: existingUser, tokens: {accessToken, refreshToken, hashToken}}); 
     }
   })
-  const jti = uuid();
-  const { accessToken, refreshToken } = Jwt.generateTokens(existingUser, jti);
-  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
-  res.send({user: existingUser, tokens: {accessToken, refreshToken, hashToken}}); 
 })
 
 // ***************** Sign in With Token Endpoint *****************
@@ -159,6 +163,7 @@ app.use(["/home", "/aiAssistance", "/aiChat", "/selectCupid", "/myAccount", "/cu
   const authorization = req.headers;
   if (!authorization.host) next();
   res.redirect("/");
+  return;
 })
 
 // ********** Middleware to validate the access token ***************
@@ -183,6 +188,7 @@ app.use((req, res, next) => {
 })
 
 // ************** Protected Endpoints ***************
+
 
 
 app.listen(process.env.PORT || 3000, () => {

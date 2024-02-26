@@ -5,7 +5,7 @@ import AppContext from "../../componets/app_context";
 
 function MyAccount() {
   const context = useContext(AppContext);
-  const { firstName, lastName, email } = context.getUser();
+  const { firstName, lastName, email, profile } = context.getUser();
   return (
     <section>
       <Navbar title="My Account"></Navbar>
