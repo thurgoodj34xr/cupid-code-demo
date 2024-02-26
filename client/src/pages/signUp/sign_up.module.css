@@ -4,6 +4,16 @@
     border-width: 2px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+
 }
+
+body {
+    background-image: linear-gradient(to bottom, #763AF6, #FF0000);
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: bottom right, left, right;  
+}
+

@@ -48,7 +48,7 @@ function SignUp({ setuser }) {
 
   return (
     <section className={classes.container}>
-      <h1>Sign Up</h1>
+      <h1>Get Started</h1>
       {error && <p className="error">{error}</p>}
       <Input
         text="First Name"
