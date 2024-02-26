@@ -104,7 +104,9 @@ function App() {
 
     */
     <AppContext.Provider value={userSettings}>
+      <div className={!user ? 'gradient' : ''}>
       <div className="main">
+        
         <BrowserRouter>
           {/* Some routes require a prerequisite such as a auth user */}
           <Routes>
@@ -118,81 +120,82 @@ function App() {
               path="/home"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<Home />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<Home />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
             <Route
               exact
               path="/aiAssistance"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<AiAssistance />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<AiAssistance />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
             <Route
               exact
               path="/aiChat"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<AiChat />}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<AiChat />}
                   route={"/" /* Redirects to login if there is no auth user */}
+                  />
+                }
                 />
-              }
-            />
             <Route
               exact
               path="/selectCupid"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<SelectCupid />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<SelectCupid />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
             <Route
               exact
               path="/myAccount"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<MyAccount />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<MyAccount />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
             <Route
               exact
               path="/cupidCash"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<CupidCash />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<CupidCash />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
             <Route
               exact
               path="/purchases"
               element={
                 <ConditionalRoute
-                  condition={user != null /* Requires an auth user */}
-                  componetToRender={<Purchases />}
-                  route={"/" /* Redirects to login if there is no auth user */}
+                condition={user != null /* Requires an auth user */}
+                componetToRender={<Purchases />}
+                route={"/" /* Redirects to login if there is no auth user */}
                 />
               }
-            />
+              />
           </Routes>
         </BrowserRouter>
       </div>
+              </div>
     </AppContext.Provider>
   );
 }

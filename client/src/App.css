@@ -46,3 +46,15 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+.gradient {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(to bottom, #763AF6, #FF0000);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: bottom right, left, right;  
+}
+
+
