@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import classes from "./sign_up.module.css";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
+import * as Api from "../../hook/api";
 
-function SignUp({ setuser }) {
+function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -22,24 +23,17 @@ function SignUp({ setuser }) {
   }
 
   const signUp = async () => {
-    const res = await fetch("/signup", {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        password,
-      }),
-    }).then((resp) => resp.json());
+    const res = await Api.Post("/signup", {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+
     if (res.error) {
       setError(res.error);
-    } else {
-      setuser(res);
-      navigate("/home");
     }
+    navigate("/");
   };
 
   const signIn = () => {
@@ -74,7 +68,9 @@ function SignUp({ setuser }) {
         placeholder="Enter Password"
         onChangeFunc={handlePassword}
       />
-      <p onClick={signIn}>Already have an account? Sign In</p>
+      <p onClick={signIn}>
+        Already have an account? <span className="pointer">Sign In</span>
+      </p>
       <Button text="Sign Up" onClickFunc={signUp}></Button>
     </section>
   );

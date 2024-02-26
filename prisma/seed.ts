@@ -6,22 +6,26 @@ config();
 
 
 async function main() {
-  const user = await db.user.upsert({
-    where: {
-      id: 1,
-    },
-    create : {
-      firstName: "SITE",
-      lastName: "ADMIN",
-      email: "admin@gmail.com",
-      password: bcryptjs.hashSync('admin'),
-      profile: {},
-    },
-    update: {
-      email: "admin@gmail.com"
-    }
-  })
-  console.log(user);
+  // const user = await db.user.upsert({
+  //   where: {
+  //     id: 1,
+  //   },
+  //   create : {
+  //     firstName: "SITE",
+  //     lastName: "ADMIN",
+  //     email: "admin@gmail.com",
+  //     password: bcryptjs.hashSync('admin'),
+  //     profile: {
+  //       create: {
+
+  //       }
+  //     },
+  //   },
+  //   update: {
+  //     email: "admin@gmail.com"
+  //   }
+  // })
+  // console.log(user);
 }
 
 main()
