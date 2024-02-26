@@ -15,15 +15,15 @@ datasource db {
 // updatedAt DateTime @updatedAt
 
 model User {
-  id            Int           @id @default(autoincrement())
-  firstName     String
-  lastName      String
-  email         String        @unique
-  password      String
-  refreshTokens RefreshToken?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  profile       Profile?
+  id           Int           @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String        @unique
+  password     String
+  refreshToken RefreshToken?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      Profile?
 }
 
 // This is the Standard user schema.

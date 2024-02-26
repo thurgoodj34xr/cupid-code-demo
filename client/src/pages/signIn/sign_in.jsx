@@ -68,6 +68,7 @@ export default function SignIn() {
 
     if (res.error) {
       setError(res.error);
+      return;
     }
 
     context.updateUser(res.user);
