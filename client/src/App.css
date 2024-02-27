@@ -53,8 +53,12 @@ body {
   flex-direction: column;
   justify-content: center;
   background-image: linear-gradient(to bottom, #763AF6, #FF0000);
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  background-position: bottom right, left, right;  
+  background-repeat: no-repeat;
+  align-items: center;
 }
+.container label {
+  margin-bottom: -10px;
+}
+
 
 
