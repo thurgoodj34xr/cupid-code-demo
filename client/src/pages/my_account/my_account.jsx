@@ -8,7 +8,6 @@ function MyAccount() {
   const { firstName, lastName, email, profile } = context.getUser();
   return (
     <section>
-      <Navbar title="My Account"></Navbar>
       <p>First:{firstName}</p>
       <p>Last:{lastName}</p>
       <p>Email:{email}</p>

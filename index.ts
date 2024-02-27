@@ -9,6 +9,7 @@ import * as Jwt from "./utils/jwt";
 import jwt from "jsonwebtoken";
 import {v4 as uuid} from "uuid";
 import bcrypt from "bcryptjs";
+import tokenHasher from "./utils/hashToken";
 dotenv.config();
 
 
@@ -65,52 +66,15 @@ app.get(['/'], (req, res) => {
 
 app.post("/signin", async (req, res) => {
   const {email, password} = req.body;
-  const existingUser = await User.findUserByEmail(email);
+  const user = await User.findUserByEmail(email);
 
-  if (!existingUser) {
-    res.send({error: "Invalid login credentials."});
-    return;
+  if (user && bcrypt.compareSync(password, user.password)) {
+      const { accessToken, refreshToken } = Jwt.generateTokens(user);
+      await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+      res.send({user: user, tokens: {accessToken, refreshToken}});
+  } else {
+    res.send({ error: "Invalid login credentials." });
   }
-  bcrypt.compare(password, existingUser.password, async (err, result) => {
-    if (!result) {
-      res.send({ error: "Invalid login credentials." });
-    } else {
-      const jti = uuid();
-      const { accessToken, refreshToken } = Jwt.generateTokens(existingUser, jti);
-      const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
-      res.send({user: existingUser, tokens: {accessToken, refreshToken, hashToken}}); 
-    }
-  })
-})
-
-// ***************** Sign in With Token Endpoint *****************
-
-app.post("/signinwithtoken", async (req, res) => {
-  
-  const {refreshToken, id} = req.body;
-  if (!refreshToken) {
-    res.send({error: "Access Denied"})
-    return;
-  }
-  const token = await Auth.findRefreshTokenById(id);
-  if (!token) {
-    res.send({error: "Access Denied"})
-    return;
-  }
-  // Need to look at expired refresh tokens here
-  // Current authentication is always given
-  const user = await User.findUserById(token.userId);
-  if (!user) {
-    res.send({error: "Access Denied"})
-    return;
-  }
-  
-  const jti = uuid();
-  const tokens = Jwt.generateTokens(user, jti);
-  const newRefresh = tokens.refreshToken;
-  const newAccess = tokens.accessToken;
-  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken: tokens.refreshToken, userId: user.id });
-  res.send({user, tokens: {accessToken: newAccess, refreshToken: newRefresh, hashToken}});
 })
 
 // ******************* Sign up Endpoint *************************
@@ -125,10 +89,28 @@ app.post("/signup", async (req, res) => {
   }
 
   const user = await User.createUser({firstName, lastName, email, password});
-  const jti = uuid();
-  const { accessToken, refreshToken } = Jwt.generateTokens(user, jti);
-  await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+  const { refreshToken } = Jwt.generateTokens(user);
+  await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
   res.send({success: true});
+})
+
+// ***************** Endpoint to verify a token ***********************
+
+app.post("/verifyToken", async (req, res) => {
+  const {token} = req.body;
+  try {
+    jwt.verify(token, process.env.JWT_ACCESS_SECRET!!);
+  } catch (err) {
+    res.send({error: "Expired"})
+    return;
+  }
+  
+  const user = await Auth.findUserByToken(tokenHasher(token))
+  if (!user) {
+    res.send({error: "Invalid Token"})
+  } else {
+    res.send({user})
+  }
 })
 
 
@@ -138,52 +120,26 @@ app.post("/signup", async (req, res) => {
 app.post("/refreshToken", async (req, res) => {
   const {user, refreshToken} = req.body;
 
-  if (!user || !refreshToken) {
-    res.send({error: "Access Denied"})
-    return;
-  }
-
   if (await !Auth.findRefreshTokenById(refreshToken)) {
     res.send({error: "Access Denied"})
     return;
   }
-
   const newToken = Jwt.generateAccessToken(user);
-  
-  const jti = uuid();
-  const hashToken = await Auth.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
-  console.log("New Token Generated!");
-
-  res.send({tokens: {accessToken: newToken, refreshToken, hashToken}});
-})
-
-// ************** Protected Routes ************************
-
-app.use(["/home", "/aiAssistance", "/aiChat", "/selectCupid", "/myAccount", "/cupidCash", "/purchases"], (req, res, next) => {
-  const authorization = req.headers;
-  if (!authorization.host) next();
-  res.redirect("/");
-  return;
+  await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+  res.send({tokens: {accessToken: newToken, refreshToken}});
 })
 
 // ********** Middleware to validate the access token ***************
 
 app.use((req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) {
-    res.send({error: "Un-Authorized"})
-  }
   try {
-    const token = authorization;
-    if (!token) return;
-    if (!process.env.JWT_ACCESS_SECRET) return;
-    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    jwt.verify(authorization!!, process.env.JWT_ACCESS_SECRET!!);
     console.log("Access Granted")
     next();
   } catch (err) {
     console.log("Token expired")
     res.send({error: err})
-    return;
   }
 })
 

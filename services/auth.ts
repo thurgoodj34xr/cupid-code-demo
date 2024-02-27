@@ -2,16 +2,13 @@ import db from "../utils/prisma"
 import hashToken from "../utils/hashToken";
 
 // used when we create a refresh token.
-export async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: {
-  jti: any,
+export async function addRefreshTokenToWhitelist({ refreshToken, userId }: {
   refreshToken: string,
   userId: number
 }) {
-  const users = await deleteRefreshTokenByUser(userId);
-  console.log(users)
+  await deleteRefreshTokenByUser(userId);
   return db.refreshToken.create({
     data: {
-      id: jti,
       hashedToken: hashToken(refreshToken),
       userId
     },
@@ -19,7 +16,7 @@ export async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: 
 }
 
 // used to check if the token sent by the client is in the database.
-export function findRefreshTokenById(id: any) {
+export function findRefreshTokenById(id: number) {
   return db.refreshToken.findUnique({
     where: {
       id,
@@ -27,8 +24,36 @@ export function findRefreshTokenById(id: any) {
   });
 }
 
+// used to check if the token sent by the client is in the database.
+export function findRefreshTokenByHash(hashedToken: string) {
+  return db.refreshToken.findFirst({
+    where: {
+      hashedToken,
+    },
+  });
+}
+
+// used to check if the token sent by the client is in the database.
+export async function findUserByToken(hashedToken: string) {
+  const token = await db.refreshToken.findFirst({
+    where: {
+      hashedToken,
+    },
+  });
+  if (!token) return;
+  return db.user.findUnique({
+    where: {
+      id: token?.userId
+    },
+    include: {
+      profile: true,
+      refreshToken: true,
+    }
+  })
+}
+
 // soft delete tokens after usage.
-export function deleteRefreshToken(id: any) {
+export function deleteRefreshToken(id: number) {
   return db.refreshToken.update({
     where: {
       id,
@@ -40,7 +65,7 @@ export function deleteRefreshToken(id: any) {
 }
 
 // soft delete tokens after usage.
-export function deleteRefreshTokenByUser(userId: any) {
+export function deleteRefreshTokenByUser(userId: number) {
   console.log(`Deleting ${userId}`)
   return db.refreshToken.deleteMany({
     where: {
@@ -50,7 +75,7 @@ export function deleteRefreshTokenByUser(userId: any) {
 }
 
 
-export function revokeTokens(userId:any) {
+export function revokeTokens(userId: number) {
   return db.refreshToken.updateMany({
     where: {
       userId

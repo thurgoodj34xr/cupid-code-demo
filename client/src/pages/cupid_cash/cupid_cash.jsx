@@ -5,11 +5,7 @@ import AppContext from "../../componets/app_context";
 
 function CupidCash() {
   const context = useContext(AppContext);
-  return (
-    <section>
-      <Navbar title="Cupid Cash"></Navbar>
-    </section>
-  );
+  return <section></section>;
 }
 
 export default CupidCash;

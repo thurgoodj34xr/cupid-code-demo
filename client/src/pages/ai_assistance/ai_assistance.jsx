@@ -5,11 +5,7 @@ import AppContext from "../../componets/app_context";
 
 function AiAssistance() {
   const context = useContext(AppContext);
-  return (
-    <section>
-      <Navbar title="Ai Assistance"></Navbar>
-    </section>
-  );
+  return <section></section>;
 }
 
 export default AiAssistance;

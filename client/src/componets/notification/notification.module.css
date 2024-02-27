@@ -13,7 +13,7 @@
     align-items: center;
     animation:
         slideDown 1s 1,
-        slideUp 2s 3s 1 forwards;
+        slideUp 2s 2s 1 forwards;
 }
 
 .hidden {
@@ -21,6 +21,7 @@
 }
 
 .notification span {
+    text-align: center;
     color: black;
 }
 

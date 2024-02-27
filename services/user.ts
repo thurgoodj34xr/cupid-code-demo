@@ -27,6 +27,7 @@ export function findUserByEmail(email: string) {
       },
       include: {
         profile: true,
+        refreshToken: true,
       }
     });
   }
@@ -38,6 +39,7 @@ export function findUserByEmail(email: string) {
       },
       include: {
         profile: true,
+        refreshToken: true,
       }
     });
   }
