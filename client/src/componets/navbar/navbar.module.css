@@ -27,7 +27,7 @@
     top: 0;
     bottom: 0;
     padding: 20px;
-    background-color: rgba(177, 177, 177, 0.95);
+    background-color: rgba(196, 190, 190, 0.95);
     padding: 20px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -47,7 +47,7 @@
 }
 
 .exit div:hover{
-    background-color: rgba(200 , 200, 200, 1);
+    background-color: rgb(216, 213, 213);
 }
 
 .container{
@@ -70,7 +70,7 @@
 }
 
 .tile:hover {
-    background-color: rgba(200 , 200, 200, 1);
+    background-color: rgb(216, 213, 213);
 }
 
 
