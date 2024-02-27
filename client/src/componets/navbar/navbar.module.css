@@ -31,6 +31,8 @@
     padding: 20px;
     overflow-y: auto;
     overflow-x: hidden;
+    z-index: 3;
+    transform: translateX(-100%);
 }
 .exit {
     text-align: right;
@@ -97,6 +99,58 @@
     display: none;
 }
 
+h3 {
+    font-weight: 300;
+}
+
+.wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(128, 128, 128, 0.3);
+    z-index: 2;
+    transform: translateX(-100%);
+    cursor: pointer;
+}
+
+.fadein {
+    animation: fadein 1s forwards;
+}
+
+.fadeout {
+    animation: fadeout 0.5s forwards
+}
+
+@keyframes fadein {
+    0% {
+        transform: translateX(0%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    0% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+    99% {
+        transform: translateX(-0%);
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    
+}
+
+
 @keyframes slideRight {
     0% {
         transform: translateX(-100%);
@@ -108,7 +162,9 @@
 }
 
 @keyframes slideLeft {
-    0% {}
+    0% {
+        transform: translateX(0%);
+    }
 
     100% {
         transform: translateX(-100%);

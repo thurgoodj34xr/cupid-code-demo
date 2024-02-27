@@ -16,20 +16,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function Navbar({ title }) {
+  const [on, setOn] = useState(false);
+  const [init, setInit] = useState(true);
   const context = useContext(AppContext);
-  const [c, setC] = useState(`${classes.hide}`);
   const user = context.getUser();
   let navigate = useNavigate();
 
   const showNavBar = () => {
-    setC(`${classes.modal} ${classes.slideRight}`);
+    setInit(false);
+    setOn(true);
   };
 
   const hideNavBar = () => {
-    setC(`${classes.modal} ${classes.slideLeft}`);
-    setTimeout(() => {
-      setC(`${classes.hide}`);
-    }, 500);
+    setOn(false);
   };
 
   const signout = () => {
@@ -86,7 +85,25 @@ function Navbar({ title }) {
           onClick={showNavBar}
         />
       </div>
-      <section className={c}>
+      <section
+        onClick={hideNavBar}
+        className={
+          init
+            ? `${classes.hide}`
+            : on
+            ? `${classes.wrapper} ${classes.fadein}`
+            : `${classes.wrapper} ${classes.fadeout}`
+        }
+      />
+      <section
+        className={
+          init
+            ? `${classes.hide}`
+            : on
+            ? `${classes.modal} ${classes.slideRight}`
+            : `${classes.modal} ${classes.slideLeft}`
+        }
+      >
         {/* Exit Icon */}
         <section className={classes.exit}>
           <div onClick={hideNavBar}>
@@ -114,7 +131,7 @@ function Navbar({ title }) {
             <div>
               <FontAwesomeIcon icon={faHandshake} size="2xl" />
             </div>
-            <h3>Ai Assistancee</h3>
+            <h3>Ai Assistance</h3>
           </section>
           {/* Ai Chat */}
           <section className={classes.tile} onClick={aiChat}>
@@ -143,7 +160,7 @@ function Navbar({ title }) {
             <div>
               <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
             </div>
-            <h3>Add cupid Cash</h3>
+            <h3>Add Cupid Cash</h3>
           </section>
           {/* Purchases */}
           <section className={classes.tile} onClick={purchases}>
