@@ -155,9 +155,10 @@ app.use((req, res, next) => {
 // ************** Adding New CupidCash ***************
 app.post("/changeCupidCash", async (req, res) => {
   const { changeAmount, userID } = req.body
-  const currentValues = await User.findUserById(userID)
+  const currentValues = await User.getUserByProfile(userID)
   if (currentValues == null) {
-    res.send({ error: "An error occured with your user Profile" })
+    res.send({ error: "An error occurred with your user Profile" })
+    return;
   }
   // Check if profile.balance is defined before trying to convert it
   const balanceString = currentValues?.profile?.balance?.toString();
@@ -167,11 +168,12 @@ app.post("/changeCupidCash", async (req, res) => {
   const newBalance = balanceFloat + changeAmount
   if (newBalance < 0) {
     res.send({ error: "You are spending too much money" });
+    return;
   }
-  const balance = await User.updateUserBalance(userID, newBalance)
+  await User.updateUserBalance(userID, newBalance)
 
   // Handle success, send response, etc.
-  res.status(200).json({ success: true, message: "Balance updated successfully", newBalance: newBalance });
+  res.send({ message: "Balance updated successfully", newBalance: newBalance });
 });
 
 app.listen(process.env.PORT || 3000, () => {

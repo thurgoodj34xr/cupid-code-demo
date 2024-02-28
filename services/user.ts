@@ -43,6 +43,18 @@ export function findUserById(id: any) {
     }
   });
 }
+
+export function getUserByProfile(id: any) {
+  return db.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      profile: true,
+    }
+  });
+}
+
 export function updateUserBalance(userId: any, newBalance: number) {
   return db.user.update({
     where: {
