@@ -152,7 +152,7 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
-// ************** Adding New CupidCash ***************
+// ************** Changing CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {
   const { changeAmount, userID } = req.body
   const currentValues = await User.getUserByProfile(userID)
