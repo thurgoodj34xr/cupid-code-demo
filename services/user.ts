@@ -27,6 +27,7 @@ export function createUser(user: any) {
     },
     include: {
       profile: true,
+      refreshToken: true,
     }
   });
 }
@@ -38,10 +39,10 @@ export function findUserById(id: any) {
     },
     include: {
       profile: true,
+      refreshToken: true,
     }
   });
 }
-
 export function updateUserBalance(userId: any, newBalance: number) {
   return db.user.update({
     where: {

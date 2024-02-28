@@ -32,8 +32,9 @@ function SignUp() {
 
     if (res.error) {
       setError(res.error);
+    } else {
+      navigate("/");
     }
-    navigate("/");
   };
 
   const signIn = () => {

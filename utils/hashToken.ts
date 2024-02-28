@@ -1,5 +1,6 @@
-import bcrypt from "bcryptjs";
+import {createHash, createDecipheriv} from "crypto";
 
 export default function hashToken(token: any) {
-    return bcrypt.hashSync(token,12)
+    return createHash('sha1').update(token).digest('hex');
+
 }

@@ -41,8 +41,8 @@ model Profile {
 }
 
 model RefreshToken {
-  id          String   @id
-  hashedToken String
+  id          Int      @id @default(autoincrement())
+  hashedToken String   @unique
   revoked     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

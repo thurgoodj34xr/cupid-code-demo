@@ -17,16 +17,14 @@ export default function SignIn() {
   let navigate = useNavigate();
 
   const SigninWithToken = async () => {
-    const refreshToken = localStorage.getItem("token");
-    const id = localStorage.getItem("id");
-    if (!refreshToken || !id) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       setLoading(false);
       return;
     }
 
-    const resp = await Api.Post("/signinwithtoken", {
-      refreshToken,
-      id,
+    const resp = await Api.Post("/verifyToken", {
+      token,
     });
 
     if (!resp.user) {
@@ -35,7 +33,7 @@ export default function SignIn() {
     }
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
-    navigate("/home");
+    navigate("/Home");
   };
 
   useEffect(() => {
@@ -68,16 +66,16 @@ export default function SignIn() {
 
     if (res.error) {
       setError(res.error);
-      return;
+    } else {
+      context.updateUser(res.user);
+      context.updateTokens(res.tokens);
+      localStorage.setItem("token", res.tokens.refreshToken);
+      navigate("/Home");
     }
-
-    context.updateUser(res.user);
-    context.updateTokens(res.tokens);
-    navigate("/home");
   };
 
   const signUp = () => {
-    navigate("/sign_up");
+    navigate("/signUp");
   };
 
   return loading ? (

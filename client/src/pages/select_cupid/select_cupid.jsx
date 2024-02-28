@@ -5,11 +5,7 @@ import AppContext from "../../componets/app_context";
 
 function SelectCupid() {
   const context = useContext(AppContext);
-  return (
-    <section>
-      <Navbar title="Select Cupid"></Navbar>
-    </section>
-  );
+  return <section></section>;
 }
 
 export default SelectCupid;
