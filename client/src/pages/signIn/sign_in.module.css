@@ -8,4 +8,9 @@
     box-sizing: border-box;
     background-color: white;
     border-radius: 10px;
+    position: absolute;
+    width: 90vw;
+    max-width: 600px;
+    top: 45%;
+    transform: translateY(-50%);
 }
