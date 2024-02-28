@@ -19,7 +19,7 @@ function CupidCash() {
     const newTotal = amountToAdd + parseFloat(user.profile.balance)
     const userID = user.id
     try {
-      const response = await Api.Post("/addCupidCash", { newTotal, userID });
+      const response = await Api.PostWithAuth("/addCupidCash", { newTotal, userID }, context);
 
       if (!response.error) {
         // Update user profile with the new balance

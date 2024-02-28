@@ -57,21 +57,6 @@ app.get(['/'], (req, res) => {
 
 
 // ***************** Un-Protected EndPoints ***************
-app.post("/addCupidCash", async (req, res) => {
-  try {
-    const { newTotal, userID } = req.body
-    const balance = await User.updateUserBalance(userID, newTotal)
-
-    // Handle success, send response, etc.
-    res.status(200).json({ success: true, message: "Balance updated successfully", balance });
-  } catch (error) {
-    // Handle error
-    console.error("Error updating user balance:", error);
-
-    // Send an error response to the client
-    res.status(500).json({ success: false, error: "Internal Server Error" });
-  }
-});
 let ct = 0;
 app.post("/number", (req, res) => {
   const { inc } = req.body;
@@ -167,7 +152,22 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
+// ************** Adding New CupidCash ***************
+app.post("/addCupidCash", async (req, res) => {
+  try {
+    const { newTotal, userID } = req.body
+    const balance = await User.updateUserBalance(userID, newTotal)
 
+    // Handle success, send response, etc.
+    res.status(200).json({ success: true, message: "Balance updated successfully", balance });
+  } catch (error) {
+    // Handle error
+    console.error("Error updating user balance:", error);
+
+    // Send an error response to the client
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);
