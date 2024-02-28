@@ -5,12 +5,21 @@ import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSpinner,
+  faAppleWhole,
+  faBook,
+  faSitemap,
+} from "@fortawesome/free-solid-svg-icons";
+import SignOn from "../../componets/sign_on/sign_on";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const [buttonText, setButtonText] = useState("Sign in");
 
   const context = useContext(AppContext);
 
@@ -59,6 +68,9 @@ export default function SignIn() {
     /* After a user has entered their email and password and has submited the login, this function will handle the logic */
   }
   const handleSignIn = async () => {
+    setButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="2xl" />
+    );
     const res = await Api.Post("/signin", {
       email,
       password,
@@ -66,6 +78,7 @@ export default function SignIn() {
 
     if (res.error) {
       setError(res.error);
+      setButtonText("Sign in");
     } else {
       context.updateUser(res.user);
       context.updateTokens(res.tokens);
@@ -75,15 +88,16 @@ export default function SignIn() {
   };
 
   const signUp = () => {
-    navigate("/signUp");
+    navigate("/SelectAccount");
   };
 
   return loading ? (
     <div></div>
   ) : (
     <div className={classes.sign_in}>
-      <h1>Log In</h1>
+      <h1>Get Started</h1>
       {error && <p className="error">{error}</p>}
+      <p className="label">Let’s get started by filling out the form below.</p>
       <Input
         inputType="email"
         text="Email"
@@ -96,10 +110,18 @@ export default function SignIn() {
         placeholder="Enter Password"
         onChangeFunc={(p) => setPassword(p)}
       />
-      <p onClick={signUp}>
-        Don't have an account? <span className="pointer">Sign up</span>
+      <span className="pointer right">Forgot Password?</span>
+      <Button text={buttonText} onClickFunc={handleSignIn}></Button>
+      <p className="label">Or sign up with</p>
+      <SignOn icon={faAppleWhole} text="Continue with Apple" />
+      <SignOn icon={faSitemap} text="Continue with Google" />
+      <SignOn icon={faBook} text="Continue with Facebook" />
+      <p>
+        Don't have an account?{" "}
+        <span className="pointer" onClick={signUp}>
+          Sign up
+        </span>
       </p>
-      <Button text="Log In" onClickFunc={handleSignIn}></Button>
     </div>
   );
 }

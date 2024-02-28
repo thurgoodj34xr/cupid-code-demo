@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import classes from "./sign_up.module.css";
+import classes from "./sign_up_cupid.module.css";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
@@ -7,16 +7,13 @@ import * as Api from "../../hook/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
-function SignUp() {
+function SignUpCupid() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState();
   const [buttonText, setButtonText] = useState("Sign Up");
-  const [age, setAge] = useState();
-  const [budget, setBudget] = useState();
-  const [goals, setGoals] = useState();
 
   let navigate = useNavigate();
 
@@ -62,45 +59,34 @@ function SignUp() {
         />
       </div>
       <h1>Create Account</h1>
-      <p className="label">Type of Account: Standard</p>
+      <p className="label">Type of Account: Cupid</p>
       {error && <p className="error">{error}</p>}
       <Input
+        text="First Name"
         inputType="text"
         placeholder="Enter First Name"
         onChangeFunc={(name) => setFirstName(name)}
       />
       <Input
+        text="Last Name"
         inputType="text"
         placeholder="Enter Last Name"
         onChangeFunc={(name) => setLastName(name)}
       />
       <Input
+        text="Email"
         inputType="email"
         placeholder="Enter Email"
         onChangeFunc={handleEmail}
       />
       <Input
+        text="Password"
         inputType="password"
         placeholder="Enter Password"
         onChangeFunc={handlePassword}
       />
-      <Input
-        inputType="number"
-        placeholder="Enter Age"
-        onChangeFunc={(age) => setAge(age)}
-      />
-      <Input
-        inputType="number"
-        placeholder="Enter Budget Per Date"
-        onChangeFunc={(budget) => setBudget(budget)}
-      />
-      <Input
-        inputType="text"
-        placeholder="Enter Relationship Goals"
-        onChangeFunc={(goals) => setGoals(goals)}
-      />
       <p>
-        Already have an account?{" "}
+        Already have an account?
         <span className="pointer" onClick={signIn}>
           Sign In
         </span>
@@ -110,4 +96,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUpCupid;

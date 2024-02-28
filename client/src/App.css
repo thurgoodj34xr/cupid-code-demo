@@ -64,6 +64,26 @@ body {
 }
 .container label {
   margin-bottom: -10px;
+
+  
 }
+
+.rotate {
+  animation: div-rotate 0.7s infinite steps(8);
+}
+
+.right  {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+@keyframes div-rotate {
+  0% { transform: rotate(  0deg) scale(1);}
+100% { transform: rotate(360deg) scale(1);}
+}
+
 
 

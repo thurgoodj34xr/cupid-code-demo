@@ -12,6 +12,7 @@
   box-sizing: border-box;
 }
 
+
 h1 {
   margin: 0px;
 }
@@ -85,4 +86,9 @@ h1 {
   color: #007AFF;
   font-weight: 500;
 
+}
+
+.back {
+    width: 100%;
+    text-align: left;
 }

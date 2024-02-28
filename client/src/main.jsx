@@ -13,6 +13,8 @@ import SelectCupid from "./pages/select_cupid/select_cupid";
 import MyAccount from "./pages/my_account/my_account";
 import CupidCash from "./pages/cupid_cash/cupid_cash";
 import Purchases from "./pages/purchases/purchases";
+import SelectAccount from "./pages/select_account/select_account.jsx";
+import SignUpCupid from "./pages/signUpCupid/sign_up_cupid.jsx";
 
 const router = createHashRouter([
   {
@@ -26,6 +28,14 @@ const router = createHashRouter([
       {
         path: "/signUp",
         element: <SignUp />,
+      },
+      {
+        path: "/signUpCupid",
+        element: <SignUpCupid />,
+      },
+      {
+        path: "/selectAccount",
+        element: <SelectAccount />,
       },
       {
         path: "/Home",
