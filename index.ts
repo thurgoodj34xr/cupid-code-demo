@@ -153,20 +153,25 @@ app.use((req, res, next) => {
 // ************** Protected Endpoints ***************
 
 // ************** Adding New CupidCash ***************
-app.post("/addCupidCash", async (req, res) => {
-  try {
-    const { newTotal, userID } = req.body
-    const balance = await User.updateUserBalance(userID, newTotal)
-
-    // Handle success, send response, etc.
-    res.status(200).json({ success: true, message: "Balance updated successfully", balance });
-  } catch (error) {
-    // Handle error
-    console.error("Error updating user balance:", error);
-
-    // Send an error response to the client
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+app.post("/changeCupidCash", async (req, res) => {
+  const { changeAmount, userID } = req.body
+  const currentValues = await User.findUserById(userID)
+  if (currentValues == null) {
+    res.send({ error: "An error occured with your user Profile" })
   }
+  // Check if profile.balance is defined before trying to convert it
+  const balanceString = currentValues?.profile?.balance?.toString();
+
+  // Parse the balance as a float
+  const balanceFloat = parseFloat(balanceString || '0');
+  const newBalance = balanceFloat + changeAmount
+  if (newBalance < 0) {
+    res.send({ error: "You are spending too much money" });
+  }
+  const balance = await User.updateUserBalance(userID, newBalance)
+
+  // Handle success, send response, etc.
+  res.status(200).json({ success: true, message: "Balance updated successfully", newBalance: newBalance });
 });
 
 app.listen(process.env.PORT || 3000, () => {

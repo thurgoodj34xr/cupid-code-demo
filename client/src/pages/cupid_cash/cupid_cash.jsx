@@ -16,16 +16,15 @@ function CupidCash() {
 
 
   const handleAddBalance = async () => {
-    const newTotal = amountToAdd + parseFloat(user.profile.balance)
     const userID = user.id
     try {
-      const response = await Api.PostWithAuth("/addCupidCash", { newTotal, userID }, context);
+      const response = await Api.PostWithAuth("/changeCupidCash", { changeAmount: amountToAdd, userID }, context);
 
       if (!response.error) {
         // Update user profile with the new balance
-        user.profile.balance = newTotal;
+        user.profile.balance = response.newBalance;
         context.updateUser(user);
-        setUserBalance(newTotal)
+        setUserBalance(response.newBalance)
         setAmountToAdd(0)
       } else {
         console.log("Failed to update balance");
@@ -50,7 +49,6 @@ function CupidCash() {
           name="addBalance"
           value={amountToAdd}
           onChange={handleAmountChange}
-          min="0"
           step="5"
         />
         <button onClick={handleAddBalance}>Add to Balance</button>
