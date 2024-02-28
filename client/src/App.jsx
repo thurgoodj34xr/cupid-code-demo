@@ -106,16 +106,12 @@ function App() {
   return (
     <AppContext.Provider value={userSettings}>
       {notification ? <Notification text={notification} /> : ""}
-      <div className="main">
-        {!user ? (
-          ""
-        ) : (
-          <section>
-            <Navbar title={location.join(" ")}></Navbar>
-          </section>
-        )}
+      <div className={user ? "background" : "background gradient"}>
+        <div className="main">
+          {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
 
-        <Outlet />
+          <Outlet />
+        </div>
       </div>
     </AppContext.Provider>
   );

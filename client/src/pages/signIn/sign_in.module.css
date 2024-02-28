@@ -6,4 +6,6 @@
     flex-direction: column;
     gap: 20px;
     box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
 }
