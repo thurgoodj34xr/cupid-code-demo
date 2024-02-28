@@ -91,7 +91,6 @@ export async function PostWithAuth(route, body, context) {
 }
 
 async function PostWithToken(route, body, accessToken) {
-  console.log("here")
   return await fetch(route, {
     method: "post",
     headers: {
