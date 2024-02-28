@@ -7,7 +7,7 @@ import * as User from "./services/user";
 import * as Auth from "./services/auth";
 import * as Jwt from "./utils/jwt";
 import jwt from "jsonwebtoken";
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import tokenHasher from "./utils/hashToken";
 dotenv.config();
@@ -57,7 +57,21 @@ app.get(['/'], (req, res) => {
 
 
 // ***************** Un-Protected EndPoints ***************
+app.post("/addCupidCash", async (req, res) => {
+  try {
+    const { newTotal, userID } = req.body
+    const balance = await User.updateUserBalance(userID, newTotal)
 
+    // Handle success, send response, etc.
+    res.status(200).json({ success: true, message: "Balance updated successfully", balance });
+  } catch (error) {
+    // Handle error
+    console.error("Error updating user balance:", error);
+
+    // Send an error response to the client
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+});
 
 
 
@@ -65,13 +79,13 @@ app.get(['/'], (req, res) => {
 // ***************** Signin Endpoint ******************
 
 app.post("/signin", async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   const user = await User.findUserByEmail(email);
 
   if (user && bcrypt.compareSync(password, user.password)) {
-      const { accessToken, refreshToken } = Jwt.generateTokens(user);
-      await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-      res.send({user: user, tokens: {accessToken, refreshToken}});
+    const { accessToken, refreshToken } = Jwt.generateTokens(user);
+    await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+    res.send({ user: user, tokens: { accessToken, refreshToken } });
   } else {
     res.send({ error: "Invalid login credentials." });
   }
@@ -84,32 +98,32 @@ app.post("/signup", async (req, res) => {
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
-    res.send({error: "Email already in use"});
+    res.send({ error: "Email already in use" });
     return;
   }
 
-  const user = await User.createUser({firstName, lastName, email, password});
+  const user = await User.createUser({ firstName, lastName, email, password });
   const { refreshToken } = Jwt.generateTokens(user);
   await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-  res.send({success: true});
+  res.send({ success: true });
 })
 
 // ***************** Endpoint to verify a token ***********************
 
 app.post("/verifyToken", async (req, res) => {
-  const {token} = req.body;
+  const { token } = req.body;
   try {
     jwt.verify(token, process.env.JWT_ACCESS_SECRET!!);
   } catch (err) {
-    res.send({error: "Expired"})
+    res.send({ error: "Expired" })
     return;
   }
-  
+
   const user = await Auth.findUserByToken(tokenHasher(token))
   if (!user) {
-    res.send({error: "Invalid Token"})
+    res.send({ error: "Invalid Token" })
   } else {
-    res.send({user})
+    res.send({ user })
   }
 })
 
@@ -118,16 +132,17 @@ app.post("/verifyToken", async (req, res) => {
 // ************** End point to refresh the access token *************
 
 app.post("/refreshToken", async (req, res) => {
-  const {user, refreshToken} = req.body;
+  const { user, refreshToken } = req.body;
 
   if (await !Auth.findRefreshTokenById(refreshToken)) {
-    res.send({error: "Access Denied"})
+    res.send({ error: "Access Denied" })
     return;
   }
   const newToken = Jwt.generateAccessToken(user);
   await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-  res.send({tokens: {accessToken: newToken, refreshToken}});
+  res.send({ tokens: { accessToken: newToken, refreshToken } });
 })
+
 
 // ********** Middleware to validate the access token ***************
 
@@ -139,7 +154,7 @@ app.use((req, res, next) => {
     next();
   } catch (err) {
     console.log("Token expired")
-    res.send({error: err})
+    res.send({ error: err })
   }
 })
 
