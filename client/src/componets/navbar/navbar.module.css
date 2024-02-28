@@ -5,6 +5,7 @@
     align-items: center;
     animation: fade-in 1.5s forwards;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 @keyframes fade-in {

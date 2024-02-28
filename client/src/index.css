@@ -61,14 +61,15 @@ body {
 }
 
 .main {
-  width: 100vw;
-  height: 100svh;
+  margin: auto;
   max-height: 100svh;
   max-width: 800px;
   display: flex;
   flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
@@ -81,4 +82,7 @@ h1 {
 
 .pointer {
   cursor: pointer;
+  color: #007AFF;
+  font-weight: 500;
+
 }

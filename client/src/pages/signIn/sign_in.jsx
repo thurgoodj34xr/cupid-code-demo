@@ -97,7 +97,7 @@ export default function SignIn() {
         onChangeFunc={(p) => setPassword(p)}
       />
       <p onClick={signUp}>
-        Dont have an account? <span className="pointer">Sign up</span>
+        Don't have an account? <span className="pointer">Sign up</span>
       </p>
       <Button text="Log In" onClickFunc={handleSignIn}></Button>
     </div>
