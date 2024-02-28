@@ -58,7 +58,12 @@ app.get(['/'], (req, res) => {
 
 // ***************** Un-Protected EndPoints ***************
 
-
+let ct = 0;
+app.post("/number", (req,res) => {
+  const {inc} = req.body;
+  ct += inc
+  res.send({ct});
+})
 
 
 
@@ -106,10 +111,12 @@ app.post("/verifyToken", async (req, res) => {
   }
   
   const user = await Auth.findUserByToken(tokenHasher(token))
+
+  const accessToken = Jwt.generateAccessToken(user);
   if (!user) {
     res.send({error: "Invalid Token"})
   } else {
-    res.send({user})
+    res.send({user, tokens: {refreshToken: token, accessToken}})
   }
 })
 
