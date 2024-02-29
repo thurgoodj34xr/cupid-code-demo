@@ -1,13 +1,11 @@
-.inputV {
+.txt {
     display: flex;
     flex-direction: column;
     gap: 20px;
     text-align: left;
-}
-
-.inputV input {
-    padding: 10px;
-    border-radius: 8px;
     background-color: rgb(241, 244, 248);
+    border-radius: 8px;
+    padding: 10px;
+    border-width: 2px;
 }
 

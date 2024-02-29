@@ -13,8 +13,53 @@
     max-width: 600px;
     top: 50%;
     transform: translateY(-50%);
+    animation: fadein 2s forwards;
 }
 
 .container label {
     margin-bottom: -10px;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: .2;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.select {
+    box-sizing: border-box;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(241, 244, 248);
+    justify-content: space-between;
+    padding: 10px 20px 10px 20px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.select p {
+    cursor: pointer;
+    padding: 10px;
+    width: 40%;
+}
+
+.type  {
+    background-color: #007AFF;
+    border-radius: 8px;
+    color: white;
+    animation: fadein 1s forwards;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: .2;
+    }
+    100% {
+        opacity: 1;
+    }
 }

@@ -13,6 +13,7 @@
     max-width: 600px;
     top: 50%;
     transform: translateY(-50%);
+    animation: fadein 2s forwards;
 }
 
 .signOn {
@@ -29,3 +30,11 @@
     gap: 10px;
     align-items: center;
 }
+@keyframes fadein {
+    0%{
+      opacity: .2;
+    }
+    100% {
+      opacity: 1;
+    }
+  }

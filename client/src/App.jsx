@@ -10,6 +10,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [tokens, setTokens] = useState(null);
   const [notification, setNotification] = useState("");
+  const [accountT, setAccountT] = useState("Standard");
 
   const location = useLocation()
     .pathname.replace("/", "")
@@ -64,6 +65,14 @@ function App() {
     return notification;
   }
 
+  function setAccountType(t) {
+    setAccountT(t);
+  }
+
+  function getAccountType() {
+    return accountT;
+  }
+
   /*
     These functions will be avalible for access on 
     any of the pages. Feel free to add more of them
@@ -79,6 +88,8 @@ function App() {
     RefreshToken,
     sendNotification,
     getNotification,
+    setAccountType,
+    getAccountType,
   };
   /*
         **************  Context Setup ******************

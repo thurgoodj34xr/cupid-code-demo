@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import * as Api from "../../hook/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import AppContext from "../../componets/app_context";
+import TextArea from "../../componets/text_area/text_area";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -17,8 +19,20 @@ function SignUp() {
   const [age, setAge] = useState();
   const [budget, setBudget] = useState();
   const [goals, setGoals] = useState();
+  const [male, setMale] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState();
 
+  const context = useContext(AppContext);
+  const userType = context.getAccountType();
   let navigate = useNavigate();
+
+  const setUser = () => {
+    setMale(true);
+  };
+
+  const setCupid = () => {
+    setMale(false);
+  };
 
   function handleEmail(email) {
     setEmail(email);
@@ -29,14 +43,23 @@ function SignUp() {
   }
 
   const signUp = async () => {
+    if (password != confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     setButtonText(
-      <FontAwesomeIcon className="rotate" icon={faSpinner} size="2xl" />
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
     const res = await Api.Post("/signup", {
+      userType,
       firstName,
       lastName,
       email,
       password,
+      age,
+      budget,
+      goals,
     });
 
     if (res.error) {
@@ -62,7 +85,7 @@ function SignUp() {
         />
       </div>
       <h1>Create Account</h1>
-      <p className="label">Type of Account: Standard</p>
+      <p className="label">Create an account by filling out the form below.</p>
       {error && <p className="error">{error}</p>}
       <Input
         inputType="text"
@@ -85,20 +108,39 @@ function SignUp() {
         onChangeFunc={handlePassword}
       />
       <Input
-        inputType="number"
-        placeholder="Enter Age"
-        onChangeFunc={(age) => setAge(age)}
+        inputType="password"
+        placeholder="Confirm Password"
+        onChangeFunc={(p) => setConfirmPassword(p)}
       />
-      <Input
-        inputType="number"
-        placeholder="Enter Budget Per Date"
-        onChangeFunc={(budget) => setBudget(budget)}
-      />
-      <Input
-        inputType="text"
-        placeholder="Enter Relationship Goals"
-        onChangeFunc={(goals) => setGoals(goals)}
-      />
+      {userType != "Standard" ? (
+        ""
+      ) : (
+        <>
+          <Input
+            inputType="number"
+            placeholder="Enter Age"
+            onChangeFunc={(age) => setAge(age)}
+          />
+          <Input
+            inputType="number"
+            placeholder="Enter Budget Per Date"
+            onChangeFunc={(budget) => setBudget(budget)}
+          />
+          <TextArea
+            placeholder="Enter Relationship Goals"
+            onChangeFunc={(e) => setGoals(e)}
+          />
+          <div className={classes.select}>
+            <p onClick={setUser} className={male ? classes.type : ""}>
+              Male
+            </p>
+            <p>|</p>
+            <p onClick={setCupid} className={male ? "" : classes.type}>
+              Female
+            </p>
+          </div>
+        </>
+      )}
       <p>
         Already have an account?{" "}
         <span className="pointer" onClick={signIn}>

@@ -13,6 +13,15 @@ import {
   faSitemap,
 } from "@fortawesome/free-solid-svg-icons";
 import SignOn from "../../componets/sign_on/sign_on";
+import {
+  FaApple,
+  FaBeer,
+  FaFacebook,
+  FaFacebookMessenger,
+  FaFacebookSquare,
+  FaGoogle,
+  FaGooglePay,
+} from "react-icons/fa";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -69,7 +78,7 @@ export default function SignIn() {
   }
   const handleSignIn = async () => {
     setButtonText(
-      <FontAwesomeIcon className="rotate" icon={faSpinner} size="2xl" />
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
     const res = await Api.Post("/signin", {
       email,
@@ -95,17 +104,15 @@ export default function SignIn() {
     <div></div>
   ) : (
     <div className={classes.sign_in}>
-      <h1>Get Started</h1>
+      <h1>Cupid Code</h1>
       {error && <p className="error">{error}</p>}
       <p className="label">Let’s get started by filling out the form below.</p>
       <Input
         inputType="email"
-        text="Email"
         placeholder="Enter Email"
         onChangeFunc={(email) => setEmail(email)}
       />
       <Input
-        text="Password"
         inputType="password"
         placeholder="Enter Password"
         onChangeFunc={(p) => setPassword(p)}
@@ -113,9 +120,12 @@ export default function SignIn() {
       <span className="pointer right">Forgot Password?</span>
       <Button text={buttonText} onClickFunc={handleSignIn}></Button>
       <p className="label">Or sign up with</p>
-      <SignOn icon={faAppleWhole} text="Continue with Apple" />
-      <SignOn icon={faSitemap} text="Continue with Google" />
-      <SignOn icon={faBook} text="Continue with Facebook" />
+      <SignOn ricon={<FaApple size="2rem" />} text="Continue with Apple" />
+      <SignOn ricon={<FaGoogle size="2rem" />} text="Continue with Google" />
+      <SignOn
+        ricon={<FaFacebook size="2rem" />}
+        text="Continue with Facebook"
+      />
       <p>
         Don't have an account?{" "}
         <span className="pointer" onClick={signUp}>
