@@ -2,16 +2,19 @@ import classes from "./cupid_cash.module.css";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";
+import Input from "../../componets/inputs/input";
+import Button from "../../componets/button/button";
 
 function CupidCash() {
   const context = useContext(AppContext);
   const user = context.getUser();
-  const [amountToAdd, setAmountToAdd] = useState(5);
-  const [creditCard, setCreditCard] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
-  const [cvv, setCVV] = useState('');
+  const [amountToAdd, setAmountToAdd] = useState(0);
+  const [creditCard, setCreditCard] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [cvv, setCVV] = useState("");
   const [userBalance, setUserBalance] = useState(user.profile.balance);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [zip, setZip] = useState(0);
 
   // Client-side validation function
   const validateAmount = (value) => {
@@ -27,7 +30,7 @@ function CupidCash() {
   // TODO: This should be server side validation for data integrity
   const validateCreditCardInfo = () => {
     // Remove spaces from the credit card number before validation
-    const cleanedCreditCard = creditCard.replace(/\s/g, '');
+    const cleanedCreditCard = creditCard.replace(/\s/g, "");
 
     // Credit card number validation (16 digits)
     const creditCardRegex = /^\d{16}$/;
@@ -44,9 +47,15 @@ function CupidCash() {
 
     // Check if the card has not expired
     const currentDate = new Date();
-    const enteredExpirationDate = new Date(`20${expirationDate.split('/')[1]}`, expirationDate.split('/')[0] - 1, 1);
+    const enteredExpirationDate = new Date(
+      `20${expirationDate.split("/")[1]}`,
+      expirationDate.split("/")[0] - 1,
+      1
+    );
     if (enteredExpirationDate < currentDate) {
-      setErrorMessage("Card has expired. Please enter a valid expiration date.");
+      setErrorMessage(
+        "Card has expired. Please enter a valid expiration date."
+      );
       return false;
     }
 
@@ -60,31 +69,22 @@ function CupidCash() {
     return true;
   };
 
-  const handleAmountChange = (event) => {
-    const newValue = parseInt(event.target.value, 10) || 0;
+  const handleAmountChange = (v) => {
+    const newValue = parseInt(v, 10) || 0;
     setAmountToAdd(newValue);
   };
 
-  const handleCreditCardChange = (event) => {
+  function creditCardValidation(value) {
     // Remove non-numeric characters from input
-    const cleanedValue = event.target.value.replace(/\D/g, '');
+    const cleanedValue = value.replace(/\D/g, "");
 
     // Limit the credit card number to a maximum of 16 characters
     const truncatedValue = cleanedValue.slice(0, 16);
 
     // Format credit card number with spaces every 4 digits
-    const formattedValue = truncatedValue.replace(/(\d{4})/g, '$1 ').trim();
-
-    setCreditCard(formattedValue);
-  };
-
-  const handleExpirationDateChange = (event) => {
-    setExpirationDate(event.target.value);
-  };
-
-  const handleCVVChange = (event) => {
-    setCVV(event.target.value);
-  };
+    const formattedValue = truncatedValue.replace(/(\d{4})/g, "$1 ").trim();
+    return formattedValue;
+  }
 
   const handleAddBalance = async () => {
     // Validate the amount on the client side before making the API call
@@ -97,10 +97,13 @@ function CupidCash() {
       return;
     }
 
-
     const userID = user.id;
 
-    const response = await Api.PostWithAuth("/changeCupidCash", { changeAmount: amountToAdd, userID }, context);
+    const response = await Api.PostWithAuth(
+      "/changeCupidCash",
+      { changeAmount: amountToAdd, userID },
+      context
+    );
 
     if (!response.error) {
       // Update user profile with the new balance
@@ -119,60 +122,52 @@ function CupidCash() {
   };
 
   return (
-    <section>
+    <section className={classes.main}>
       <div>
-        Welcome {user.firstName}, you currently have {userBalance} cupid bucks in your account.
+        <p className="label">Current balance: {userBalance}</p>
       </div>
       {errorMessage && (
         <div style={{ color: "red", marginTop: "10px" }}>
           Error: {errorMessage}
         </div>
       )}
-      <div>
-        <label htmlFor="addBalance">Add to Balance:</label>
-        <input
-          type="number"
-          id="addBalance"
-          name="addBalance"
-          value={amountToAdd}
-          onChange={handleAmountChange}
-          step="5"
-        />
+      <Input
+        inputType="number"
+        state={amountToAdd == 0 ? "" : amountToAdd}
+        setState={setAmountToAdd}
+        placeholder="Enter Amount"
+      />
+      <Input
+        inputType="text"
+        state={creditCard}
+        setState={setCreditCard}
+        placeholder="Card Number"
+        validationFunc={(v) => creditCardValidation(v)}
+      />
+      <Input
+        inputType="text"
+        state={zip == 0 ? "" : zip}
+        setState={setZip}
+        placeholder="Zip"
+      />
+      <div className={classes.row}>
+        <div className="w-50">
+          <Input
+            state={expirationDate}
+            setState={setExpirationDate}
+            placeholder={"Exp. Date"}
+          />
+        </div>
+        <div className="w-50">
+          <Input
+            inputType="text"
+            state={cvv}
+            setState={setCVV}
+            placeholder="CVV"
+          />
+        </div>
       </div>
-      <div>
-        <label htmlFor="creditCard">Credit Card Number:</label>
-        <input
-          type="text"
-          id="creditCard"
-          name="creditCard"
-          value={creditCard}
-          onChange={handleCreditCardChange}
-          placeholder="xxxx xxxx xxxx xxxx"
-        />
-      </div>
-      <div>
-        <label htmlFor="expirationDate">Expiration Date (MM/YY):</label>
-        <input
-          type="text"
-          id="expirationDate"
-          name="expirationDate"
-          value={expirationDate}
-          onChange={handleExpirationDateChange}
-          placeholder="MM/YY"
-        />
-      </div>
-      <div>
-        <label htmlFor="cvv">CVV:</label>
-        <input
-          type="text"
-          id="cvv"
-          name="cvv"
-          value={cvv}
-          onChange={handleCVVChange}
-          placeholder="xxx"
-        />
-      </div>
-      <button onClick={handleAddBalance}>Buy Cupid Cash!!</button>
+      <Button onClickFunc={handleAddBalance} text="Add Cupid Cash" />
     </section>
   );
 }

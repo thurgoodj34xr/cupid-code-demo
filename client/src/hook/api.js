@@ -66,8 +66,6 @@ async function GetWithToken(route, accessToken) {
 
 // ------------ POST REQUESTS ---------------
 
-
-
 export async function Post(route, body) {
   return await fetch(route, {
     method: "post",
@@ -104,14 +102,13 @@ async function PostWithToken(route, body, accessToken) {
 
 // Used to generate a new Refresh Token
 async function RefreshToken(context) {
-  return await fetch("/refreshToken", {
+  return await fetch("/verifyToken", {
     method: "post",
     headers: {
       "Content-type": "application/json",
     },
     body: JSON.stringify({
-      user: context.getUser(),
-      refreshToken: context.getTokens().refreshToken,
+      token: context.getTokens().refreshToken,
     }),
   })
     .then((res) => res.json())

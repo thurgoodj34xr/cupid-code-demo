@@ -8,13 +8,13 @@ export function findUserByEmail(email: string) {
     },
     include: {
       profile: true,
-    }
+    },
   });
 }
 
 export function createUser(user: any) {
   user.password = bcrypt.hashSync(user.password, 12);
-  const { firstName, lastName, email, password } = user;
+  const {  firstName, lastName, email, password, age, budget, goals } = user;
   return db.user.create({
     data: {
       firstName,
@@ -22,7 +22,11 @@ export function createUser(user: any) {
       email,
       password: password,
       profile: {
-        create: {}
+        create: {
+          age: parseInt(age),
+          dailyBudget: parseFloat(budget),
+          relationshipGoals: goals,
+        }
       }
     },
     include: {

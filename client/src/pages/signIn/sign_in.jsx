@@ -110,12 +110,14 @@ export default function SignIn() {
       <Input
         inputType="email"
         placeholder="Enter Email"
-        onChangeFunc={(email) => setEmail(email)}
+        state={email}
+        setState={setEmail}
       />
       <Input
         inputType="password"
         placeholder="Enter Password"
-        onChangeFunc={(p) => setPassword(p)}
+        state={password}
+        setState={setPassword}
       />
       <span className="pointer right">Forgot Password?</span>
       <Button text={buttonText} onClickFunc={handleSignIn}></Button>

@@ -1,7 +1,7 @@
 import classes from "./daily_notificaiton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-function DailyNotification({ title, body }) {
+function DailyNotification({ title, body, time }) {
   return (
     <div className={classes.container}>
       <div className={classes.left}>
@@ -12,7 +12,7 @@ function DailyNotification({ title, body }) {
         <div className={classes.icon}>
           <FontAwesomeIcon icon={faChevronRight} size="lg" />
         </div>
-        <p className="label">2m</p>
+        <p className="label">{time}</p>
       </div>
     </div>
   );
