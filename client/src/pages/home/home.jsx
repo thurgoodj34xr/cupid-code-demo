@@ -7,7 +7,6 @@ import AppContext from "../../componets/app_context";
 function Home() {
   const context = useContext(AppContext);
   const user = context.getUser();
-
   return (
     <section className={classes.container}>
       {/* Container for Budget */}
@@ -32,10 +31,12 @@ function Home() {
       <DailyNotification
         title="Be Yourself"
         body="Authenticity is attractive. Don't try to be someone you're not just to.."
+        time="2m"
       />
       <DailyNotification
         title="Smell Good"
         body="Take a moment in your morning routine to put on some..."
+        time="4m"
       />
     </section>
   );

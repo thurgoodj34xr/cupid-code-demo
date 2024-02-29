@@ -14,6 +14,7 @@ function CupidCash() {
   const [cvv, setCVV] = useState("");
   const [userBalance, setUserBalance] = useState(user.profile.balance);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [zip, setZip] = useState(0);
 
   // Client-side validation function
   const validateAmount = (value) => {
@@ -123,8 +124,7 @@ function CupidCash() {
   return (
     <section className={classes.main}>
       <div>
-        Welcome {user.firstName}, you currently have {userBalance} cupid bucks
-        in your account.
+        <p className="label">Current balance: {userBalance}</p>
       </div>
       {errorMessage && (
         <div style={{ color: "red", marginTop: "10px" }}>
@@ -141,15 +141,32 @@ function CupidCash() {
         inputType="text"
         state={creditCard}
         setState={setCreditCard}
-        placeholder="xxxx xxxx xxxx xxxx"
+        placeholder="Card Number"
         validationFunc={(v) => creditCardValidation(v)}
       />
       <Input
-        state={expirationDate}
-        setState={setExpirationDate}
-        placeholder={"MM/YY"}
+        inputType="text"
+        state={zip == 0 ? "" : zip}
+        setState={setZip}
+        placeholder="Zip"
       />
-      <Input inputType="text" state={cvv} setState={setCVV} placeholder="xxx" />
+      <div className={classes.row}>
+        <div className="w-50">
+          <Input
+            state={expirationDate}
+            setState={setExpirationDate}
+            placeholder={"Exp. Date"}
+          />
+        </div>
+        <div className="w-50">
+          <Input
+            inputType="text"
+            state={cvv}
+            setState={setCVV}
+            placeholder="CVV"
+          />
+        </div>
+      </div>
       <Button onClickFunc={handleAddBalance} text="Add Cupid Cash" />
     </section>
   );

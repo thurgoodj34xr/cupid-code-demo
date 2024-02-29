@@ -101,3 +101,7 @@ h1 {
     width: 100%;
     text-align: left;
 }
+
+.w-50 {
+  width: 50%;
+}

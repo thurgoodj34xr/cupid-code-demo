@@ -10,6 +10,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import tokenHasher from "./utils/hashToken";
+import { Decimal } from "@prisma/client/runtime/library";
 dotenv.config();
 
 
@@ -78,17 +79,24 @@ app.post("/signin", async (req, res) => {
 // ******************* Sign up Endpoint *************************
 
 app.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { userType, firstName, lastName, email, password, age, budget, goals, } = req.body;
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
     res.send({ error: "Email already in use" });
-  } else {
-    if (await User.createUser({ firstName, lastName, email, password })) {
-      res.send({ success: true });
-    } else {
-      res.send({error: "An error occured"});
-    }
+    return;
+  }
+
+  switch (userType) {
+    case 'Standard':
+      if (await User.createUser({ firstName, lastName, email, password, age, budget, goals })) {
+        res.send({ success: true });
+      } else {
+        res.send({ error: "An error occured" });
+      }
+      break;
+      default:
+        res.send({error: "Invalid user type"})
   }
 })
 
@@ -126,25 +134,17 @@ app.use((req, res, next) => {
 // ************** Changing CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {
   const { changeAmount, userID } = req.body
-  const currentValues = await User.getUserByProfile(userID)
-  if (currentValues == null) {
-    res.send({ error: "An error occurred with your user Profile" })
+  try {
+    const user = await User.findUserById(userID);
+    const currentBalance = user!!.profile!!.balance.toNumber();
+    const newBalance = currentBalance + parseFloat(changeAmount);
+    await User.updateUserBalance(userID, newBalance)
+    res.send({ newBalance });
+  } catch (error) {
+    console.log({ error })
+    res.send({ error: "Access Denied" })
     return;
   }
-  // Check if profile.balance is defined before trying to convert it
-  const balanceString = currentValues?.profile?.balance?.toString();
-
-  // Parse the balance as a float
-  const balanceFloat = parseFloat(balanceString || '0');
-  const newBalance = balanceFloat + changeAmount
-  if (newBalance < 0) {
-    res.send({ error: "You are spending too much money" });
-    return;
-  }
-  await User.updateUserBalance(userID, newBalance)
-
-  // Handle success, send response, etc.
-  res.send({ message: "Balance updated successfully", newBalance: newBalance });
 });
 
 app.listen(process.env.PORT || 3000, () => {
