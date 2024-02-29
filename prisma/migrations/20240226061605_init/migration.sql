@@ -37,6 +37,20 @@ CREATE TABLE "RefreshToken" (
     CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Purchases" (
+  "id"          SERIAL NOT NULL,
+  "userId"      INTEGER NOT NULL,
+  "cupidId"     INTEGER NOT NULL,
+  "total"       DECIMAL(65,30) NOT NULL DEFAULT 0,
+  "jobCost"     DECIMAL(65,30) NOT NULL DEFAULT 0,
+  "cupidPayout" DECIMAL(65,30) NOT NULL DEFAULT 0,
+  "details"     TEXT,
+  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "Purchases_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -45,6 +59,9 @@ CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RefreshToken_userId_key" ON "RefreshToken"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Purchases_id_key" ON "Purchases"("id");
 
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -49,3 +49,14 @@ model RefreshToken {
   User        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
 }
+
+model Purchases {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  cupidId     Int
+  total       Decimal
+  jobCost     Decimal
+  cupidPayout Decimal
+  details     String   @default("Cupid Code Intervention")
+  timestamp   DateTime @default(now())
+}
