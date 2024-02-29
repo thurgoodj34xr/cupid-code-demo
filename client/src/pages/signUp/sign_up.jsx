@@ -14,13 +14,13 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
   const [buttonText, setButtonText] = useState("Sign Up");
-  const [age, setAge] = useState();
-  const [budget, setBudget] = useState();
-  const [goals, setGoals] = useState();
+  const [age, setAge] = useState(0);
+  const [budget, setBudget] = useState(0);
+  const [goals, setGoals] = useState("");
   const [male, setMale] = useState(true);
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const context = useContext(AppContext);
   const userType = context.getAccountType();
@@ -90,27 +90,33 @@ function SignUp() {
       <Input
         inputType="text"
         placeholder="Enter First Name"
-        onChangeFunc={(name) => setFirstName(name)}
+        state={firstName}
+        setState={setFirstName}
+        require
       />
       <Input
         inputType="text"
         placeholder="Enter Last Name"
-        onChangeFunc={(name) => setLastName(name)}
+        state={lastName}
+        setState={setLastName}
       />
       <Input
         inputType="email"
         placeholder="Enter Email"
-        onChangeFunc={handleEmail}
+        state={email}
+        setState={setEmail}
       />
       <Input
         inputType="password"
         placeholder="Enter Password"
-        onChangeFunc={handlePassword}
+        state={password}
+        setState={setPassword}
       />
       <Input
         inputType="password"
         placeholder="Confirm Password"
-        onChangeFunc={(p) => setConfirmPassword(p)}
+        state={confirmPassword}
+        setState={setConfirmPassword}
       />
       {userType != "Standard" ? (
         ""
@@ -119,16 +125,19 @@ function SignUp() {
           <Input
             inputType="number"
             placeholder="Enter Age"
-            onChangeFunc={(age) => setAge(age)}
+            state={age == 0 ? "" : age}
+            setState={setAge}
           />
           <Input
             inputType="number"
             placeholder="Enter Budget Per Date"
-            onChangeFunc={(budget) => setBudget(budget)}
+            state={budget == 0 ? "" : budget}
+            setState={setBudget}
           />
           <TextArea
             placeholder="Enter Relationship Goals"
-            onChangeFunc={(e) => setGoals(e)}
+            state={goals}
+            setState={setGoals}
           />
           <div className={classes.select}>
             <p onClick={setUser} className={male ? classes.type : ""}>

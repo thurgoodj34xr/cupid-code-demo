@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import * as User from "./services/user";
 import * as Auth from "./services/auth";
 import * as Jwt from "./utils/jwt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import tokenHasher from "./utils/hashToken";
@@ -57,12 +57,6 @@ app.get(['/'], (req, res) => {
 
 
 // ***************** Un-Protected EndPoints ***************
-let ct = 0;
-app.post("/number", (req, res) => {
-  const { inc } = req.body;
-  ct += inc
-  res.send({ ct });
-})
 
 
 
@@ -89,13 +83,13 @@ app.post("/signup", async (req, res) => {
 
   if (existingUser) {
     res.send({ error: "Email already in use" });
-    return;
+  } else {
+    if (await User.createUser({ firstName, lastName, email, password })) {
+      res.send({ success: true });
+    } else {
+      res.send({error: "An error occured"});
+    }
   }
-
-  const user = await User.createUser({ firstName, lastName, email, password });
-  const { refreshToken } = Jwt.generateTokens(user);
-  await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-  res.send({ success: true });
 })
 
 // ***************** Endpoint to verify a token ***********************
@@ -103,38 +97,15 @@ app.post("/signup", async (req, res) => {
 app.post("/verifyToken", async (req, res) => {
   const { token } = req.body;
   try {
-    jwt.verify(token, process.env.JWT_ACCESS_SECRET!!);
+    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!!) as JwtPayload;
+    const user = await User.findUserById(parseInt(payload.userId))
+    const accessToken = Jwt.generateAccessToken(user);
+    res.send({ user, tokens: { refreshToken: token, accessToken } })
   } catch (err) {
     res.send({ error: "Expired" })
-    return;
-  }
-
-  const user = await Auth.findUserByToken(tokenHasher(token))
-
-  const accessToken = Jwt.generateAccessToken(user);
-  if (!user) {
-    res.send({ error: "Invalid Token" })
-  } else {
-    res.send({ user, tokens: { refreshToken: token, accessToken } })
+    console.log(err)
   }
 })
-
-
-
-// ************** End point to refresh the access token *************
-
-app.post("/refreshToken", async (req, res) => {
-  const { user, refreshToken } = req.body;
-
-  if (await !Auth.findRefreshTokenById(refreshToken)) {
-    res.send({ error: "Access Denied" })
-    return;
-  }
-  const newToken = Jwt.generateAccessToken(user);
-  await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-  res.send({ tokens: { accessToken: newToken, refreshToken } });
-})
-
 
 // ********** Middleware to validate the access token ***************
 

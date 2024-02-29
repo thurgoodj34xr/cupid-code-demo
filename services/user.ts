@@ -8,7 +8,7 @@ export function findUserByEmail(email: string) {
     },
     include: {
       profile: true,
-    }
+    },
   });
 }
 
