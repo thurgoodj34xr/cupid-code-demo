@@ -101,7 +101,7 @@ export default function SignIn() {
       />
       <p>Or Sign up with</p>
       <button style={{ backgroundColor: "black", color: "white" }}>Click me</button>
-          <button className={classes.facebookButton} text="Continue with Apple" onClickFunc={handleSignIn} ></button>
+          <Button text="Continue with Apple" onClickFunc={handleSignIn} ></Button>
           <Button text="Continue with Google" onClickFunc={handleSignIn}></Button>
           <Button text="Continue with Facebook" onClickFunc={handleSignIn}></Button>
       <p onClick={signUp}>
