@@ -132,7 +132,7 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
-// ************** Changing CupidCash in Account ***************
+// ************** Adding CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {
   const { changeAmount, userId } = req.body
   try {
@@ -180,15 +180,7 @@ app.post("/recordPurchase", async (req, res) => {
   }
 });
 
-// ************** Record Purchase ***************
-app.post("/getPurchaseHistory", async (req, res) => {
-  const { userId } = req.body
-  const purchases = await Purchases.findAllByUserId(userId)
-  res.send({ purchases })
-  return;
-});
-
-// ************** Record Purchase ***************
+// ************** Get Full Purchase History ***************
 app.post("/getPurchaseHistory", async (req, res) => {
   const { userId } = req.body
   const purchases = await Purchases.findAllByUserId(userId)
