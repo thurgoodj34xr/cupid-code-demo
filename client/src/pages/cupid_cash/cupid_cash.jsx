@@ -19,7 +19,7 @@ function CupidCash() {
   // Client-side validation function
   const validateAmount = (value) => {
     // TODO: In release we need this to be set back to 0, leaving as -10 to demonstrate negative values are accepted
-    if (isNaN(value) || value <= -100) {
+    if (isNaN(value) || value < 0) {
       setErrorMessage("Please enter a valid positive number.");
       return false;
     }
@@ -66,6 +66,7 @@ function CupidCash() {
       return false;
     }
 
+
     return true;
   };
 
@@ -86,6 +87,37 @@ function CupidCash() {
     return formattedValue;
   }
 
+  function zipCodeValidation(value) {
+    // Remove non-numeric characters from input
+    const cleanedValue = value.replace(/\D/g, "");
+
+    // Limit the zip code to a maximum of 5 characters
+    const truncatedValue = cleanedValue.slice(0, 5);
+    return truncatedValue
+  }
+
+  function expirationDateValidation(value) {
+    // Remove non-numeric characters from input
+    const cleanedValue = value.replace(/\D/g, "");
+
+    // Limit the month to a maximum of 4 characters
+    const truncatedValue = cleanedValue.slice(0, 4);
+
+    // Format month with a slash after the first two characters
+    if (truncatedValue.length == 2) return truncatedValue
+    const formattedValue = truncatedValue.replace(/(\d{2})(\d{0,2})/, "$1/$2").trim();
+    return formattedValue;
+  }
+
+  function cvvValidate(value) {
+    // Remove non-numeric characters from input
+    const cleanedValue = value.replace(/\D/g, "");
+
+    // Limit the cvv to a maximum of 3 characters
+    const truncatedValue = cleanedValue.slice(0, 3);
+    return truncatedValue
+  }
+
   const handleAddBalance = async () => {
     // Validate the amount on the client side before making the API call
     if (!validateAmount(amountToAdd)) {
@@ -97,11 +129,11 @@ function CupidCash() {
       return;
     }
 
-    const userID = user.id;
+    const userId = user.id;
 
     const response = await Api.PostWithAuth(
       "/changeCupidCash",
-      { changeAmount: amountToAdd, userID },
+      { changeAmount: amountToAdd, userId },
       context
     );
 
@@ -149,6 +181,7 @@ function CupidCash() {
         state={zip == 0 ? "" : zip}
         setState={setZip}
         placeholder="Zip"
+        validationFunc={(z) => zipCodeValidation(z)}
       />
       <div className={classes.row}>
         <div className="w-50">
@@ -156,6 +189,7 @@ function CupidCash() {
             state={expirationDate}
             setState={setExpirationDate}
             placeholder={"Exp. Date"}
+            validationFunc={(date) => expirationDateValidation(date)}
           />
         </div>
         <div className="w-50">
@@ -164,6 +198,7 @@ function CupidCash() {
             state={cvv}
             setState={setCVV}
             placeholder="CVV"
+            validationFunc={(cvv) => cvvValidate(cvv)}
           />
         </div>
       </div>

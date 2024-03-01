@@ -7,3 +7,17 @@ export function findAllByUserId(userId: any) {
         },
     });
 }
+
+export function recordPurchase(userId: number, cupidId: any, total: number, jobCost: number, cupidPayout: number, profit: number, details: string) {
+    return db.purchases.create({
+        data: {
+            userId,
+            cupidId,
+            total,
+            jobCost,
+            cupidPayout,
+            profit,
+            details,
+        },
+    });
+}

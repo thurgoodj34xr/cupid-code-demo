@@ -40,13 +40,14 @@ CREATE TABLE "RefreshToken" (
 -- CreateTable
 CREATE TABLE "Purchases" (
   "id"          SERIAL NOT NULL,
-  "userId"      INTEGER NOT NULL,
-  "cupidId"     INTEGER NOT NULL,
+  "cupidId"     INTEGER,
   "total"       DECIMAL(65,30) NOT NULL DEFAULT 0,
   "jobCost"     DECIMAL(65,30) NOT NULL DEFAULT 0,
   "cupidPayout" DECIMAL(65,30) NOT NULL DEFAULT 0,
+  "profit"      DECIMAL(65,30) NOT NULL DEFAULT 0,
   "details"     TEXT,
-  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "timestamp"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "userId"      INTEGER NOT NULL, 
 
   CONSTRAINT "Purchases_pkey" PRIMARY KEY ("id")
 );
@@ -68,3 +69,6 @@ ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Purchases" ADD CONSTRAINT "Purchases_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
