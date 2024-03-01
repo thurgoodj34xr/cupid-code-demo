@@ -133,7 +133,7 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
-// ************** Changing CupidCash in Account ***************
+// ************** Adding CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {
   const { changeAmount, userId } = req.body
   try {

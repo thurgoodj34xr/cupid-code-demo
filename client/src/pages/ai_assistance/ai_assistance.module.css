@@ -5,6 +5,8 @@
     flex-direction: column;
     gap: 20px;
     text-align: left;
+    animation: fade-in 1s forwards;
+    overflow-y: auto;
 }
 
 .row {
@@ -12,4 +14,13 @@
     justify-content: space-between;
     width: 100%;
     box-sizing: border-box;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: .2;
+        transform: translateY(50%);
+    }
+    100% {
+    }
 }

@@ -2,6 +2,12 @@ import classes from "./purchases.module.css";
 import * as Api from "../../hook/api";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
+import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import { FaMoneyBill } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import Input from "../../componets/inputs/input";
+import Button from "../../componets/button/button";
 
 function Purchases() {
   const context = useContext(AppContext);
@@ -11,9 +17,9 @@ function Purchases() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
-    total: '',
-    jobCost: '',
-    details: '',
+    total: "",
+    jobCost: "",
+    details: "",
   });
 
   const handleFormChange = (e) => {
@@ -23,10 +29,10 @@ function Purchases() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    var total = parseFloat(formData.total)
-    var jobCost = parseFloat(formData.jobCost)
-    var details = formData.details
-    var cupidId = 1
+    var total = parseFloat(formData.total);
+    var jobCost = parseFloat(formData.jobCost);
+    var details = formData.details;
+    var cupidId = 1;
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
@@ -34,11 +40,12 @@ function Purchases() {
       { userId, cupidId, total, jobCost, details },
       context
     );
+    console.log(response);
     if (!response.error) {
       // Update user profile with the new balance
       user.profile.balance = response.newBalance;
       context.updateUser(user);
-      setUserBalance(response.newBalance)
+      setUserBalance(response.newBalance);
       setErrorMessage(null);
       setSuccessMessage(response.message);
       setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
@@ -46,7 +53,7 @@ function Purchases() {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
-  }
+  };
 
   async function getPurchaseHistory() {
     const userId = user.id;
@@ -55,56 +62,69 @@ function Purchases() {
       { userId },
       context
     );
-    setPurchaseHistory(response.purchases)
+    setPurchaseHistory(response.purchases);
   }
   useEffect(() => {
     getPurchaseHistory();
-
-    return () => {
-    };
+    return () => {};
   }, []);
-  return <section>
-    <h1>Purchase Form</h1>
-    <div>
-      <p className="label">Current balance: {userBalance}</p>
-    </div>
-    {errorMessage && (
-      <div style={{ color: "red", marginTop: "10px" }}>
-        Error: {errorMessage}
+
+  return (
+    <section className={classes.main}>
+      {errorMessage && (
+        <div style={{ color: "red", marginTop: "10px" }}>
+          Error: {errorMessage}
+        </div>
+      )}
+      {successMessage && (
+        <div style={{ color: "green", marginTop: "10px" }}>
+          {successMessage}
+        </div>
+      )}
+      <div className="row">
+        <p className="label left">Create Demo Purchase</p>
+        <p className="label left">${user.profile.balance}</p>
       </div>
-    )}
-    {successMessage && (
-      <div style={{ color: "green", marginTop: "10px" }}>
-        {successMessage}
+      <form className={classes.formData} onSubmit={handleFormSubmit}>
+        <Input
+          placeholder="Total"
+          inputType="number"
+          state={formData.total}
+          setState={(v) => {
+            setFormData((old) => ({ ...old, total: v }));
+          }}
+        />
+        <Input
+          placeholder="Job Cost"
+          inputType="number"
+          state={formData.jobCost}
+          setState={(v) => {
+            setFormData((old) => ({ ...old, jobCost: v }));
+          }}
+        />
+        <Input
+          placeholder="Details"
+          inputType="text"
+          state={formData.details}
+          setState={(v) => {
+            setFormData((old) => ({ ...old, details: v }));
+          }}
+        />
+        <Button text="Submit Purchase" />
+      </form>
+      <p className="label left">Recent Purchases</p>
+      <div className={classes.purchases}>
+        {purchaseHistory.map((purchase, idx) => (
+          <PurchaseTile
+            key={idx}
+            title={purchase.details}
+            amount={purchase.total}
+            icon={<FaMoneyBill size="2rem" />}
+          />
+        ))}
       </div>
-    )}
-    <form onSubmit={handleFormSubmit}>
-      <br />
-      <label>
-        Total:
-        <input type="number" name="total" value={formData.total} onChange={handleFormChange} />
-      </label>
-      <br />
-      <label>
-        Job Cost:
-        <input type="number" name="jobCost" value={formData.jobCost} onChange={handleFormChange} />
-      </label>
-      <br />
-      <label>
-        Details:
-        <input type="text" name="details" value={formData.details} onChange={handleFormChange} />
-      </label>
-      <br />
-      <button type="submit">Create Purchase</button>
-    </form>
-    <ul>
-      {purchaseHistory.map((purchase) => (
-        <li key={purchase.id}>
-          <strong>Total:</strong> {purchase.total} | <strong>Details:</strong> {purchase.details}
-        </li>
-      ))}
-    </ul>
-  </section>;
+    </section>
+  );
 }
 
 export default Purchases;
