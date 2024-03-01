@@ -7,4 +7,10 @@ function Button({ text, onClickFunc }) {
     )
 }
 
+function Button2({ text, onClickFunc }) {
+    return (
+        <button className={classes.btn2} onClick={onClickFunc}>{text}</button>
+    )
+}
+
 export default Button
