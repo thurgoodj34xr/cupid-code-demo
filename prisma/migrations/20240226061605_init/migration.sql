@@ -52,6 +52,17 @@ CREATE TABLE "Purchases" (
   CONSTRAINT "Purchases_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Notifications"(
+    "id"        SERIAL NOT NULL,
+    "title"     TEXT,
+    "message"   TEXT,
+    "timeStamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "read"      BOOLEAN DEFAULT false,
+    "userId"      INTEGER NOT NULL, 
+    CONSTRAINT "Notifications_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -64,6 +75,9 @@ CREATE UNIQUE INDEX "RefreshToken_userId_key" ON "RefreshToken"("userId");
 -- CreateIndex
 CREATE UNIQUE INDEX "Purchases_id_key" ON "Purchases"("id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Notifications_id_key" ON "Notifications"("id");
+
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -72,3 +86,6 @@ ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Purchases" ADD CONSTRAINT "Purchases_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notifications" ADD CONSTRAINT "Notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
