@@ -9,6 +9,7 @@ function Purchases() {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [userBalance, setUserBalance] = useState(user.profile.balance);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
     total: '',
     jobCost: '',
@@ -34,15 +35,15 @@ function Purchases() {
       context
     );
     if (!response.error) {
-      console.log(response)
       // Update user profile with the new balance
       user.profile.balance = response.newBalance;
       context.updateUser(user);
       setUserBalance(response.newBalance)
       setErrorMessage(null);
-      console.log(response.purchase.user)
+      setSuccessMessage(response.message);
       setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
     } else {
+      setSuccessMessage(null);
       setErrorMessage(response.error);
     }
   }
@@ -70,6 +71,11 @@ function Purchases() {
     {errorMessage && (
       <div style={{ color: "red", marginTop: "10px" }}>
         Error: {errorMessage}
+      </div>
+    )}
+    {successMessage && (
+      <div style={{ color: "green", marginTop: "10px" }}>
+        {successMessage}
       </div>
     )}
     <form onSubmit={handleFormSubmit}>
