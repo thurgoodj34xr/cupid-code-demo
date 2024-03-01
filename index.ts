@@ -169,15 +169,24 @@ app.post("/recordPurchase", async (req, res) => {
       return;
     }
     await User.updateUserBalance(userId, newBalance)
-    const cupidPayout = (total - jobCost) * .6
-    const profit = (total - jobCost) * .4
+    const cupidPayout = (workingTotal - workingJobCost) * .6
+    const profit = (workingTotal - workingJobCost) * .4
     var purchase = await Purchases.recordPurchase(userId, cupidId, workingTotal, workingJobCost, cupidPayout, profit, details)
     res.send({ message: "Purchase successfully completed", purchase, newBalance: newBalance })
+    return;
   } catch (error) {
     console.log({ error })
     res.send({ error: "Access Denied" })
     return;
   }
+});
+
+// ************** Record Purchase ***************
+app.post("/getPurchaseHistory", async (req, res) => {
+  const { userId } = req.body
+  const purchases = await Purchases.findAllByUserId(userId)
+  res.send({ purchases })
+  return;
 });
 
 app.listen(process.env.PORT || 3000, () => {

@@ -6,6 +6,7 @@ import AppContext from "../../componets/app_context";
 function Purchases() {
   const context = useContext(AppContext);
   const user = context.getUser();
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [userBalance, setUserBalance] = useState(user.profile.balance);
   const [errorMessage, setErrorMessage] = useState(null);
   const [formData, setFormData] = useState({
@@ -14,12 +15,12 @@ function Purchases() {
     details: '',
   });
 
-  const handleChange = (e) => {
+  const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     var total = parseFloat(formData.total)
     var jobCost = parseFloat(formData.jobCost)
@@ -38,11 +39,29 @@ function Purchases() {
       user.profile.balance = response.newBalance;
       context.updateUser(user);
       setUserBalance(response.newBalance)
-      setErrorMessage(null); // Clear any previous error messages
+      setErrorMessage(null);
+      console.log(response.purchase.user)
+      setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
     } else {
       setErrorMessage(response.error);
     }
   }
+
+  async function getPurchaseHistory() {
+    const userId = user.id;
+    var response = await Api.PostWithAuth(
+      "/getPurchaseHistory",
+      { userId },
+      context
+    );
+    setPurchaseHistory(response.purchases)
+  }
+  useEffect(() => {
+    getPurchaseHistory();
+
+    return () => {
+    };
+  }, []);
   return <section>
     <h1>Purchase Form</h1>
     <div>
@@ -53,25 +72,32 @@ function Purchases() {
         Error: {errorMessage}
       </div>
     )}
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleFormSubmit}>
       <br />
       <label>
         Total:
-        <input type="number" name="total" value={formData.total} onChange={handleChange} />
+        <input type="number" name="total" value={formData.total} onChange={handleFormChange} />
       </label>
       <br />
       <label>
         Job Cost:
-        <input type="number" name="jobCost" value={formData.jobCost} onChange={handleChange} />
+        <input type="number" name="jobCost" value={formData.jobCost} onChange={handleFormChange} />
       </label>
       <br />
       <label>
         Details:
-        <input type="text" name="details" value={formData.details} onChange={handleChange} />
+        <input type="text" name="details" value={formData.details} onChange={handleFormChange} />
       </label>
       <br />
       <button type="submit">Create Purchase</button>
     </form>
+    <ul>
+      {purchaseHistory.map((purchase) => (
+        <li key={purchase.id}>
+          <strong>Total:</strong> {purchase.total} | <strong>Details:</strong> {purchase.details}
+        </li>
+      ))}
+    </ul>
   </section>;
 }
 
