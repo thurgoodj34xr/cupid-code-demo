@@ -4,11 +4,11 @@ import classes from "./inputs.module.css";
 export default function Input({
   text,
   placeholder,
-  onChangeFunc,
+  validationFunc,
   inputType = "text",
+  state,
+  setState,
 }) {
-  const [inputV, setinputV] = useState("");
-
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.keyCode === 13) {
@@ -19,11 +19,14 @@ export default function Input({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [inputV]);
+  }, [state]);
 
   function handleChange(e) {
-    setinputV(e.target.value);
-    onChangeFunc(e.target.value);
+    if (validationFunc) {
+      setState(validationFunc(e.target.value));
+    } else {
+      setState(e.target.value);
+    }
   }
 
   return (
@@ -33,7 +36,7 @@ export default function Input({
         type={inputType}
         placeholder={placeholder}
         onChange={handleChange}
-        value={inputV}
+        value={state}
       />
     </div>
   );

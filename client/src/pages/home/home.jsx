@@ -3,16 +3,12 @@ import classes from "./home.module.css";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import { useContext, useEffect } from "react";
 import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
 
 function Home() {
   const context = useContext(AppContext);
   const user = context.getUser();
-
   return (
     <section className={classes.container}>
-      {/* Navigation Bar */}
-      <Navbar title="Home"></Navbar>
       {/* Container for Budget */}
       <section className={classes.budget}>
         <h2>Good Morning,</h2>
@@ -35,10 +31,12 @@ function Home() {
       <DailyNotification
         title="Be Yourself"
         body="Authenticity is attractive. Don't try to be someone you're not just to.."
+        time="2m"
       />
       <DailyNotification
         title="Smell Good"
         body="Take a moment in your morning routine to put on some..."
+        time="4m"
       />
     </section>
   );

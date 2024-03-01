@@ -4,14 +4,14 @@
     border-width: 2px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
     box-sizing: border-box;
     background-color: white;
     border-radius: 10px;
     position: absolute;
     width: 90vw;
     max-width: 600px;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     animation: fadein 2s forwards;
 }
@@ -20,25 +20,15 @@
     margin-bottom: -10px;
 }
 
-@keyframes fadein {
-    0% {
-        opacity: .2;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-
 .select {
-    box-sizing: border-box;
     margin: auto;
     display: flex;
     flex-direction: row;
     background-color: rgb(241, 244, 248);
     justify-content: space-between;
     padding: 10px 20px 10px 20px;
-    width: 100%;
+    width: 80%;
+    max-width: 300px;
     border-radius: 10px;
 }
 
@@ -62,4 +52,9 @@
     100% {
         opacity: 1;
     }
+}
+
+.icon {
+    width: 100%;
+    text-align: left;
 }

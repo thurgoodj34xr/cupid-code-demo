@@ -1,0 +1,15 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: white;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+

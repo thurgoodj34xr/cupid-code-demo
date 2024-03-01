@@ -1,26 +1,24 @@
 import "./App.css";
-import Home from "./pages/home/home";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import SignIn from "./pages/signIn/sign_in";
-import SignUp from "./pages/signUp/sign_up";
+import { Outlet, useLocation, Router } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AppContext from "./componets/app_context";
-import { ConditionalRoute } from "./componets/conditional_route";
-import AiAssistance from "./pages/ai_assistance/ai_assistance";
-import AiChat from "./pages/ai_chat/ai_chat";
-import SelectCupid from "./pages/select_cupid/select_cupid";
-import MyAccount from "./pages/my_account/my_account";
-import CupidCash from "./pages/cupid_cash/cupid_cash";
-import Purchases from "./pages/purchases/purchases";
+import Navbar from "./componets/navbar/navbar";
+import * as Api from "./hook/api";
+import Notification from "./componets/notification/notification";
 
 function App() {
   const [user, setUser] = useState(null);
   const [tokens, setTokens] = useState(null);
+  const [notification, setNotification] = useState("");
+  const [accountT, setAccountT] = useState("Standard");
+
+  const location = useLocation()
+    .pathname.replace("/", "")
+    .split(/(?=[A-Z])/);
 
   useEffect(() => {
     if (tokens?.accessToken) {
       localStorage.setItem("token", tokens.refreshToken);
-      localStorage.setItem("id", tokens.hashToken.id);
     }
   }, [tokens]);
 
@@ -56,12 +54,23 @@ function App() {
     });
   }
 
-  function updateHashToken(t) {
-    setTokens({
-      refreshToken: tokens.refreshToken,
-      accessToken: tokens.accessToken,
-      hashToken: t,
-    });
+  function sendNotification(text) {
+    setNotification(text);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  }
+
+  function getNotification() {
+    return notification;
+  }
+
+  function setAccountType(t) {
+    setAccountT(t);
+  }
+
+  function getAccountType() {
+    return accountT;
   }
 
   /*
@@ -75,13 +84,14 @@ function App() {
     updateTokens,
     getTokens,
     updateAccessToken,
-    updateHashToken,
     AccessToken,
     RefreshToken,
+    sendNotification,
+    getNotification,
+    setAccountType,
+    getAccountType,
   };
-
-  return (
-    /*
+  /*
         **************  Context Setup ******************
 
         Wrap app with a context that will allow child elements
@@ -103,97 +113,16 @@ function App() {
               context.updateUser(user)
 
     */
-    <AppContext.Provider value={userSettings}>
-      <div className={!user ? 'gradient' : ''}>
-      <div className="main">
-        
-        <BrowserRouter>
-          {/* Some routes require a prerequisite such as a auth user */}
-          <Routes>
-            {/* Setup routes that dont need a prerequisite */}
-            <Route exact path="/" element={<SignIn />} />
-            <Route exact path="/sign_up" element={<SignUp />} />
 
-            {/* Pages that required an auth user */}
-            <Route
-              exact
-              path="/home"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<Home />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-            <Route
-              exact
-              path="/aiAssistance"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<AiAssistance />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-            <Route
-              exact
-              path="/aiChat"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<AiChat />}
-                  route={"/" /* Redirects to login if there is no auth user */}
-                  />
-                }
-                />
-            <Route
-              exact
-              path="/selectCupid"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<SelectCupid />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-            <Route
-              exact
-              path="/myAccount"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<MyAccount />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-            <Route
-              exact
-              path="/cupidCash"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<CupidCash />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-            <Route
-              exact
-              path="/purchases"
-              element={
-                <ConditionalRoute
-                condition={user != null /* Requires an auth user */}
-                componetToRender={<Purchases />}
-                route={"/" /* Redirects to login if there is no auth user */}
-                />
-              }
-              />
-          </Routes>
-        </BrowserRouter>
+  return (
+    <AppContext.Provider value={userSettings}>
+      {notification ? <Notification text={notification} /> : ""}
+      <div className={user ? "background" : "background gradient"}>
+        <div className="main">
+          {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
+
+          <Outlet />
+        </div>
       </div>
               </div>
     </AppContext.Provider>

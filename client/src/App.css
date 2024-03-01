@@ -23,6 +23,10 @@ body {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.w-100 {
+  width: 100%;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -46,18 +50,39 @@ body {
 .read-the-docs {
   color: #888;
 }
-
 .gradient {
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   background-image: linear-gradient(to bottom, #763AF6, #FF0000);
   background-repeat: no-repeat;
-  align-items: center;
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 .container label {
   margin-bottom: -10px;
+
+  
+}
+
+.rotate {
+  animation: div-rotate 0.7s infinite steps(8);
+}
+
+.right  {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+@keyframes div-rotate {
+  0% { transform: rotate(  0deg) scale(1);}
+100% { transform: rotate(360deg) scale(1);}
 }
 
 

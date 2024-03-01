@@ -4,15 +4,35 @@ import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../../hook/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import AppContext from "../../componets/app_context";
+import TextArea from "../../componets/text_area/text_area";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
+  const [buttonText, setButtonText] = useState("Sign Up");
+  const [age, setAge] = useState(0);
+  const [budget, setBudget] = useState(0);
+  const [goals, setGoals] = useState("");
+  const [male, setMale] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const context = useContext(AppContext);
+  const userType = context.getAccountType();
   let navigate = useNavigate();
+
+  const setUser = () => {
+    setMale(true);
+  };
+
+  const setCupid = () => {
+    setMale(false);
+  };
 
   function handleEmail(email) {
     setEmail(email);
@@ -23,17 +43,31 @@ function SignUp() {
   }
 
   const signUp = async () => {
+    if (password != confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
+    );
     const res = await Api.Post("/signup", {
+      userType,
       firstName,
       lastName,
       email,
       password,
+      age,
+      budget,
+      goals,
     });
 
     if (res.error) {
       setError(res.error);
+      setButtonText("Sign Up");
+    } else {
+      navigate("/");
     }
-    navigate("/");
   };
 
   const signIn = () => {
@@ -42,36 +76,87 @@ function SignUp() {
 
   return (
     <section className={classes.container}>
-      <h1>Get Started</h1>
+      <div className="back">
+        <FontAwesomeIcon
+          onClick={() => navigate("/SelectAccount")}
+          className="pointer"
+          icon={faAngleLeft}
+          size="2xl"
+        />
+      </div>
+      <h1>Create Account</h1>
+      <p className="label">Create an account by filling out the form below.</p>
       {error && <p className="error">{error}</p>}
       <Input
-        text="First Name"
         inputType="text"
         placeholder="Enter First Name"
-        onChangeFunc={(name) => setFirstName(name)}
+        state={firstName}
+        setState={setFirstName}
+        require
       />
       <Input
-        text="Last Name"
         inputType="text"
         placeholder="Enter Last Name"
-        onChangeFunc={(name) => setLastName(name)}
+        state={lastName}
+        setState={setLastName}
       />
       <Input
-        text="Email"
         inputType="email"
         placeholder="Enter Email"
-        onChangeFunc={handleEmail}
+        state={email}
+        setState={setEmail}
       />
       <Input
-        text="Password"
         inputType="password"
         placeholder="Enter Password"
-        onChangeFunc={handlePassword}
+        state={password}
+        setState={setPassword}
       />
-      <p onClick={signIn}>
-        Already have an account? <span className="pointer">Sign In</span>
+      <Input
+        inputType="password"
+        placeholder="Confirm Password"
+        state={confirmPassword}
+        setState={setConfirmPassword}
+      />
+      {userType != "Standard" ? (
+        ""
+      ) : (
+        <>
+          <Input
+            inputType="number"
+            placeholder="Enter Age"
+            state={age == 0 ? "" : age}
+            setState={setAge}
+          />
+          <Input
+            inputType="number"
+            placeholder="Enter Budget Per Date"
+            state={budget == 0 ? "" : budget}
+            setState={setBudget}
+          />
+          <TextArea
+            placeholder="Enter Relationship Goals"
+            state={goals}
+            setState={setGoals}
+          />
+          <div className={classes.select}>
+            <p onClick={setUser} className={male ? classes.type : ""}>
+              Male
+            </p>
+            <p>|</p>
+            <p onClick={setCupid} className={male ? "" : classes.type}>
+              Female
+            </p>
+          </div>
+        </>
+      )}
+      <p>
+        Already have an account?{" "}
+        <span className="pointer" onClick={signIn}>
+          Sign In
+        </span>
       </p>
-      <Button text="Sign Up" onClickFunc={signUp}></Button>
+      <Button text={buttonText} onClickFunc={signUp}></Button>
     </section>
   );
 }

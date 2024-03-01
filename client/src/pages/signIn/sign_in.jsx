@@ -6,28 +6,44 @@ import Button2 from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSpinner,
+  faAppleWhole,
+  faBook,
+  faSitemap,
+} from "@fortawesome/free-solid-svg-icons";
+import SignOn from "../../componets/sign_on/sign_on";
+import {
+  FaApple,
+  FaBeer,
+  FaFacebook,
+  FaFacebookMessenger,
+  FaFacebookSquare,
+  FaGoogle,
+  FaGooglePay,
+} from "react-icons/fa";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const [buttonText, setButtonText] = useState("Sign in");
 
   const context = useContext(AppContext);
 
   let navigate = useNavigate();
 
   const SigninWithToken = async () => {
-    const refreshToken = localStorage.getItem("token");
-    const id = localStorage.getItem("id");
-    if (!refreshToken || !id) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       setLoading(false);
       return;
     }
 
-    const resp = await Api.Post("/signinwithtoken", {
-      refreshToken,
-      id,
+    const resp = await Api.Post("/verifyToken", {
+      token,
     });
 
     if (!resp.user) {
@@ -36,7 +52,7 @@ export default function SignIn() {
     }
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
-    navigate("/home");
+    navigate("/Home");
   };
 
   useEffect(() => {
@@ -62,6 +78,9 @@ export default function SignIn() {
     /* After a user has entered their email and password and has submited the login, this function will handle the logic */
   }
   const handleSignIn = async () => {
+    setButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
+    );
     const res = await Api.Post("/signin", {
       email,
       password,
@@ -69,46 +88,53 @@ export default function SignIn() {
 
     if (res.error) {
       setError(res.error);
-      return;
+      setButtonText("Sign in");
+    } else {
+      context.updateUser(res.user);
+      context.updateTokens(res.tokens);
+      localStorage.setItem("token", res.tokens.refreshToken);
+      navigate("/Home");
     }
-
-    context.updateUser(res.user);
-    context.updateTokens(res.tokens);
-    navigate("/home");
   };
 
   const signUp = () => {
-    navigate("/sign_up");
+    navigate("/SelectAccount");
   };
 
   return loading ? (
     <div></div>
   ) : (
     <div className={classes.sign_in}>
-      <h1>Log In</h1>
+      <h1>Cupid Code</h1>
       {error && <p className="error">{error}</p>}
+      <p className="label">Let’s get started by filling out the form below.</p>
       <Input
         inputType="email"
-        text="Email"
         placeholder="Enter Email"
-        onChangeFunc={(email) => setEmail(email)}
+        state={email}
+        setState={setEmail}
       />
       <Input
-        text="Password"
         inputType="password"
         placeholder="Enter Password"
-        onChangeFunc={(p) => setPassword(p)}
+        state={password}
+        setState={setPassword}
       />
-      <p>Or Sign up with</p>
-      <button style={{ backgroundColor: "black", color: "white" }}>Click me</button>
-          <Button text="Continue with Apple" onClickFunc={handleSignIn} ></Button>
-          <Button text="Continue with Google" onClickFunc={handleSignIn}></Button>
-          <Button text="Continue with Facebook" onClickFunc={handleSignIn}></Button>
-      <p onClick={signUp}>
-        Don't have an account? <span className="pointer">Sign up</span>
+      <span className="pointer right">Forgot Password?</span>
+      <Button text={buttonText} onClickFunc={handleSignIn}></Button>
+      <p className="label">Or sign up with</p>
+      <SignOn ricon={<FaApple size="2rem" />} text="Continue with Apple" />
+      <SignOn ricon={<FaGoogle size="2rem" />} text="Continue with Google" />
+      <SignOn
+        ricon={<FaFacebook size="2rem" />}
+        text="Continue with Facebook"
+      />
+      <p>
+        Don't have an account?{" "}
+        <span className="pointer" onClick={signUp}>
+          Sign up
+        </span>
       </p>
-      <Button text="Log In" onClickFunc={handleSignIn}></Button>
-      
     </div>
   );
 }

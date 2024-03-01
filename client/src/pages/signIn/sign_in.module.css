@@ -8,6 +8,33 @@
     box-sizing: border-box;
     background-color: white;
     border-radius: 10px;
-    display: flex;
+    position: absolute;
+    width: 90vw;
+    max-width: 600px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: fadein 2s forwards;
 }
 
+.signOn {
+    box-sizing: border-box;
+    border-width: 1px;
+    border-radius: 8px;
+    justify-content: center;
+    padding: 10px;
+    border-style: solid;
+    width: 100%;
+    border-color: rgba(60, 60, 60, .6);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+@keyframes fadein {
+    0%{
+      opacity: .2;
+    }
+    100% {
+      opacity: 1;
+    }
+  }

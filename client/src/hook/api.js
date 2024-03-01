@@ -23,7 +23,7 @@
 
   NOTE: If the server responds with access denied, then
         most likey the endpoint does not exist on the server.
-*/  
+*/
 
 
 
@@ -32,7 +32,7 @@
 
 export async function Get(route) {
   return await fetch(route)
-  .then(resp => resp.json());
+    .then(resp => resp.json());
 }
 
 export async function GetWithAuth(route, context) {
@@ -65,8 +65,6 @@ async function GetWithToken(route, accessToken) {
 
 
 // ------------ POST REQUESTS ---------------
-
-
 
 export async function Post(route, body) {
   return await fetch(route, {
@@ -104,20 +102,19 @@ async function PostWithToken(route, body, accessToken) {
 
 // Used to generate a new Refresh Token
 async function RefreshToken(context) {
-  return await fetch("/refreshToken", {
-     method: "post",
-     headers: {
-       "Content-type": "application/json",
-     },
-     body: JSON.stringify({
-       user: context.getUser(),
-       refreshToken: context.getTokens().refreshToken,
-     }),
-   })
-   .then((res) => res.json())
-   .then(res => {
-      const {tokens} = res;
+  return await fetch("/verifyToken", {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      token: context.getTokens().refreshToken,
+    }),
+  })
+    .then((res) => res.json())
+    .then(res => {
+      const { tokens } = res;
       context.updateTokens(tokens)
       return tokens;
-   });
- }
+    });
+}
