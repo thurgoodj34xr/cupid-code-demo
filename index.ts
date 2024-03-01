@@ -177,8 +177,15 @@ app.post("/recordPurchase", async (req, res) => {
   } catch (error) {
     console.log({ error })
     res.send({ error: "Access Denied" })
-    return;
   }
+});
+
+// ************** Record Purchase ***************
+app.post("/getPurchaseHistory", async (req, res) => {
+  const { userId } = req.body
+  const purchases = await Purchases.findAllByUserId(userId)
+  res.send({ purchases })
+  return;
 });
 
 // ************** Record Purchase ***************
