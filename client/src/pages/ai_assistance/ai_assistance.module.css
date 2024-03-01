@@ -5,7 +5,8 @@
     flex-direction: column;
     gap: 20px;
     text-align: left;
-    animation: fade-in 1s forwards
+    animation: fade-in 1s forwards;
+    overflow-y: auto;
 }
 
 .row {

@@ -81,7 +81,10 @@ function Purchases() {
           {successMessage}
         </div>
       )}
-      <p className="label left">Create Demo Purchase</p>
+      <div className="row">
+        <p className="label left">Create Demo Purchase</p>
+        <p className="label left">${user.profile.balance}</p>
+      </div>
       <form className={classes.formData} onSubmit={handleFormSubmit}>
         <Input
           placeholder="Total"

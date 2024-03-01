@@ -90,5 +90,9 @@ body {
 100% { transform: rotate(360deg) scale(1);}
 }
 
+.row {
+  display: flex;
+  justify-content: space-between;
+}
 
 
