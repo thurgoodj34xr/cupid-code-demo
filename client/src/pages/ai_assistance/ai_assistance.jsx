@@ -7,9 +7,16 @@ import DailyNotification from "../../componets/daily_notification/daily_notifica
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import { FaGoodreads, FaTicketAlt } from "react-icons/fa";
 import Button from "../../componets/button/button";
+import { useNavigate } from "react-router-dom";
 
 function AiAssistance() {
   const context = useContext(AppContext);
+  let navigate = useNavigate();
+
+  const purchases = () => {
+    navigate("/Purchases");
+  };
+
   return (
     <section className={classes.main}>
       <div className={classes.row}>
@@ -30,9 +37,16 @@ function AiAssistance() {
       />
       <div className={classes.row}>
         <p className="label">Recent Purchases</p>
-        <p className="pointer">View All</p>
+        <p className="pointer" onClick={purchases}>
+          View All
+        </p>
       </div>
-      <PurchaseTile icon={<FaTicketAlt size="4rem" />} time="5m" />
+      <PurchaseTile
+        title="Movie Tickets"
+        amount="25"
+        icon={<FaTicketAlt size="4rem" />}
+        time="5m"
+      />
       <Button text="Import Transcript" />
       <Button text="Start Listening" />
     </section>

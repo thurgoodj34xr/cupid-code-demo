@@ -117,6 +117,7 @@ function Navbar({ title }) {
               {user.firstName} {user.lastName}
             </h2>
             <p className="label">{user.email}</p>
+            <p className="label">${user.profile.balance}</p>
           </section>
           <hr />
           {/* Home Icon */}
