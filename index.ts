@@ -138,12 +138,15 @@ app.post("/changeCupidCash", async (req, res) => {
     const user = await User.findUserById(userID);
     const currentBalance = user!!.profile!!.balance.toNumber();
     const newBalance = currentBalance + parseFloat(changeAmount);
-    await User.updateUserBalance(userID, newBalance)
-    res.send({ newBalance });
+    if (newBalance < 0) {
+      res.send({error: "Not enough Funds in account"})
+    } else {
+      await User.updateUserBalance(userID, newBalance)
+      res.send({ newBalance });
+    }
   } catch (error) {
     console.log({ error })
     res.send({ error: "Access Denied" })
-    return;
   }
 });
 
