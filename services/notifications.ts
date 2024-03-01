@@ -17,3 +17,14 @@ export function recordNotification(userId: number, title: string, message: strin
         }
     })
 }
+
+export function changeReadState(notificationId: number, read: boolean) {
+    return db.notifications.update({
+        where: {
+            id: notificationId,
+        },
+        data: {
+            read: read
+        }
+    })
+}

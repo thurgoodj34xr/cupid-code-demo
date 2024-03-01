@@ -1,5 +1,6 @@
 import classes from "./notification_history.module.css";
 import { useEffect, useState, useContext } from "react";
+import * as Api from "../../hook/api";
 import Navbar from "../../componets/navbar/navbar";
 import AppContext from "../../componets/app_context";
 
@@ -23,44 +24,71 @@ function NotificationHistory() {
 
     setFormData((prevData) => ({ ...prevData, [name]: newValue }));
   };
-
+  // TODO: These functions should be moved into their own files elsewhere, @jathurgood needs to chat with thelms to figure out how that would work and what it would look like
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    var total = parseFloat(formData.title)
-    var jobCost = parseFloat(formData.message)
-    var details = formData.read
-    var cupidId = 1
+    var title = formData.title
+    var message = formData.message
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/recordPurchase",
-      { userId, cupidId, total, jobCost, details },
+      "/recordNotification",
+      { userId, title, message },
       context
     );
     if (!response.error) {
       // Update user profile with the new balance
-      user.profile.balance = response.newBalance;
-      context.updateUser(user);
       setErrorMessage(null);
       setSuccessMessage(response.message);
-      setNotificationHistory((prevHistory) => [...prevHistory, response.purchase]);
+      setNotificationHistory((prevHistory) => [...prevHistory, response.notification]);
+      setFormData({
+        title: '',
+        message: '',
+        read: false,
+      });
     } else {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
   }
 
-  async function getPurchaseHistory() {
+  const updateReadStatus = async (notificationId, newReadStatus) => {
+    // Send API request to update the "read" status on the server
+    try {
+      const response = await Api.PostWithAuth("/changeReadState", {
+        notificationId,
+        newReadStatus,
+      }, context);
+
+      // Handle the response as needed (e.g., show a success message)
+      if (!response.error) {
+        // Update the state for this specific notification
+        setNotificationHistory((prevHistory) =>
+          prevHistory.map((notification) =>
+            notification.id === notificationId
+              ? { ...notification, read: newReadStatus }
+              : notification
+          )
+        );
+      } else {
+        console.error("Error updating read status:", response.error);
+      }
+    } catch (error) {
+      console.error("Error updating read status:", error);
+    }
+  };
+
+  async function getNotificationHistory() {
     const userId = user.id;
     var response = await Api.PostWithAuth(
-      "/getPurchaseHistory",
+      "/getNotificationHistory",
       { userId },
       context
     );
-    setNotificationHistory(response.purchases)
+    setNotificationHistory(response.notifications)
   }
   useEffect(() => {
-    getPurchaseHistory();
+    getNotificationHistory();
 
     return () => {
     };
@@ -97,9 +125,14 @@ function NotificationHistory() {
       <button type="submit">Create Notification</button>
     </form>
     <ul>
-      {notificationHistory.map((purchase) => (
-        <li key={purchase.id}>
-          <strong>Total:</strong> {purchase.total} | <strong>Details:</strong> {purchase.details}
+      {notificationHistory.map((notification) => (
+        <li key={notification.id}>
+          <strong>Total:</strong> {notification.title} |{" "}
+          <strong>Details:</strong> {notification.message} |{" "}
+          <strong>Read:</strong> {String(notification.read)} |{" "}
+          <button onClick={() => updateReadStatus(notification.id, !notification.read)}>
+            Toggle Read Status
+          </button>
         </li>
       ))}
     </ul>

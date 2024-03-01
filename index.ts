@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import * as User from "./services/user";
 import * as Auth from "./services/auth";
 import * as Purchases from "./services/purchases";
+import * as Notifications from "./services/notifications";
 import * as Jwt from "./utils/jwt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
@@ -188,11 +189,27 @@ app.post("/getPurchaseHistory", async (req, res) => {
   return;
 });
 
-// ************** Record Purchase ***************
-app.post("/getPurchaseHistory", async (req, res) => {
+// ************** Record Notification ***************
+app.post("/recordNotification", async (req, res) => {
+  const { userId, title, message } = req.body
+  const notification = await Notifications.recordNotification(userId, title, message)
+  res.send({ message: "Your message was sent", notification })
+  return;
+});
+
+// ************** Get All Notifications for User ***************
+app.post("/getNotificationHistory", async (req, res) => {
   const { userId } = req.body
-  const purchases = await Purchases.findAllByUserId(userId)
-  res.send({ purchases })
+  const notifications = await Notifications.findAllByUserId(userId)
+  res.send({ notifications })
+  return;
+});
+
+// ************** Get All Notifications for User ***************
+app.post("/changeReadState", async (req, res) => {
+  const { notificationId, newReadStatus } = req.body
+  const notification = await Notifications.changeReadState(notificationId, newReadStatus)
+  res.send({ notification })
   return;
 });
 
