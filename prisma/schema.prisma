@@ -24,6 +24,7 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   profile      Profile?
+  purchase     Purchases[]
 }
 
 // This is the Standard user schema.
@@ -48,4 +49,17 @@ model RefreshToken {
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
+}
+
+model Purchases {
+  id          Int      @id @default(autoincrement())
+  cupidId     Int?
+  total       Decimal
+  jobCost     Decimal
+  cupidPayout Decimal
+  profit      Decimal
+  details     String   @default("Cupid Code Intervention")
+  timestamp   DateTime @default(now())
+  User        User     @relation(fields: [userId], references: [id])
+  userId      Int
 }

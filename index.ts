@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
 import * as User from "./services/user";
 import * as Auth from "./services/auth";
+import * as Purchases from "./services/purchases";
 import * as Jwt from "./utils/jwt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
@@ -95,8 +96,8 @@ app.post("/signup", async (req, res) => {
         res.send({ error: "An error occured" });
       }
       break;
-      default:
-        res.send({error: "Invalid user type"})
+    default:
+      res.send({ error: "Invalid user type" })
   }
 })
 
@@ -131,23 +132,60 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 
-// ************** Changing CupidCash in Account ***************
+// ************** Adding CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {
-  const { changeAmount, userID } = req.body
+  const { changeAmount, userId } = req.body
   try {
-    const user = await User.findUserById(userID);
+    const user = await User.findUserById(userId);
     const currentBalance = user!!.profile!!.balance.toNumber();
-    const newBalance = currentBalance + parseFloat(changeAmount);
+    var workingChangeAmount = Math.abs(changeAmount)
+    const newBalance = currentBalance + workingChangeAmount;
     if (newBalance < 0) {
-      res.send({error: "Not enough Funds in account"})
-    } else {
-      await User.updateUserBalance(userID, newBalance)
-      res.send({ newBalance });
+      res.send({ error: "Cannot Spend more money then you have!" })
+      return;
     }
+    await User.updateUserBalance(userId, newBalance)
+    await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
+    res.send({ newBalance });
+    return;
+  } catch (error) {
+    console.log({ error })
+    res.send({ error: "Access Denied" })
+    return;
+  }
+});
+
+// ************** Record Purchase ***************
+app.post("/recordPurchase", async (req, res) => {
+  const { userId, cupidId, total, jobCost, details } = req.body
+  try {
+    var workingTotal = Math.abs(total)
+    var workingJobCost = Math.abs(jobCost)
+    const user = await User.findUserById(userId);
+    const currentBalance = user!!.profile!!.balance.toNumber();
+    const newBalance = currentBalance - workingTotal;
+    if (newBalance < 0) {
+      res.send({ error: "Cannot Spend more money then you have!" })
+      return;
+    }
+    await User.updateUserBalance(userId, newBalance)
+    const cupidPayout = (workingTotal - workingJobCost) * .6
+    const profit = (workingTotal - workingJobCost) * .4
+    var purchase = await Purchases.recordPurchase(userId, cupidId, workingTotal, workingJobCost, cupidPayout, profit, details)
+    res.send({ message: "Purchase successfully completed", purchase, newBalance: newBalance })
+    return;
   } catch (error) {
     console.log({ error })
     res.send({ error: "Access Denied" })
   }
+});
+
+// ************** Get Full Purchase History ***************
+app.post("/getPurchaseHistory", async (req, res) => {
+  const { userId } = req.body
+  const purchases = await Purchases.findAllByUserId(userId)
+  res.send({ purchases })
+  return;
 });
 
 app.listen(process.env.PORT || 3000, () => {
