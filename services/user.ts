@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import db from "../utils/prisma";
+import e from "express";
 
 export function findUserByEmail(email: string) {
   return db.user.findUnique({
@@ -14,7 +15,7 @@ export function findUserByEmail(email: string) {
 
 export function createUser(user: any) {
   user.password = bcrypt.hashSync(user.password, 12);
-  const {  firstName, lastName, email, password, age, budget, goals } = user;
+  const { firstName, lastName, email, password, age, budget, goals } = user;
   return db.user.create({
     data: {
       firstName,
@@ -68,6 +69,25 @@ export function updateUserBalance(userId: any, newBalance: number) {
       profile: {
         update: {
           balance: newBalance,
+        },
+      },
+    },
+  })
+}
+export function updateUserAccount(userId: any, firstName: string, lastName: string, email: string, age: number, dailyBudget: number, relationshipGoals: string) {
+  return db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      profile: {
+        update: {
+          dailyBudget: dailyBudget,
+          age: age,
+          relationshipGoals: relationshipGoals
         },
       },
     },

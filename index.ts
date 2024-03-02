@@ -183,7 +183,7 @@ app.post("/recordPurchase", async (req, res) => {
   }
 });
 
-// ************** Record Purchase ***************
+// ************** Get Purchase History ***************
 app.post("/getPurchaseHistory", async (req, res) => {
   const { userId } = req.body
   const purchases = await Purchases.findAllByUserId(userId)
@@ -207,11 +207,49 @@ app.post("/getNotificationHistory", async (req, res) => {
   return;
 });
 
-// ************** Get All Notifications for User ***************
+// ************** Delete Specific Notification ***************
 app.post("/deleteNotification", async (req, res) => {
   const { notificationId } = req.body
   const notification = await Notifications.deleteNotification(notificationId)
   res.send({ notification })
+  return;
+});
+
+// ************** Update User Account ***************
+app.post("/updateProfile", async (req, res) => {
+  const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
+  var workingAge = parseInt(age)
+  var workingBudget = parseFloat(dailyBudget)
+
+  // Validate Numbers
+  if (isNaN(workingAge)) {
+    res.send({ error: "Age must be a number" })
+    return;
+  }
+
+  if (isNaN(workingBudget)) {
+    res.send({ error: "Budget must be a number" });
+    return;
+  }
+
+  // Check Email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.send({ error: "Invalid Email Provided" })
+    return;
+  }
+  // Check Budget
+  if (workingBudget < 10 && workingBudget != 0) {
+    res.send({ error: "In order to service quality dates, Cupid Code requires a minimum of 10 cupid bucks per date" })
+    return;
+  }
+  // Check Age
+  if (workingAge < 18 && workingAge != 0) {
+    res.send({ error: "To use this service you must be at least 18" })
+    return;
+  }
+  const notification = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
+  res.send({ message: "Your account was successfully updated", notification })
   return;
 });
 
