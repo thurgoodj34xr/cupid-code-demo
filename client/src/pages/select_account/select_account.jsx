@@ -43,7 +43,7 @@ function SelectAccount() {
           size="2xl"
         />
       </div>
-      <h1>Type of Account</h1>
+      <h1>Type</h1>
       <p className="label">
         Select the type of account that you would like to create
       </p>

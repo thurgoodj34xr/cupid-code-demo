@@ -24,6 +24,8 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
+
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -76,12 +78,14 @@ app.post("/signin", async (req, res) => {
   } else {
     res.send({ error: "Invalid login credentials." });
   }
+
 })
 
 // ******************* Sign up Endpoint *************************
 
 app.post("/signup", async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals, } = req.body;
+  const { userType, firstName, lastName, email, password, age, budget, goals, profileImage} = req.body;
+  console.log(profileImage);
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
@@ -95,8 +99,6 @@ app.post("/signup", async (req, res) => {
       if (user) {
         res.send({ success: true });
         await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
-      } else {
-        res.send({ error: "An error occured" });
       }
       break;
     default:
