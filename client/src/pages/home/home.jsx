@@ -18,7 +18,6 @@ function Home() {
       context
     );
     setNotificationHistory(response.notifications)
-    console.log(response.notifications[0])
   }
   useEffect(() => {
     getNotificationHistory();
@@ -26,6 +25,20 @@ function Home() {
     return () => {
     };
   }, []);
+
+  const handleDeleteNotification = async (notificationId) => {
+    var response = await Api.PostWithAuth(
+      "/deleteNotification",
+      { notificationId },
+      context
+    );
+    if (!response.error) {
+      // Filter out the notification with the specified ID
+      const updatedNotificationHistory = notificationHistory.filter(notification => notification.id !== notificationId);
+      setNotificationHistory(updatedNotificationHistory);
+    };
+  }
+
   return (
     <section className={classes.container}>
       {/* Container for Budget */}
@@ -54,6 +67,7 @@ function Home() {
           title={notification.title}
           body={notification.message}
           time={notification.timeStamp}
+          onDelete={handleDeleteNotification}
         />
       ))}
     </section>

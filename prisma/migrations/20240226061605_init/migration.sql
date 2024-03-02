@@ -58,7 +58,6 @@ CREATE TABLE "Notifications"(
     "title"     TEXT,
     "message"   TEXT,
     "timeStamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "read"      BOOLEAN DEFAULT false,
     "userId"      INTEGER NOT NULL, 
     CONSTRAINT "Notifications_pkey" PRIMARY KEY ("id")
 );

@@ -1,25 +1,14 @@
 import classes from "./daily_notificaiton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { calculateTimeSince } from "../../../../utils/calculateTimeSince.js"
 
-function DailyNotification({ notificationId, title, body, time }) {
-  const creationTime = new Date(time);
-  const currentTime = new Date();
-  const timeDifference = currentTime - creationTime;
-  const seconds = Math.floor(timeDifference / 1000);
+function DailyNotification({ notificationId, title, body, time, onDelete }) {
+  var printTime = calculateTimeSince(time)
 
-  let timeValue, timeUnit;
-  if (seconds < 60) {
-    timeValue = seconds;
-    timeUnit = 's';
-  } else if (seconds < 3600) {
-    timeValue = Math.floor(seconds / 60);
-    timeUnit = 'm';
-  } else {
-    timeValue = Math.floor(seconds / 3600);
-    timeUnit = 'h';
-  }
-  var printTime = `${timeValue}${timeUnit}`
+  const handleDeleteClick = () => {
+    onDelete(notificationId);
+  };
 
   return (
     <div className={classes.container}>
@@ -29,7 +18,7 @@ function DailyNotification({ notificationId, title, body, time }) {
       </div>
       <div className={classes.right}>
         <div className={classes.icon}>
-          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+          <FontAwesomeIcon icon={faChevronRight} size="lg" onClick={handleDeleteClick} />
         </div>
         <p className="label">{printTime}</p>
       </div>

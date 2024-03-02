@@ -1,10 +1,10 @@
-import classes from "./notification_history.module.css";
+import classes from "./createNotification.module.css";
 import { useEffect, useState, useContext } from "react";
 import * as Api from "../../hook/api";
 import Navbar from "../../componets/navbar/navbar";
 import AppContext from "../../componets/app_context";
 
-function NotificationHistory() {
+function CreateNotification() {
   const context = useContext(AppContext);
   const user = context.getUser();
   const [notificationHistory, setNotificationHistory] = useState([]);
@@ -13,7 +13,6 @@ function NotificationHistory() {
   const [formData, setFormData] = useState({
     title: '',
     message: '',
-    read: false,
   });
 
   const handleFormChange = (e) => {
@@ -44,7 +43,6 @@ function NotificationHistory() {
       setFormData({
         title: '',
         message: '',
-        read: false,
       });
     } else {
       setSuccessMessage(null);
@@ -92,10 +90,6 @@ function NotificationHistory() {
         <input type="string" name="message" value={formData.message} onChange={handleFormChange} />
       </label>
       <br />
-      <label>
-        Read:
-        <input type="checkbox" name="read" checked={formData.read} onChange={handleFormChange} />
-      </label>
       <br />
       <button type="submit">Create Notification</button>
     </form>
@@ -104,10 +98,9 @@ function NotificationHistory() {
         <li key={notification.id}>
           <strong>Total:</strong> {notification.title} |{" "}
           <strong>Details:</strong> {notification.message} |{" "}
-          <strong>Read:</strong> {String(notification.read)} |{" "}
         </li>
       ))}
     </ul>
   </section>;
 }
-export default NotificationHistory;
+export default CreateNotification;
