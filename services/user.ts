@@ -93,3 +93,14 @@ export function updateUserAccount(userId: any, firstName: string, lastName: stri
     },
   })
 }
+export function updateUserPassword(userId: any, password: string,) {
+  const newPassword = bcrypt.hashSync(password, 12);
+  return db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: newPassword
+    },
+  })
+}

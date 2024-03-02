@@ -87,7 +87,7 @@ const router = createHashRouter([
           />
         ),
       }, {
-        path: "/UpdatePassword",
+        path: "/ChangePassword",
         element: (
           <ConditionalRoute
             componetToRender={<UpdatePassword />}

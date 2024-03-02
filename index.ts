@@ -13,6 +13,7 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import tokenHasher from "./utils/hashToken";
 import { Decimal } from "@prisma/client/runtime/library";
+import { isStrongPassword } from "./utils/isStrongPassword"
 dotenv.config();
 
 
@@ -84,7 +85,7 @@ app.post("/signin", async (req, res) => {
 // ******************* Sign up Endpoint *************************
 
 app.post("/signup", async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals, profileImage} = req.body;
+  const { userType, firstName, lastName, email, password, age, budget, goals, profileImage } = req.body;
   console.log(profileImage);
   const existingUser = await User.findUserByEmail(email);
 
@@ -250,9 +251,38 @@ app.post("/updateProfile", async (req, res) => {
     res.send({ error: "To use this service you must be at least 18" })
     return;
   }
-  const notification = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
-  res.send({ message: "Your account was successfully updated", notification })
+  const updatedAccount = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
+  res.send({ message: "Your account was successfully updated", updatedAccount })
   return;
+});
+
+// ************** Update User Password ***************
+app.post("/updatePassword", async (req, res) => {
+  const { userId, currentPassword, newPassword, repeatNew } = req.body
+  const user = await User.findUserById(userId);
+
+  if (newPassword !== repeatNew) {
+    res.send({ error: "New password fields don't match" })
+    return;
+  }
+  if (newPassword === currentPassword) {
+    res.send({ error: "New password can't be old password" })
+    return;
+  }
+  const resultOfStrongCheck = isStrongPassword(newPassword)
+  if (!resultOfStrongCheck.success) {
+    res.send({ error: resultOfStrongCheck.message })
+    return;
+  }
+
+  if (user && bcrypt.compareSync(currentPassword, user.password)) {
+    const profile = await User.updateUserPassword(userId, newPassword)
+    res.send({ message: "Your account was successfully updated", profile })
+    return;
+  } else {
+    res.send({ error: "Incorrect Current Password." });
+    return;
+  }
 });
 
 app.listen(process.env.PORT || 3000, () => {
