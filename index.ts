@@ -206,9 +206,9 @@ app.post("/getNotificationHistory", async (req, res) => {
 });
 
 // ************** Get All Notifications for User ***************
-app.post("/changeReadState", async (req, res) => {
-  const { notificationId, newReadStatus } = req.body
-  const notification = await Notifications.changeReadState(notificationId, newReadStatus)
+app.post("/deleteNotification", async (req, res) => {
+  const { notificationId } = req.body
+  const notification = await Notifications.deleteNotification(notificationId)
   res.send({ notification })
   return;
 });

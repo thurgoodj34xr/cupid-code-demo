@@ -18,13 +18,10 @@ export function recordNotification(userId: number, title: string, message: strin
     })
 }
 
-export function changeReadState(notificationId: number, read: boolean) {
-    return db.notifications.update({
+export function deleteNotification(notificationId: number) {
+    return db.notifications.delete({
         where: {
-            id: notificationId,
-        },
-        data: {
-            read: read
+            id: notificationId
         }
     })
 }

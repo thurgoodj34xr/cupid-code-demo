@@ -48,7 +48,9 @@ function Home() {
       {/* Container for Daily Notifications */}
       <p className="label">Daily Notifications</p>
       {notificationHistory.map((notification) => (
-        <DailyNotification key={notification.id}
+        <DailyNotification
+          key={notification.id} // Use unique identifier as the key  
+          notificationId={notification.id}
           title={notification.title}
           body={notification.message}
           time={notification.timeStamp}

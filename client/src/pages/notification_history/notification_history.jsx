@@ -52,31 +52,6 @@ function NotificationHistory() {
     }
   }
 
-  const updateReadStatus = async (notificationId, newReadStatus) => {
-    // Send API request to update the "read" status on the server
-    try {
-      const response = await Api.PostWithAuth("/changeReadState", {
-        notificationId,
-        newReadStatus,
-      }, context);
-
-      // Handle the response as needed (e.g., show a success message)
-      if (!response.error) {
-        // Update the state for this specific notification
-        setNotificationHistory((prevHistory) =>
-          prevHistory.map((notification) =>
-            notification.id === notificationId
-              ? { ...notification, read: newReadStatus }
-              : notification
-          )
-        );
-      } else {
-        console.error("Error updating read status:", response.error);
-      }
-    } catch (error) {
-      console.error("Error updating read status:", error);
-    }
-  };
 
   async function getNotificationHistory() {
     const userId = user.id;
@@ -130,9 +105,6 @@ function NotificationHistory() {
           <strong>Total:</strong> {notification.title} |{" "}
           <strong>Details:</strong> {notification.message} |{" "}
           <strong>Read:</strong> {String(notification.read)} |{" "}
-          <button onClick={() => updateReadStatus(notification.id, !notification.read)}>
-            Toggle Read Status
-          </button>
         </li>
       ))}
     </ul>

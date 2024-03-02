@@ -2,7 +2,7 @@ import classes from "./daily_notificaiton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-function DailyNotification({ title, body, time }) {
+function DailyNotification({ notificationId, title, body, time }) {
   const creationTime = new Date(time);
   const currentTime = new Date();
   const timeDifference = currentTime - creationTime;
