@@ -15,7 +15,7 @@ import CupidCash from "./pages/cupid_cash/cupid_cash";
 import CreateNotification from "./pages/createNotification/createNotification.jsx";
 import Purchases from "./pages/purchases/purchases";
 import SelectAccount from "./pages/select_account/select_account.jsx";
-
+import UpdatePassword from "./pages/updatePassword/updatePassword.jsx";
 const router = createHashRouter([
   {
     path: "",
@@ -83,6 +83,14 @@ const router = createHashRouter([
         element: (
           <ConditionalRoute
             componetToRender={<MyAccount />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      }, {
+        path: "/UpdatePassword",
+        element: (
+          <ConditionalRoute
+            componetToRender={<UpdatePassword />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),
