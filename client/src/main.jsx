@@ -12,6 +12,7 @@ import AiChat from "./pages/ai_chat/ai_chat";
 import SelectCupid from "./pages/select_cupid/select_cupid";
 import MyAccount from "./pages/my_account/my_account";
 import CupidCash from "./pages/cupid_cash/cupid_cash";
+import CreateNotification from "./pages/createNotification/createNotification.jsx";
 import Purchases from "./pages/purchases/purchases";
 import SelectAccount from "./pages/select_account/select_account.jsx";
 
@@ -64,6 +65,15 @@ const router = createHashRouter([
         element: (
           <ConditionalRoute
             componetToRender={<SelectCupid />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+      {
+        path: "/CreateNotification",
+        element: (
+          <ConditionalRoute
+            componetToRender={<CreateNotification />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),

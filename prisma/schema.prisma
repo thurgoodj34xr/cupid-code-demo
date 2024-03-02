@@ -15,17 +15,18 @@ datasource db {
 // updatedAt DateTime @updatedAt
 
 model User {
-  id           Int           @id @default(autoincrement())
-  firstName    String
-  lastName     String
-  email        String        @unique
-  password     String
-  refreshToken RefreshToken?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  profile      Profile?
-  cupid        Cupid?
-  purchase     Purchases[]
+  id            Int             @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String          @unique
+  password      String
+  refreshToken  RefreshToken?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  profile       Profile?
+  cupid         Cupid?
+  purchase      Purchases[]
+  Notifications Notifications[]
 }
 
 // This is the Standard user schema.
@@ -78,4 +79,13 @@ model Purchases {
   timestamp   DateTime @default(now())
   User        User     @relation(fields: [userId], references: [id])
   userId      Int
+}
+
+model Notifications {
+  id        Int      @id @default(autoincrement())
+  title     String
+  message   String
+  timeStamp DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }

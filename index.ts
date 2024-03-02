@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import * as User from "./services/user";
 import * as Auth from "./services/auth";
 import * as Purchases from "./services/purchases";
+import * as Notifications from "./services/notifications";
 import * as Jwt from "./utils/jwt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
@@ -85,20 +86,19 @@ app.post("/signin", async (req, res) => {
 app.post("/signup", async (req, res) => {
   const { userType, firstName, lastName, email, password, age, budget, goals, profileImage} = req.body;
   console.log(profileImage);
-  return;
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
     res.send({ error: "Email already in use" });
     return;
   }
-
+  var user = await User.createUser({ firstName, lastName, email, password, age, budget, goals })
   switch (userType) {
+
     case 'Standard':
-      if (await User.createUser({ firstName, lastName, email, password, age, budget, goals })) {
+      if (user) {
         res.send({ success: true });
-        res.send({ error: "An error occured" });
-      } else {
+        await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
       }
       break;
     default:
@@ -185,11 +185,35 @@ app.post("/recordPurchase", async (req, res) => {
   }
 });
 
-// ************** Get Full Purchase History ***************
+// ************** Record Purchase ***************
 app.post("/getPurchaseHistory", async (req, res) => {
   const { userId } = req.body
   const purchases = await Purchases.findAllByUserId(userId)
   res.send({ purchases })
+  return;
+});
+
+// ************** Record Notification ***************
+app.post("/recordNotification", async (req, res) => {
+  const { userId, title, message } = req.body
+  const notification = await Notifications.recordNotification(userId, title, message)
+  res.send({ message: "Your message was sent", notification })
+  return;
+});
+
+// ************** Get All Notifications for User ***************
+app.post("/getNotificationHistory", async (req, res) => {
+  const { userId } = req.body
+  const notifications = await Notifications.findAllByUserId(userId)
+  res.send({ notifications })
+  return;
+});
+
+// ************** Get All Notifications for User ***************
+app.post("/deleteNotification", async (req, res) => {
+  const { notificationId } = req.body
+  const notification = await Notifications.deleteNotification(notificationId)
+  res.send({ notification })
   return;
 });
 
