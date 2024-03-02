@@ -4,6 +4,7 @@ import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
+import ResponseMessage from "../../componets/responseMessage/responseMessage";
 
 function CupidCash() {
   const context = useContext(AppContext);
@@ -13,8 +14,9 @@ function CupidCash() {
   const [expirationDate, setExpirationDate] = useState("");
   const [cvv, setCVV] = useState("");
   const [userBalance, setUserBalance] = useState(user.profile.balance);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [zip, setZip] = useState(0);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   // Client-side validation function
   const validateAmount = (value) => {
@@ -68,11 +70,6 @@ function CupidCash() {
 
 
     return true;
-  };
-
-  const handleAmountChange = (v) => {
-    const newValue = parseInt(v, 10) || 0;
-    setAmountToAdd(newValue);
   };
 
   function creditCardValidation(value) {
@@ -148,7 +145,9 @@ function CupidCash() {
       // setExpirationDate('');
       // setCVV('');
       setErrorMessage(null); // Clear any previous error messages
+      setSuccessMessage(`You successfully bought ${amountToAdd} CupidBucks`)
     } else {
+      setSuccessMessage(null); // Clear previous success message
       setErrorMessage(response.error);
     }
   };
@@ -158,11 +157,8 @@ function CupidCash() {
       <div>
         <p className="label">Current balance: {userBalance}</p>
       </div>
-      {errorMessage && (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          Error: {errorMessage}
-        </div>
-      )}
+      {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
+      {successMessage && <ResponseMessage type="success" message={successMessage} />}
       <Input
         inputType="number"
         state={amountToAdd == 0 ? "" : amountToAdd}

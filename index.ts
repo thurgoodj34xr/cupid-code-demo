@@ -1,20 +1,18 @@
+import bcrypt from "bcryptjs";
+import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
 import express from "express";
 import { engine } from 'express-handlebars';
 import fs from "fs";
-import * as dotenv from "dotenv";
-import bodyParser from "body-parser";
-import * as User from "./services/user";
-import * as Auth from "./services/auth";
-import * as Purchases from "./services/purchases";
-import * as Notifications from "./services/notifications";
-import * as Jwt from "./utils/jwt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { v4 as uuid } from "uuid";
-import bcrypt from "bcryptjs";
-import tokenHasher from "./utils/hashToken";
-import { Decimal } from "@prisma/client/runtime/library";
 import multer from "multer";
 import path from "path";
+import * as Auth from "./services/auth";
+import * as Notifications from "./services/notifications";
+import * as Purchases from "./services/purchases";
+import * as User from "./services/user";
+import { isStrongPassword } from "./utils/isStrongPassword";
+import * as Jwt from "./utils/jwt";
 dotenv.config();
 
 
@@ -111,7 +109,6 @@ app.post("/signin", async (req, res) => {
 
 app.post("/signup", upload.single('file'), async (req, res) => {
   const { userType, firstName, lastName, email, password, age, budget, goals} = req.body;
-
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
@@ -211,7 +208,7 @@ app.post("/recordPurchase", async (req, res) => {
   }
 });
 
-// ************** Record Purchase ***************
+// ************** Get Purchase History ***************
 app.post("/getPurchaseHistory", async (req, res) => {
   const { userId } = req.body
   const purchases = await Purchases.findAllByUserId(userId)
@@ -235,12 +232,79 @@ app.post("/getNotificationHistory", async (req, res) => {
   return;
 });
 
-// ************** Get All Notifications for User ***************
+// ************** Delete Specific Notification ***************
 app.post("/deleteNotification", async (req, res) => {
   const { notificationId } = req.body
   const notification = await Notifications.deleteNotification(notificationId)
   res.send({ notification })
   return;
+});
+
+// ************** Update User Account ***************
+app.post("/updateProfile", async (req, res) => {
+  const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
+  var workingAge = parseInt(age)
+  var workingBudget = parseFloat(dailyBudget)
+
+  // Validate Numbers
+  if (isNaN(workingAge)) {
+    res.send({ error: "Age must be a number" })
+    return;
+  }
+
+  if (isNaN(workingBudget)) {
+    res.send({ error: "Budget must be a number" });
+    return;
+  }
+
+  // Check Email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.send({ error: "Invalid Email Provided" })
+    return;
+  }
+  // Check Budget
+  if (workingBudget < 10 && workingBudget != 0) {
+    res.send({ error: "In order to service quality dates, Cupid Code requires a minimum of 10 cupid bucks per date" })
+    return;
+  }
+  // Check Age
+  if (workingAge < 18 && workingAge != 0) {
+    res.send({ error: "To use this service you must be at least 18" })
+    return;
+  }
+  const updatedAccount = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
+  res.send({ message: "Your account was successfully updated", updatedAccount })
+  return;
+});
+
+// ************** Update User Password ***************
+app.post("/updatePassword", async (req, res) => {
+  const { userId, currentPassword, newPassword, repeatNew } = req.body
+  const user = await User.findUserById(userId);
+
+  if (newPassword !== repeatNew) {
+    res.send({ error: "New password fields don't match" })
+    return;
+  }
+  if (newPassword === currentPassword) {
+    res.send({ error: "New password can't be old password" })
+    return;
+  }
+  const resultOfStrongCheck = isStrongPassword(newPassword)
+  if (!resultOfStrongCheck.success) {
+    res.send({ error: resultOfStrongCheck.message })
+    return;
+  }
+
+  if (user && bcrypt.compareSync(currentPassword, user.password)) {
+    const profile = await User.updateUserPassword(userId, newPassword)
+    res.send({ message: "Your account was successfully updated", profile })
+    return;
+  } else {
+    res.send({ error: "Incorrect Current Password." });
+    return;
+  }
 });
 
 app.listen(process.env.PORT || 3000, () => {

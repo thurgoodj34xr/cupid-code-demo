@@ -8,12 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
+import ResponseMessage from "../../componets/responseMessage/responseMessage";
 
 function Purchases() {
   const context = useContext(AppContext);
   const user = context.getUser();
   const [purchaseHistory, setPurchaseHistory] = useState([]);
-  const [userBalance, setUserBalance] = useState(user.profile.balance);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
@@ -21,11 +21,6 @@ function Purchases() {
     jobCost: "",
     details: "",
   });
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -40,12 +35,10 @@ function Purchases() {
       { userId, cupidId, total, jobCost, details },
       context
     );
-    console.log(response);
     if (!response.error) {
       // Update user profile with the new balance
       user.profile.balance = response.newBalance;
       context.updateUser(user);
-      setUserBalance(response.newBalance);
       setErrorMessage(null);
       setSuccessMessage(response.message);
       setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
@@ -66,21 +59,13 @@ function Purchases() {
   }
   useEffect(() => {
     getPurchaseHistory();
-    return () => {};
+    return () => { };
   }, []);
 
   return (
     <section className={classes.main}>
-      {errorMessage && (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          Error: {errorMessage}
-        </div>
-      )}
-      {successMessage && (
-        <div style={{ color: "green", marginTop: "10px" }}>
-          {successMessage}
-        </div>
-      )}
+      {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
+      {successMessage && <ResponseMessage type="success" message={successMessage} />}
       <div className="row">
         <p className="label left">Create Demo Purchase</p>
         <p className="label left">${user.profile.balance}</p>
