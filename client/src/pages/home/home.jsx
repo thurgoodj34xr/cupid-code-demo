@@ -1,12 +1,31 @@
 import Navbar from "../../componets/navbar/navbar";
 import classes from "./home.module.css";
+import * as Api from "../../hook/api";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
-import { useContext, useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
 
 function Home() {
   const context = useContext(AppContext);
+  const [notificationHistory, setNotificationHistory] = useState([]);
   const user = context.getUser();
+
+  async function getNotificationHistory() {
+    const userId = user.id;
+    var response = await Api.PostWithAuth(
+      "/getNotificationHistory",
+      { userId },
+      context
+    );
+    setNotificationHistory(response.notifications)
+    console.log(response.notifications[0])
+  }
+  useEffect(() => {
+    getNotificationHistory();
+
+    return () => {
+    };
+  }, []);
   return (
     <section className={classes.container}>
       {/* Container for Budget */}
@@ -28,16 +47,13 @@ function Home() {
 
       {/* Container for Daily Notifications */}
       <p className="label">Daily Notifications</p>
-      <DailyNotification
-        title="Be Yourself"
-        body="Authenticity is attractive. Don't try to be someone you're not just to.."
-        time="2m"
-      />
-      <DailyNotification
-        title="Smell Good"
-        body="Take a moment in your morning routine to put on some..."
-        time="4m"
-      />
+      {notificationHistory.map((notification) => (
+        <DailyNotification key={notification.id}
+          title={notification.title}
+          body={notification.message}
+          time={notification.timeStamp}
+        />
+      ))}
     </section>
   );
 }
