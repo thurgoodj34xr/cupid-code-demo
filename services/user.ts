@@ -59,6 +59,17 @@ export function getUserByProfile(id: any) {
   });
 }
 
+export function updateUserPicture(userId: any, photoUrl: string) {
+  return db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+        photoUrl,
+    },
+  })
+}
+
 export function updateUserBalance(userId: any, newBalance: number) {
   return db.user.update({
     where: {

@@ -20,6 +20,7 @@ model User {
   lastName      String
   email         String          @unique
   password      String
+  photoUrl      String?
   refreshToken  RefreshToken?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt

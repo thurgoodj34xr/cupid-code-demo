@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import AppContext from "../../componets/app_context";
 import TextArea from "../../componets/text_area/text_area";
+import axios from "axios";
 import {
   FaCamera,
   FaCameraRetro,
@@ -31,15 +32,11 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [bio, setBio] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [file, setFile] = useState();
 
   const context = useContext(AppContext);
   const userType = context.getAccountType();
   let navigate = useNavigate();
-
-  function handleChange(e) {
-    console.log(e.target.files);
-    setProfileImage(URL.createObjectURL(e.target.files[0]));
-  }
 
   const setUser = () => {
     setMale(true);
@@ -49,13 +46,11 @@ function SignUp() {
     setMale(false);
   };
 
-  function handleEmail(email) {
-    setEmail(email);
-  }
-
-  function handlePassword(password) {
-    setPassword(password);
-  }
+  useEffect(() => {
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
+  }, [file]);
 
   const signUp = async () => {
     if (password != confirmPassword) {
@@ -82,6 +77,14 @@ function SignUp() {
       setError(res.error);
       setButtonText("Sign Up");
     } else {
+      // Update the profile picture
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("userId", res.userId);
+      axios
+        .post("/profileUrl", formData)
+        .then((res) => {})
+        .catch((er) => console.log(er));
       navigate("/");
     }
   };
@@ -113,7 +116,7 @@ function SignUp() {
           height="120px"
           accept="image/*"
         />
-        <div onClick={handleChange} className={classes.cameraContainer}>
+        <div className={classes.cameraContainer}>
           <label className={classes.label} htmlFor="file-input">
             <FaCameraRetro className={classes.camera} size="22px" />
           </label>
@@ -121,7 +124,7 @@ function SignUp() {
             className={classes.fileInput}
             id="file-input"
             type="file"
-            onChange={handleChange}
+            onChange={(e) => setFile(e.target.files[0])}
           />
         </div>
       </span>

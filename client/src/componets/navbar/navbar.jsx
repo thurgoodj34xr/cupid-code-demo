@@ -20,6 +20,7 @@ function Navbar({ title }) {
   const [init, setInit] = useState(true);
   const context = useContext(AppContext);
   const user = context.getUser();
+  console.log(user);
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -112,6 +113,9 @@ function Navbar({ title }) {
         </section>
         {/* User Info */}
         <section className={classes.container}>
+          <span className={classes.profilePhoto}>
+            <img src={user.photoUrl} width="120px" height="120px" />
+          </span>
           <section className={classes.profile}>
             <h2>
               {user.firstName} {user.lastName}

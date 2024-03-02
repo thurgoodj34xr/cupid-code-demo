@@ -17,13 +17,12 @@ function Home() {
       { userId },
       context
     );
-    setNotificationHistory(response.notifications)
+    setNotificationHistory(response.notifications);
   }
   useEffect(() => {
     getNotificationHistory();
 
-    return () => {
-    };
+    return () => {};
   }, []);
 
   const handleDeleteNotification = async (notificationId) => {
@@ -34,10 +33,12 @@ function Home() {
     );
     if (!response.error) {
       // Filter out the notification with the specified ID
-      const updatedNotificationHistory = notificationHistory.filter(notification => notification.id !== notificationId);
+      const updatedNotificationHistory = notificationHistory.filter(
+        (notification) => notification.id !== notificationId
+      );
       setNotificationHistory(updatedNotificationHistory);
-    };
-  }
+    }
+  };
 
   return (
     <section className={classes.container}>
@@ -62,7 +63,7 @@ function Home() {
       <p className="label">Daily Notifications</p>
       {notificationHistory.map((notification) => (
         <DailyNotification
-          key={notification.id} // Use unique identifier as the key  
+          key={notification.id} // Use unique identifier as the key
           notificationId={notification.id}
           title={notification.title}
           body={notification.message}

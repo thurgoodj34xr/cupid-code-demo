@@ -13,6 +13,8 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import tokenHasher from "./utils/hashToken";
 import { Decimal } from "@prisma/client/runtime/library";
+import multer from "multer";
+import path from "path";
 dotenv.config();
 
 
@@ -30,8 +32,32 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`)
-  next()
+  if (req.url.includes("/Images")) {
+    res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
+  } else {
+    next()
+  }
 });
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    return cb(null, "./Images")
+  },
+  filename: function (req, file, cb) {
+    return cb(null, `${Date.now()}_${file.originalname}`)
+  }
+})
+
+const upload = multer({storage})
+
+app.post('/profileUrl', upload.single('file'), async (req, res) => {
+  try {
+    const user = await User.updateUserPicture(parseInt(req.body.userId), req!!.file!!.path)
+  } catch (error) {
+    res.send({error})
+    console.log({error})
+  }
+})
 
 if (!DEBUG) {
   app.use(express.static('static'));
@@ -83,9 +109,9 @@ app.post("/signin", async (req, res) => {
 
 // ******************* Sign up Endpoint *************************
 
-app.post("/signup", async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals, profileImage} = req.body;
-  console.log(profileImage);
+app.post("/signup", upload.single('file'), async (req, res) => {
+  const { userType, firstName, lastName, email, password, age, budget, goals} = req.body;
+
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
@@ -97,7 +123,7 @@ app.post("/signup", async (req, res) => {
 
     case 'Standard':
       if (user) {
-        res.send({ success: true });
+        res.send({ userId: user.id });
         await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
       }
       break;

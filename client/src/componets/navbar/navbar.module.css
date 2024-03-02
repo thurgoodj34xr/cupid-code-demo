@@ -55,7 +55,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 0px;
     gap: 20px;
     margin-bottom: 20px;
 }
@@ -122,6 +122,24 @@ h3 {
 
 .fadeout {
     animation: fadeout 0.5s forwards
+}
+
+.profilePhoto {
+    margin: auto;
+    min-height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  
+
+}
+
+.profilePhoto img {
+    object-fit: cover;
+    object-position: center center;
 }
 
 @keyframes fadein {
