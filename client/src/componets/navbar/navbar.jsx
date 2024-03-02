@@ -14,6 +14,7 @@ import {
   faUser,
   faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaKey } from "react-icons/fa";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
@@ -64,6 +65,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const changePassword = () => {
+    navigate("ChangePassword");
+    hideNavBar();
+  }
+
   const cupidCash = () => {
     navigate("/CupidCash");
     hideNavBar();
@@ -91,8 +97,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.wrapper} ${classes.fadein}`
-            : `${classes.wrapper} ${classes.fadeout}`
+              ? `${classes.wrapper} ${classes.fadein}`
+              : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -100,8 +106,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.modal} ${classes.slideRight}`
-            : `${classes.modal} ${classes.slideLeft}`
+              ? `${classes.modal} ${classes.slideRight}`
+              : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
@@ -155,6 +161,13 @@ function Navbar({ title }) {
               <FontAwesomeIcon icon={faUser} size="2xl" />
             </div>
             <h3>My Account</h3>
+          </section>
+          <section className={classes.tile} onClick={changePassword}>
+            <div>
+              {/* TODO: This sizing works but it logs an error*/}
+              <FaKey size="2rem" />
+            </div>
+            <h3>Change Password</h3>
           </section>
           {/* Add Cupid Cash */}
           <section className={classes.tile} onClick={cupidCash}>

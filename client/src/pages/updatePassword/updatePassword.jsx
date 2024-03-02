@@ -1,5 +1,5 @@
 import classes from '../my_account/my_account.module.css'
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";
 import Input from "../../componets/inputs/input";
