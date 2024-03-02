@@ -9,7 +9,6 @@ import Button from "../../componets/button/button";
 function MyAccount() {
   const context = useContext(AppContext);
   const user = context.getUser();
-  console.log(user);
   const [email, setEmail] = useState(user.email);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
