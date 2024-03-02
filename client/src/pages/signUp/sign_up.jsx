@@ -8,6 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import AppContext from "../../componets/app_context";
 import TextArea from "../../componets/text_area/text_area";
+import {
+  FaCamera,
+  FaCameraRetro,
+  FaCircle,
+  FaMonero,
+  FaPersonBooth,
+  FaUser,
+} from "react-icons/fa";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -21,10 +29,17 @@ function SignUp() {
   const [goals, setGoals] = useState("");
   const [male, setMale] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [bio, setBio] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   const context = useContext(AppContext);
   const userType = context.getAccountType();
   let navigate = useNavigate();
+
+  function handleChange(e) {
+    console.log(e.target.files);
+    setProfileImage(URL.createObjectURL(e.target.files[0]));
+  }
 
   const setUser = () => {
     setMale(true);
@@ -60,6 +75,7 @@ function SignUp() {
       age,
       budget,
       goals,
+      profileImage,
     });
 
     if (res.error) {
@@ -86,6 +102,29 @@ function SignUp() {
       </div>
       <h1>Create Account</h1>
       <p className="label">Create an account by filling out the form below.</p>
+      <span className={classes.profilePhoto}>
+        <img
+          src={
+            profileImage
+              ? profileImage
+              : "https://images.pexels.com/photos/1317712/pexels-photo-1317712.jpeg"
+          }
+          width="120px"
+          height="120px"
+          accept="image/*"
+        />
+        <div onClick={handleChange} className={classes.cameraContainer}>
+          <label className={classes.label} htmlFor="file-input">
+            <FaCameraRetro className={classes.camera} size="22px" />
+          </label>
+          <input
+            className={classes.fileInput}
+            id="file-input"
+            type="file"
+            onChange={handleChange}
+          />
+        </div>
+      </span>
       {error && <p className="error">{error}</p>}
       <Input
         inputType="text"
@@ -119,7 +158,9 @@ function SignUp() {
         setState={setConfirmPassword}
       />
       {userType != "Standard" ? (
-        ""
+        <>
+          <TextArea placeholder="Enter Bio" state={bio} setState={setBio} />
+        </>
       ) : (
         <>
           <Input

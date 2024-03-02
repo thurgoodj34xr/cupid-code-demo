@@ -11,6 +11,8 @@
 
 body {
   background-color: #EEF2F3;
+  max-height: 100vh;
+  overflow-y: hidden;
 }
 
 .logo {
