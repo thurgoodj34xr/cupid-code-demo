@@ -2,16 +2,21 @@ import classes from "./daily_notificaiton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { calculateTimeSince } from "../../../../utils/calculateTimeSince.js"
+import { useState } from "react";
 
 function DailyNotification({ notificationId, title, body, time, onDelete }) {
+  const [c, setC] = useState('');
   var printTime = calculateTimeSince(time)
 
   const handleDeleteClick = () => {
-    onDelete(notificationId);
+    setC(classes.delete)
+    setTimeout(() => {
+      onDelete(notificationId);
+    }, 1000)
   };
 
   return (
-    <div className={classes.container}>
+    <div className={`${classes.container} ${c}`}>
       <div className={classes.left}>
         <h3>{title}</h3>
         <p>{body}</p>

@@ -88,11 +88,13 @@ app.post("/signup", async (req, res) => {
     res.send({ error: "Email already in use" });
     return;
   }
-
+  var user = await User.createUser({ firstName, lastName, email, password, age, budget, goals })
   switch (userType) {
+
     case 'Standard':
-      if (await User.createUser({ firstName, lastName, email, password, age, budget, goals })) {
+      if (user) {
         res.send({ success: true });
+        await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
       } else {
         res.send({ error: "An error occured" });
       }
