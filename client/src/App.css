@@ -171,3 +171,7 @@ body {
 .br {
   border-radius: 8px;
 }
+
+.center {
+  text-align: center;
+}

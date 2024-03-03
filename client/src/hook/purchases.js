@@ -8,7 +8,7 @@ async function PurchaseHistory(userId, context, setState) {
     if (resp.error) {
       context.sendNotification(`Error: ${resp.error}`)
     } else {
-      setState(purchases)
+      setState(resp.purchases)
     }
   }
 

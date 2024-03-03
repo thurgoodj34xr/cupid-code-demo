@@ -21,7 +21,9 @@ function AiAssistance() {
     <section className={classes.main}>
       <div className={classes.row}>
         <p className="label">Current Cupid</p>
-        <p className="pointer">Select</p>
+        <p className="pointer" onClick={() => navigate("/SelectCupid")}>
+          Select
+        </p>
       </div>
       <CupidTile name="Jake" distance="0.5 mi" />
       <p className="label">Notifications</p>

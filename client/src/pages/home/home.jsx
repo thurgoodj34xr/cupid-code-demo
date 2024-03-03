@@ -19,17 +19,21 @@ function Home() {
   const navigate = useNavigate();
 
   const getNotificationHistory = async () => {
-    const notifications = await GetNotificationHistory(user.id, NotificationType.DAILY, context);
-    setNotificationHistory(notifications)
-  }
+    const notifications = await GetNotificationHistory(
+      user.id,
+      NotificationType.DAILY,
+      context
+    );
+    setNotificationHistory(notifications);
+  };
   useEffect(() => {
     getNotificationHistory();
 
-    return () => { };
+    return () => {};
   }, []);
 
   const handleDeleteNotification = async (notificationId) => {
-    const response = await HandleDeleteNotification(notificationId, context)
+    const response = await HandleDeleteNotification(notificationId, context);
     if (!response.error) {
       // Filter out the notification with the specified ID
       const updatedNotificationHistory = notificationHistory.filter(
@@ -37,8 +41,7 @@ function Home() {
       );
       setNotificationHistory(updatedNotificationHistory);
     }
-  }
-
+  };
 
   useEffect(() => {
     PurchaseHistory(user.id, context, setPurchaseHistory);
@@ -65,17 +68,26 @@ function Home() {
 
       {/* Container for Daily Notifications */}
       <p className="label">Daily Notifications</p>
-      {notificationHistory.map((notification) => (
-        <DailyNotification
-          key={notification.id} // Use unique identifier as the key
-          notificationId={notification.id}
-          title={notification.title}
-          body={notification.message}
-          time={notification.timeStamp}
-          onDelete={handleDeleteNotification}
-        />
-      ))}
-      <p className="label">Purchase History</p>
+      {notificationHistory.length > 0 ? (
+        notificationHistory.map((notification) => (
+          <DailyNotification
+            key={notification.id} // Use unique identifier as the key
+            notificationId={notification.id}
+            title={notification.title}
+            body={notification.message}
+            time={notification.timeStamp}
+            onDelete={handleDeleteNotification}
+          />
+        ))
+      ) : (
+        <p className="center label"> You currently have 0 notifications</p>
+      )}
+      <div className="flex row between">
+        <p className="label">Purchase History</p>
+        <p className="pointer" onClick={() => navigate("/Purchases")}>
+          View All
+        </p>
+      </div>
       {purchaseHistory &&
         purchaseHistory.map((purchase, idx) => (
           <PurchaseTile
