@@ -8,7 +8,7 @@ import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
 import PurchaseHistory from "../../hook/purchases";
-
+import { useNavigate } from "react-router-dom";
 function Purchases() {
   const context = useContext(AppContext);
   const user = context.getUser();
@@ -47,10 +47,17 @@ function Purchases() {
     }
   };
 
+  // Set the purchases for the page
+  const getPurchaseHistory = async () => {
+    const purchases = await PurchaseHistory(user.id, context);
+    setPurchaseHistory(purchases);
+  };
+
   useEffect(() => {
-    PurchaseHistory(user.id, context, setPurchaseHistory);
+    getPurchaseHistory();
   }, []);
 
+  let navigate = useNavigate();
   return (
     <section className={classes.main}>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
@@ -98,6 +105,10 @@ function Purchases() {
             icon={<FaMoneyBill size="2rem" />}
           />
         ))}
+      </div>
+      <div className="flex row between">
+        <p className="label">Need more CupidCash?</p>
+        <p className="link pointer" onClick={() => navigate("/CupidCash")}>Buy now!</p>
       </div>
     </section>
   );

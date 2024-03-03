@@ -15,7 +15,6 @@ function Home() {
   const context = useContext(AppContext);
   const [notificationHistory, setNotificationHistory] = useState([]);
   const [purchaseHistory, setPurchaseHistory] = useState();
-  const user = context.getUser();
   const navigate = useNavigate();
 
   const getNotificationHistory = async () => {
@@ -43,8 +42,14 @@ function Home() {
     }
   };
 
+  // Set the purchaes for the page
+  const getPurchaseHistory = async () => {
+    const purchases = await PurchaseHistory(user.id, context);
+    setPurchaseHistory(purchases);
+  };
+
   useEffect(() => {
-    PurchaseHistory(user.id, context, setPurchaseHistory);
+    getPurchaseHistory();
   }, []);
 
   return (
