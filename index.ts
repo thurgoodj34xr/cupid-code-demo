@@ -12,6 +12,7 @@ import * as Notifications from "./services/notifications";
 import * as Purchases from "./services/purchases";
 import * as User from "./services/user";
 import { isStrongPassword } from "./utils/isStrongPassword";
+import { NotificationType } from "@prisma/client";
 import * as Jwt from "./utils/jwt";
 dotenv.config();
 
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     return cb(null, "./Images")
   },
   filename: function (req, file, cb) {
@@ -46,14 +47,14 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({storage})
+const upload = multer({ storage })
 
 app.post('/profileUrl', upload.single('file'), async (req, res) => {
   try {
     const user = await User.updateUserPicture(parseInt(req.body.userId), req!!.file!!.path)
   } catch (error) {
-    res.send({error})
-    console.log({error})
+    res.send({ error })
+    console.log({ error })
   }
 })
 
@@ -108,11 +109,16 @@ app.post("/signin", async (req, res) => {
 // ******************* Sign up Endpoint *************************
 
 app.post("/signup", upload.single('file'), async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals} = req.body;
+  const { userType, firstName, lastName, email, password, age, budget, goals } = req.body;
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
     res.send({ error: "Email already in use" });
+    return;
+  }
+  const passwordIsStrong = isStrongPassword(password);
+  if (!passwordIsStrong.success) {
+    res.send({ error: passwordIsStrong.message })
     return;
   }
   var user = await User.createUser({ firstName, lastName, email, password, age, budget, goals })
@@ -121,7 +127,7 @@ app.post("/signup", upload.single('file'), async (req, res) => {
     case 'Standard':
       if (user) {
         res.send({ userId: user.id });
-        await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
+        await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
       }
       break;
     default:
@@ -218,16 +224,24 @@ app.post("/getPurchaseHistory", async (req, res) => {
 
 // ************** Record Notification ***************
 app.post("/recordNotification", async (req, res) => {
-  const { userId, title, message } = req.body
-  const notification = await Notifications.recordNotification(userId, title, message)
+  const { userId, title, message, notificationType } = req.body
+  if (notificationType == NotificationType.ALL) {
+    res.send({ error: "You cannot create a notification type ALL" })
+  }
+  const notification = await Notifications.recordNotification(userId, title, message, notificationType)
   res.send({ message: "Your message was sent", notification })
   return;
 });
 
 // ************** Get All Notifications for User ***************
 app.post("/getNotificationHistory", async (req, res) => {
-  const { userId } = req.body
-  const notifications = await Notifications.findAllByUserId(userId)
+  const { userId, notificationType } = req.body
+  var notifications = null;
+  if (notificationType == NotificationType.ALL) {
+    notifications = await Notifications.findAllByUserId(userId)
+  } else {
+    notifications = await Notifications.findAllByUserIdWithType(userId, notificationType)
+  }
   res.send({ notifications })
   return;
 });

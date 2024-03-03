@@ -7,6 +7,9 @@ import Input from "../../componets/inputs/input";
 import TextArea from "../../componets/text_area/text_area";
 import Button from "../../componets/button/button";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 
 function MyAccount() {
   const context = useContext(AppContext);
@@ -20,9 +23,13 @@ function MyAccount() {
   const [userType, setUserType] = useState("Standard");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [submitButtonText, setSubmitButtonText] = useState("Update");
 
   const updateProfile = async () => {
     const userId = user.id;
+    setSubmitButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
+    );
     const response = await Api.PostWithAuth(
       "/updateProfile",
       { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals },
@@ -41,6 +48,7 @@ function MyAccount() {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
+    setSubmitButtonText("Update")
   }
 
   return (
@@ -91,7 +99,7 @@ function MyAccount() {
             />
           </>
         )}
-        <Button text="Update" onClickFunc={updateProfile} />
+        <Button text={submitButtonText} onClickFunc={updateProfile} />
       </section>
     </section>
   );

@@ -21,7 +21,6 @@ function Navbar({ title }) {
   const [init, setInit] = useState(true);
   const context = useContext(AppContext);
   const user = context.getUser();
-  console.log(user);
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -168,7 +167,6 @@ function Navbar({ title }) {
           </section>
           <section className={classes.tile} onClick={changePassword}>
             <div>
-              {/* TODO: This sizing works but it logs an error*/}
               <FaKey size="2rem" />
             </div>
             <h3>Change Password</h3>

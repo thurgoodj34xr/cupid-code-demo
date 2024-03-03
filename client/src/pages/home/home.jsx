@@ -4,6 +4,7 @@ import * as Api from "../../hook/api";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
+import { NotificationType } from "@prisma/client";
 
 function Home() {
   const context = useContext(AppContext);
@@ -14,15 +15,16 @@ function Home() {
     const userId = user.id;
     var response = await Api.PostWithAuth(
       "/getNotificationHistory",
-      { userId },
+      { userId, notificationType: NotificationType.DAILY },
       context
     );
+    console.log(response)
     setNotificationHistory(response.notifications);
   }
   useEffect(() => {
     getNotificationHistory();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const handleDeleteNotification = async (notificationId) => {

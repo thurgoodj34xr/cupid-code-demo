@@ -1,7 +1,7 @@
 import classes from "./daily_notificaiton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { calculateTimeSince } from "../../../../utils/calculateTimeSince.js"
+import { calculateTimeSince } from "../../hook/calculateTimeSince.js"
 import { useState } from "react";
 
 function DailyNotification({ notificationId, title, body, time, onDelete }) {

@@ -47,20 +47,20 @@ function UpdatePassword() {
             <p>Welcome {user.firstName} please input your old password followed by your new password</p>
             <section className={classes.main}>
                 <Input
-                    inputType="text"
+                    inputType="password"
                     placeholder="Current Password"
                     state={current}
                     setState={setCurrent}
                     require
                 />
                 <Input
-                    inputType="text"
+                    inputType="password"
                     placeholder="New Password"
                     state={newPass}
                     setState={setnewPass}
                 />
                 <Input
-                    inputType="text"
+                    inputType="password"
                     placeholder="Repeat New Password"
                     state={repeatNew}
                     setState={setRepeatNew}
