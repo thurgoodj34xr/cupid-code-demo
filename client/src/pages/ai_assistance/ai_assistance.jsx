@@ -8,9 +8,36 @@ import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import { FaGoodreads, FaTicketAlt } from "react-icons/fa";
 import Button from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
+import GetNotificationHistory from "../../hook/notificationHistory";
+import HandleDeleteNotification from "../../hook/deleteNotification"
+import { NotificationType } from "@prisma/client";
+
 
 function AiAssistance() {
+
   const context = useContext(AppContext);
+  const user = context.getUser();
+  const [notificationHistory, setNotificationHistory] = useState([]);
+  const getNotificationHistory = async () => {
+    const notifications = await GetNotificationHistory(user.id, NotificationType.AIGEN, context);
+    setNotificationHistory(notifications)
+  }
+  useEffect(() => {
+    getNotificationHistory();
+
+    return () => { };
+  }, []);
+  const handleDeleteNotification = async (notificationId) => {
+    const response = await HandleDeleteNotification(notificationId, context)
+    if (!response.error) {
+      // Filter out the notification with the specified ID
+      const updatedNotificationHistory = notificationHistory.filter(
+        (notification) => notification.id !== notificationId
+      );
+      setNotificationHistory(updatedNotificationHistory);
+    }
+  }
+
   let navigate = useNavigate();
 
   const purchases = () => {
@@ -25,16 +52,16 @@ function AiAssistance() {
       </div>
       <CupidTile name="Jake" distance="0.5 mi" />
       <p className="label">Notifications</p>
-      <DailyNotification
-        title="Be Yourself"
-        body="Authenticity is attractive. Don't try to be someone you're not just to.."
-        time="2m"
-      />
-      <DailyNotification
-        title="Smell Good"
-        body="Take a moment in your morning routine to put on some..."
-        time="5m"
-      />
+      {notificationHistory.map((notification) => (
+        <DailyNotification
+          key={notification.id} // Use unique identifier as the key
+          notificationId={notification.id}
+          title={notification.title}
+          body={notification.message}
+          time={notification.timeStamp}
+          onDelete={handleDeleteNotification}
+        />
+      ))}
       <div className={classes.row}>
         <p className="label">Recent Purchases</p>
         <p className="pointer" onClick={purchases}>
