@@ -4,8 +4,6 @@ import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import { FaMoneyBill } from "react-icons/fa";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
@@ -49,7 +47,7 @@ function Purchases() {
     }
   };
 
-  // Set the purchaes for the page
+  // Set the purchases for the page
   const getPurchaseHistory = async () => {
     const purchases = await PurchaseHistory(user.id, context);
     setPurchaseHistory(purchases);
