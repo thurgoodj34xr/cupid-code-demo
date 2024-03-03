@@ -166,7 +166,6 @@ function Navbar({ title }) {
           </section>
           <section className={classes.tile} onClick={changePassword}>
             <div>
-              {/* TODO: This sizing works but it logs an error*/}
               <FaKey size="2rem" />
             </div>
             <h3>Change Password</h3>

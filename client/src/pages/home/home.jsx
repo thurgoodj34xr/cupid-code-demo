@@ -1,13 +1,15 @@
 import Navbar from "../../componets/navbar/navbar";
 import classes from "./home.module.css";
-import * as Api from "../../hook/api";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
+import { NotificationType } from "@prisma/client";
 import PurchaseHistory from "../../hook/purchases";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import GetNotificationHistory from "../../hook/notificationHistory";
+import HandleDeleteNotification from "../../hook/deleteNotification";
 
 function Home() {
   const context = useContext(AppContext);
@@ -16,27 +18,18 @@ function Home() {
   const user = context.getUser();
   const navigate = useNavigate();
 
-  async function getNotificationHistory() {
-    const userId = user.id;
-    var response = await Api.PostWithAuth(
-      "/getNotificationHistory",
-      { userId },
-      context
-    );
-    setNotificationHistory(response.notifications);
+  const getNotificationHistory = async () => {
+    const notifications = await GetNotificationHistory(user.id, NotificationType.DAILY, context);
+    setNotificationHistory(notifications)
   }
   useEffect(() => {
     getNotificationHistory();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const handleDeleteNotification = async (notificationId) => {
-    var response = await Api.PostWithAuth(
-      "/deleteNotification",
-      { notificationId },
-      context
-    );
+    const response = await HandleDeleteNotification(notificationId, context)
     if (!response.error) {
       // Filter out the notification with the specified ID
       const updatedNotificationHistory = notificationHistory.filter(
@@ -44,7 +37,8 @@ function Home() {
       );
       setNotificationHistory(updatedNotificationHistory);
     }
-  };
+  }
+
 
   useEffect(() => {
     PurchaseHistory(user.id, context, setPurchaseHistory);

@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import * as Api from "../../hook/api";
 import Navbar from "../../componets/navbar/navbar";
 import AppContext from "../../componets/app_context";
+import { NotificationType } from "@prisma/client";
 
 function CreateNotification() {
   const context = useContext(AppContext);
@@ -13,6 +14,7 @@ function CreateNotification() {
   const [formData, setFormData] = useState({
     title: '',
     message: '',
+    notificationType: false
   });
 
   const handleFormChange = (e) => {
@@ -29,10 +31,16 @@ function CreateNotification() {
     var title = formData.title
     var message = formData.message
     const userId = user.id;
+    var workingNotificationType = null;
+    if (formData.notificationType) {
+      workingNotificationType = NotificationType.DAILY;
+    } else {
+      workingNotificationType = NotificationType.AIGEN;
+    }
 
     const response = await Api.PostWithAuth(
       "/recordNotification",
-      { userId, title, message },
+      { userId, title, message, notificationType: workingNotificationType },
       context
     );
     if (!response.error) {
@@ -43,6 +51,7 @@ function CreateNotification() {
       setFormData({
         title: '',
         message: '',
+        notificationType: formData.notificationType
       });
     } else {
       setSuccessMessage(null);
@@ -88,6 +97,15 @@ function CreateNotification() {
       <label>
         Message:
         <input type="string" name="message" value={formData.message} onChange={handleFormChange} />
+      </label>
+      <label>
+        Is Daily:
+        <input
+          type="checkbox"
+          name="notificationType"
+          checked={formData.notificationType} // Use "checked" for a boolean value
+          onChange={handleFormChange}
+        />
       </label>
       <br />
       <br />

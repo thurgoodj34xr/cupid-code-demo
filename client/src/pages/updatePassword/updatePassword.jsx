@@ -56,20 +56,20 @@ function UpdatePassword() {
       </p>
       <section className={classes.main}>
         <Input
-          inputType="text"
+          inputType="password"
           placeholder="Current Password"
           state={current}
           setState={setCurrent}
           require
         />
         <Input
-          inputType="text"
+          inputType="password"
           placeholder="New Password"
           state={newPass}
           setState={setnewPass}
         />
         <Input
-          inputType="text"
+          inputType="password"
           placeholder="Confirm New Password"
           state={repeatNew}
           setState={setRepeatNew}
