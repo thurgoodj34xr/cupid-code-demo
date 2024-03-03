@@ -1,0 +1,13 @@
+.profilePhoto {
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.profilePhoto img {
+    object-fit: cover;
+    object-position: center center;
+}

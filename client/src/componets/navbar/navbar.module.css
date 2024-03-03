@@ -124,23 +124,7 @@ h3 {
     animation: fadeout 0.5s forwards
 }
 
-.profilePhoto {
-    margin: auto;
-    min-height: 120px;
-  width: 120px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  
 
-}
-
-.profilePhoto img {
-    object-fit: cover;
-    object-position: center center;
-}
 
 @keyframes fadein {
     0% {

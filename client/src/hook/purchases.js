@@ -1,11 +1,11 @@
 import * as Api from "./api"
-async function PurchaseHistory(userId, context) {
+async function PurchaseHistory(userId, context, setState) {
     var {purchases} = await Api.PostWithAuth(
       "/getPurchaseHistory",
       { userId },
       context
     );
-    return purchases;
+    setState(purchases)
   }
 
   export default PurchaseHistory;

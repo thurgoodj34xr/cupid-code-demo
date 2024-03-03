@@ -15,6 +15,7 @@ import {
   faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaKey } from "react-icons/fa";
+import PhotoCircle from "../photo_circle/photo_circle";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
@@ -118,9 +119,7 @@ function Navbar({ title }) {
         </section>
         {/* User Info */}
         <section className={classes.container}>
-          <span className={classes.profilePhoto}>
-            <img src={user.photoUrl} width="120px" height="120px" />
-          </span>
+          <PhotoCircle url={user.photoUrl} />
           <section className={classes.profile}>
             <h2>
               {user.firstName} {user.lastName}

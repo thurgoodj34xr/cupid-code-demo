@@ -4,6 +4,7 @@ import Navbar from "../../componets/navbar/navbar";
 import AppContext from "../../componets/app_context";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import * as Api from "../../hook/api";
+import PhotoCircle from "../../componets/photo_circle/photo_circle";
 
 function SelectCupid() {
   const context = useContext(AppContext);
@@ -11,7 +12,6 @@ function SelectCupid() {
 
   const getCupids = async () => {
     const { cupids } = await Api.GetWithAuth("/cupids", context);
-    console.log(cupids);
     setCupids(cupids);
   };
 
@@ -23,9 +23,11 @@ function SelectCupid() {
       <p className="label left">Avaliable cupids</p>
       {cupids &&
         cupids.map((cupid, idx) => {
+          console.log(cupid.photoUrl);
           return (
             <CupidTile
               key={idx}
+              photoCircle={<PhotoCircle url={cupid.photoUrl} size="100px" />}
               name={`${cupid.firstName} ${cupid.lastName}`}
               distance="5 mi"
               link="Hire"
