@@ -1,22 +1,15 @@
-import { useEffect, useState, useContext } from "react";
-import classes from "./sign_up.module.css";
-import Input from "../../componets/inputs/input";
-import Button from "../../componets/button/button";
-import { useNavigate } from "react-router-dom";
-import * as Api from "../../hook/api";
+import { faAngleLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import AppContext from "../../componets/app_context";
-import TextArea from "../../componets/text_area/text_area";
 import axios from "axios";
-import {
-  FaCamera,
-  FaCameraRetro,
-  FaCircle,
-  FaMonero,
-  FaPersonBooth,
-  FaUser,
-} from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
+import { FaCameraRetro } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import AppContext from "../../componets/app_context";
+import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
+import TextArea from "../../componets/text_area/text_area";
+import * as Api from "../../hook/api";
+import classes from "./sign_up.module.css";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -52,12 +45,66 @@ function SignUp() {
     }
   }, [file]);
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.keyCode === 13) {
+        console.log("presesd");
+        signUp();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const signUp = async () => {
     if (password != confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
+    if (!firstName) {
+      setError("First Name Required");
+      return;
+    }
+    if (!lastName) {
+      setError("Last Name Required");
+      return;
+    }
+    if (!email) {
+      setError("Email Required");
+      return;
+    }
+    if (!password) {
+      setError("Password Required");
+      return;
+    }
+
+    switch (userType) {
+      case "Standard":
+        if (!age) {
+          setError("Age Required");
+          return;
+        }
+        if (!budget) {
+          setError("Budget Required");
+          return;
+        }
+        break;
+      case "Cupid":
+        if (!bio) {
+          setError("Bio Required");
+          return;
+        }
+        break;
+      default:
+    }
+
+    if (!profileImage) {
+      setError("Profile Image Required");
+      return;
+    }
     setButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
@@ -70,6 +117,7 @@ function SignUp() {
       age,
       budget,
       goals,
+      bio,
       profileImage,
     });
 
