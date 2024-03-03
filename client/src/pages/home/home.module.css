@@ -5,6 +5,7 @@
     text-align: left;
     animation: fade-in 1s forwards;
     width: 100%;
+    overflow-y: auto;
 }
 
 @keyframes fade-in {

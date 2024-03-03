@@ -9,6 +9,7 @@ import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import PurchaseHistory from "../../hook/purchases";
 
 function Purchases() {
   const context = useContext(AppContext);
@@ -48,24 +49,22 @@ function Purchases() {
     }
   };
 
-  async function getPurchaseHistory() {
-    const userId = user.id;
-    var response = await Api.PostWithAuth(
-      "/getPurchaseHistory",
-      { userId },
-      context
-    );
-    setPurchaseHistory(response.purchases);
-  }
+  // Set the purchaes for the page
+  const getPurchaseHistory = async () => {
+    const purchases = await PurchaseHistory(user.id, context);
+    setPurchaseHistory(purchases);
+  };
+
   useEffect(() => {
     getPurchaseHistory();
-    return () => { };
   }, []);
 
   return (
     <section className={classes.main}>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
-      {successMessage && <ResponseMessage type="success" message={successMessage} />}
+      {successMessage && (
+        <ResponseMessage type="success" message={successMessage} />
+      )}
       <div className="row">
         <p className="label left">Create Demo Purchase</p>
         <p className="label left">${user.profile.balance}</p>

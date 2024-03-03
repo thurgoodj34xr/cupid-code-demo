@@ -9,18 +9,6 @@ export default function Input({
   state,
   setState,
 }) {
-  useEffect(() => {
-    function handleKeyDown(e) {
-      if (e.keyCode === 13) {
-        setinputV("");
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [state]);
-
   function handleChange(e) {
     if (validationFunc) {
       setState(validationFunc(e.target.value));
@@ -28,7 +16,6 @@ export default function Input({
       setState(e.target.value);
     }
   }
-
   return (
     <div className={classes.inputV}>
       <label htmlFor="">{text}</label>

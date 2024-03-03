@@ -4,11 +4,17 @@ import * as Api from "../../hook/api";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "../../componets/app_context";
+import PurchaseHistory from "../../hook/purchases";
+import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import { FaMoneyBill } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const context = useContext(AppContext);
   const [notificationHistory, setNotificationHistory] = useState([]);
+  const [purchaseHistory, setPurchaseHistory] = useState();
   const user = context.getUser();
+  const navigate = useNavigate();
 
   async function getNotificationHistory() {
     const userId = user.id;
@@ -39,6 +45,16 @@ function Home() {
       setNotificationHistory(updatedNotificationHistory);
     }
   };
+
+  // Set the purchaes for the page
+  const getPurchaseHistory = async () => {
+    const purchases = await PurchaseHistory(user.id, context);
+    setPurchaseHistory(purchases);
+  };
+
+  useEffect(() => {
+    getPurchaseHistory();
+  }, []);
 
   return (
     <section className={classes.container}>
@@ -71,6 +87,16 @@ function Home() {
           onDelete={handleDeleteNotification}
         />
       ))}
+      <p className="label">Purchase History</p>
+      {purchaseHistory &&
+        purchaseHistory.map((purchase, idx) => (
+          <PurchaseTile
+            key={idx}
+            title={purchase.details}
+            amount={purchase.total}
+            icon={<FaMoneyBill size="2rem" />}
+          />
+        ))}
     </section>
   );
 }

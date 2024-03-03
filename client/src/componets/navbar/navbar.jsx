@@ -21,7 +21,6 @@ function Navbar({ title }) {
   const [init, setInit] = useState(true);
   const context = useContext(AppContext);
   const user = context.getUser();
-  console.log(user);
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -69,7 +68,7 @@ function Navbar({ title }) {
   const changePassword = () => {
     navigate("ChangePassword");
     hideNavBar();
-  }
+  };
 
   const cupidCash = () => {
     navigate("/CupidCash");
@@ -98,8 +97,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.wrapper} ${classes.fadein}`
-              : `${classes.wrapper} ${classes.fadeout}`
+            ? `${classes.wrapper} ${classes.fadein}`
+            : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -107,8 +106,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.modal} ${classes.slideRight}`
-              : `${classes.modal} ${classes.slideLeft}`
+            ? `${classes.modal} ${classes.slideRight}`
+            : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
