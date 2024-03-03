@@ -13,6 +13,7 @@ import * as Purchases from "./services/purchases";
 import * as User from "./services/user";
 import { isStrongPassword } from "./utils/isStrongPassword";
 import * as Jwt from "./utils/jwt";
+import * as Cupid from "./services/cupid"
 dotenv.config();
 
 
@@ -108,20 +109,26 @@ app.post("/signin", async (req, res) => {
 // ******************* Sign up Endpoint *************************
 
 app.post("/signup", upload.single('file'), async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals} = req.body;
+  const { userType, firstName, lastName, email, password, age, budget, goals, bio} = req.body;
   const existingUser = await User.findUserByEmail(email);
 
   if (existingUser) {
     res.send({ error: "Email already in use" });
     return;
   }
-  var user = await User.createUser({ firstName, lastName, email, password, age, budget, goals })
   switch (userType) {
-
     case 'Standard':
+      const user = await User.create({ firstName, lastName, email, password, age, budget, goals })
       if (user) {
         res.send({ userId: user.id });
         await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
+      }
+      break;
+    case 'Cupid':
+      const cupid = await Cupid.create({ firstName, lastName, email, password, bio})
+      if (cupid) {
+        res.send({ userId: cupid.id });
+        await Notifications.recordNotification(cupid.id, "Welcome to CupidCode!", "You have found the path to smoother dating")
       }
       break;
     default:
@@ -159,6 +166,11 @@ app.use((req, res, next) => {
 })
 
 // ************** Protected Endpoints ***************
+
+app.get("/cupids", async (req, res) => {
+  const cupids = await Cupid.getAll();
+  res.send({cupids})
+})
 
 // ************** Adding CupidCash in Account ***************
 app.post("/changeCupidCash", async (req, res) => {

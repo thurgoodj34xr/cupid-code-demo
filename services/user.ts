@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import db from "../utils/prisma";
 import e from "express";
+import { Role } from "@prisma/client";
 
 export function findUserByEmail(email: string) {
   return db.user.findUnique({
@@ -9,11 +10,12 @@ export function findUserByEmail(email: string) {
     },
     include: {
       profile: true,
+      cupid: true,
     },
   });
 }
 
-export function createUser(user: any) {
+export function create(user: any) {
   user.password = bcrypt.hashSync(user.password, 12);
   const { firstName, lastName, email, password, age, budget, goals } = user;
   return db.user.create({
@@ -28,14 +30,18 @@ export function createUser(user: any) {
           dailyBudget: parseFloat(budget),
           relationshipGoals: goals,
         }
-      }
+      },
+      role: Role.STANDARD,
     },
     include: {
       profile: true,
+      cupid: true,
       refreshToken: true,
     }
   });
 }
+
+
 
 export function findUserById(id: any) {
   return db.user.findUnique({
@@ -44,6 +50,7 @@ export function findUserById(id: any) {
     },
     include: {
       profile: true,
+      cupid: true,
       refreshToken: true,
     }
   });
@@ -56,6 +63,7 @@ export function getUserByProfile(id: any) {
     },
     include: {
       profile: true,
+      cupid: true,
     }
   });
 }

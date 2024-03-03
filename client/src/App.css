@@ -92,9 +92,82 @@ body {
 100% { transform: rotate(360deg) scale(1);}
 }
 
-.row {
+.flex {
   display: flex;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.col {
+  flex-direction: column;
+}
+
+.between {
   justify-content: space-between;
 }
 
+.ycenter {
+  align-items: center;
+}
 
+.xcenter {
+  justify-content: center;
+}
+
+.g-10 {
+  gap: 10px;
+}
+
+.g-20 {
+  gap: 20px;
+}
+.bg-white {
+  background-color: white !important;
+}
+
+.white {
+  color: white;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.p-10{
+  padding: 10px;
+}
+
+.p-20 {
+  padding: 20px;
+}
+.p-30 {
+  padding: 30px;
+}
+.p-40 {
+  padding: 40px;
+}
+.m-auto {
+  margin: auto;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.vh-100 {
+  height: 100vh;
+}
+
+.br {
+  border-radius: 8px;
+}

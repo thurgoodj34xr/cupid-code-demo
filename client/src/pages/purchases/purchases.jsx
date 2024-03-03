@@ -49,14 +49,8 @@ function Purchases() {
     }
   };
 
-  // Set the purchaes for the page
-  const getPurchaseHistory = async () => {
-    const purchases = await PurchaseHistory(user.id, context);
-    setPurchaseHistory(purchases);
-  };
-
   useEffect(() => {
-    getPurchaseHistory();
+    PurchaseHistory(user.id, context, setPurchaseHistory);
   }, []);
 
   return (
