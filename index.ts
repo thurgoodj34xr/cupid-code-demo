@@ -122,7 +122,7 @@ app.post("/signup", upload.single('file'), async (req, res) => {
     res.send({ error: passwordIsStrong.message })
     return;
   }
-  var user = await User.create({ firstName, lastName, email, password, age, budget, goals })
+
   switch (userType) {
     case 'Standard':
       const user = await User.create({ firstName, lastName, email, password, age, budget, goals })
