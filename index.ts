@@ -15,6 +15,7 @@ import { isStrongPassword } from "./utils/isStrongPassword";
 import { NotificationType } from "@prisma/client";
 import * as Jwt from "./utils/jwt";
 import * as Cupid from "./services/cupid"
+import UserController from "./src/controllers/user_controller";
 dotenv.config();
 
 
@@ -39,25 +40,7 @@ app.use((req, res, next) => {
   }
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    return cb(null, "./Images")
-  },
-  filename: function (req, file, cb) {
-    return cb(null, `${Date.now()}_${file.originalname}`)
-  }
-})
 
-const upload = multer({ storage })
-
-app.post('/profileUrl', upload.single('file'), async (req, res) => {
-  try {
-    const user = await User.updateUserPicture(parseInt(req.body.userId), req!!.file!!.path)
-  } catch (error) {
-    res.send({ error })
-    console.log({ error })
-  }
-})
 
 if (!DEBUG) {
   app.use(express.static('static'));
@@ -93,55 +76,11 @@ app.get(['/'], (req, res) => {
 
 // ***************** Signin Endpoint ******************
 
-app.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findUserByEmail(email);
-
-  if (user && bcrypt.compareSync(password, user.password)) {
-    const { accessToken, refreshToken } = Jwt.generateTokens(user);
-    await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-    res.send({ user: user, tokens: { accessToken, refreshToken } });
-  } else {
-    res.send({ error: "Invalid login credentials." });
-  }
-
-})
+app.use("/users", UserController())
 
 // ******************* Sign up Endpoint *************************
 
-app.post("/signup", upload.single('file'), async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals, bio} = req.body;
-  const existingUser = await User.findUserByEmail(email);
 
-  if (existingUser) {
-    res.send({ error: "Email already in use" });
-    return;
-  }
-  const passwordIsStrong = isStrongPassword(password);
-  if (!passwordIsStrong.success) {
-    res.send({ error: passwordIsStrong.message })
-    return;
-  }
-
-  switch (userType) {
-    case 'Standard':
-      const user = await User.create({ firstName, lastName, email, password, age, budget, goals })
-      if (user) {
-        res.send({ userId: user.id });
-        await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
-      }
-      break;
-    case 'Cupid':
-      const cupid = await Cupid.create({ firstName, lastName, email, password, bio})
-      if (cupid) {
-        res.send({ userId: cupid.id });
-        await Notifications.recordNotification(cupid.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
-      }
-      break;
-    default:
-      res.send({ error: "Invalid user type" })
-  }
-})
 
 // ***************** Endpoint to verify a token ***********************
 
@@ -176,7 +115,7 @@ app.use((req, res, next) => {
 
 app.get("/cupids", async (req, res) => {
   const cupids = await Cupid.getAll();
-  res.send({cupids})
+  res.send({ cupids })
 })
 
 // ************** Adding CupidCash in Account ***************

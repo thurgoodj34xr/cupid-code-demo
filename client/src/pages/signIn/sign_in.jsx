@@ -80,7 +80,7 @@ export default function SignIn() {
     setButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
-    const res = await Api.Post("/signin", {
+    const res = await Api.Post("/users/session", {
       email,
       password,
     });

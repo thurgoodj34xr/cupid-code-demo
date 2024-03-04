@@ -102,7 +102,7 @@ async function PostWithToken(route, body, accessToken) {
 
 // Used to generate a new Refresh Token
 async function RefreshToken(context) {
-  return await fetch("/verifyToken", {
+  return await fetch("/auth/verify", {
     method: "post",
     headers: {
       "Content-type": "application/json",

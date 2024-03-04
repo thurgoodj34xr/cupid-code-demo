@@ -108,7 +108,7 @@ function SignUp() {
     setButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
-    const res = await Api.Post("/signup", {
+    const res = await Api.Post("/users/create", {
       userType,
       firstName,
       lastName,
@@ -130,7 +130,7 @@ function SignUp() {
       formData.append("file", file);
       formData.append("userId", res.userId);
       axios
-        .post("/profileUrl", formData)
+        .post("/users/profileUrl", formData)
         .then((res) => {})
         .catch((er) => console.log(er));
       navigate("/");
