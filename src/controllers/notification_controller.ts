@@ -5,14 +5,11 @@ import * as Notifications from "../../services/notifications";
 
 const NotificationController = () => {
     const router = Router();
-    // ************** Record Notification ***************
-    router.post("/record", async (req, res) => {
-        const { userId, title, message, notificationType } = req.body
-        if (notificationType == NotificationType.ALL) {
-            res.send({ error: "You cannot create a notification type ALL" })
-        }
-        const notification = await Notifications.recordNotification(userId, title, message, notificationType)
-        res.send({ message: "Your message was sent", notification })
+    // ************** Delete Specific Notification ***************
+    router.post("/delete", async (req, res) => {
+        const { notificationId } = req.body
+        const notification = await Notifications.deleteNotification(notificationId)
+        res.send({ notification })
         return;
     });
 
@@ -29,11 +26,14 @@ const NotificationController = () => {
         return;
     });
 
-    // ************** Delete Specific Notification ***************
-    router.post("/delete", async (req, res) => {
-        const { notificationId } = req.body
-        const notification = await Notifications.deleteNotification(notificationId)
-        res.send({ notification })
+    // ************** Record Notification ***************
+    router.post("/record", async (req, res) => {
+        const { userId, title, message, notificationType } = req.body
+        if (notificationType == NotificationType.ALL) {
+            res.send({ error: "You cannot create a notification type ALL" })
+        }
+        const notification = await Notifications.recordNotification(userId, title, message, notificationType)
+        res.send({ message: "Your message was sent", notification })
         return;
     });
 
