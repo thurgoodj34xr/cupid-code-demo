@@ -22,8 +22,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-
-
 const UserController = () => {
     const router = Router();
     // ************** Adding CupidCash in Account ***************

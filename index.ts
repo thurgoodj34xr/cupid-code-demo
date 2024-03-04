@@ -62,19 +62,11 @@ app.get(['/'], (req, res) => {
   });
 });
 
-
-
-// ***************** Un-Protected EndPoints ***************
-
-
-
 // ***************** Signin Endpoint ******************
 
 app.use("/users", UserController())
 
 // ******************* Sign up Endpoint *************************
-
-
 
 // ***************** Endpoint to verify a token ***********************
 
@@ -98,7 +90,6 @@ app.use((req, res, next) => {
 app.use("/cupids", CupidController())
 app.use("/notifications", NotificationController())
 app.use("/purchases", PurchasesController())
-
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);

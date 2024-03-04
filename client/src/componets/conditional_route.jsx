@@ -55,3 +55,5 @@ export function ConditionalRoute({ componetToRender, role }) {
 
   return loading ? "" : componetToRender;
 }
+
+export default ConditionalRoute;

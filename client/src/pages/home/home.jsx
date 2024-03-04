@@ -29,7 +29,6 @@ function Home() {
   };
   useEffect(() => {
     getNotificationHistory();
-
     return () => {};
   }, []);
 
@@ -58,11 +57,11 @@ function Home() {
         <section className={classes.balance}>
           <section>
             <p>Balance</p>
-            {user.profile && <p>${user.profile}</p>}
+            {user.profile && <p>${user.profile.balance}</p>}
           </section>
           <section>
             <p>Daily budget</p>
-            {user.profile && <p>${user.profile}</p>}
+            {user.profile && <p>${user.profile.budget}</p>}
           </section>
         </section>
       </section>
