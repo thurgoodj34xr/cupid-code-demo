@@ -22,3 +22,14 @@
 .icon {
     cursor: pointer;
 }
+
+.delete {
+    animation: fadeout 1s forwards;
+}
+
+@keyframes fadeout {
+    100% {
+        opacity: 0;
+        transform: translateX(-75%)
+    }
+}

@@ -1,38 +1,138 @@
-import { useEffect, useState, useContext } from "react";
-import classes from "./sign_up.module.css";
-import Input from "../../componets/inputs/input";
-import Button from "../../componets/button/button";
+import { faAngleLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { FaCameraRetro } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import AppContext from "../../componets/app_context";
+import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
+import TextArea from "../../componets/text_area/text_area";
 import * as Api from "../../hook/api";
+import classes from "./sign_up.module.css";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
+  const [buttonText, setButtonText] = useState("Sign Up");
+  const [age, setAge] = useState(0);
+  const [budget, setBudget] = useState(0);
+  const [goals, setGoals] = useState("");
+  const [male, setMale] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [bio, setBio] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [file, setFile] = useState();
 
+  const context = useContext(AppContext);
+  const userType = context.getAccountType();
   let navigate = useNavigate();
 
-  function handleEmail(email) {
-    setEmail(email);
-  }
+  const setUser = () => {
+    setMale(true);
+  };
 
-  function handlePassword(password) {
-    setPassword(password);
-  }
+  const setCupid = () => {
+    setMale(false);
+  };
+
+  useEffect(() => {
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
+  }, [file]);
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.keyCode === 13) {
+        console.log("presesd");
+        signUp();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const signUp = async () => {
-    const res = await Api.Post("/signup", {
+    if (password != confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (!firstName) {
+      setError("First Name Required");
+      return;
+    }
+    if (!lastName) {
+      setError("Last Name Required");
+      return;
+    }
+    if (!email) {
+      setError("Email Required");
+      return;
+    }
+    if (!password) {
+      setError("Password Required");
+      return;
+    }
+
+    switch (userType) {
+      case "Standard":
+        if (!age) {
+          setError("Age Required");
+          return;
+        }
+        if (!budget) {
+          setError("Budget Required");
+          return;
+        }
+        break;
+      case "Cupid":
+        if (!bio) {
+          setError("Bio Required");
+          return;
+        }
+        break;
+      default:
+    }
+
+    if (!profileImage) {
+      setError("Profile Image Required");
+      return;
+    }
+    setButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
+    );
+    const res = await Api.Post("/users/create", {
+      userType,
       firstName,
       lastName,
       email,
       password,
+      age,
+      budget,
+      goals,
+      bio,
+      profileImage,
     });
 
     if (res.error) {
       setError(res.error);
+      setButtonText("Sign Up");
     } else {
+      // Update the profile picture
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("userId", res.userId);
+      axios
+        .post("/users/profileUrl", formData)
+        .then((res) => {})
+        .catch((er) => console.log(er));
       navigate("/");
     }
   };
@@ -43,36 +143,112 @@ function SignUp() {
 
   return (
     <section className={classes.container}>
-      <h1>Sign Up</h1>
+      <div className="back">
+        <FontAwesomeIcon
+          onClick={() => navigate("/SelectAccount")}
+          className="pointer"
+          icon={faAngleLeft}
+          size="2xl"
+        />
+      </div>
+      <h1>Create Account</h1>
+      <p className="label">Create an account by filling out the form below.</p>
+      <span className={classes.profilePhoto}>
+        <img
+          src={
+            profileImage
+              ? profileImage
+              : "https://images.pexels.com/photos/1317712/pexels-photo-1317712.jpeg"
+          }
+          width="120px"
+          height="120px"
+          accept="image/*"
+        />
+        <div className={classes.cameraContainer}>
+          <label className={classes.label} htmlFor="file-input">
+            <FaCameraRetro className={classes.camera} size="22px" />
+          </label>
+          <input
+            className={classes.fileInput}
+            id="file-input"
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
+      </span>
       {error && <p className="error">{error}</p>}
       <Input
-        text="First Name"
         inputType="text"
         placeholder="Enter First Name"
-        onChangeFunc={(name) => setFirstName(name)}
+        state={firstName}
+        setState={setFirstName}
+        require
       />
       <Input
-        text="Last Name"
         inputType="text"
         placeholder="Enter Last Name"
-        onChangeFunc={(name) => setLastName(name)}
+        state={lastName}
+        setState={setLastName}
       />
       <Input
-        text="Email"
         inputType="email"
         placeholder="Enter Email"
-        onChangeFunc={handleEmail}
+        state={email}
+        setState={setEmail}
       />
       <Input
-        text="Password"
         inputType="password"
         placeholder="Enter Password"
-        onChangeFunc={handlePassword}
+        state={password}
+        setState={setPassword}
       />
-      <p onClick={signIn}>
-        Already have an account? <span className="pointer">Sign In</span>
+      <Input
+        inputType="password"
+        placeholder="Confirm Password"
+        state={confirmPassword}
+        setState={setConfirmPassword}
+      />
+      {userType != "Standard" ? (
+        <>
+          <TextArea placeholder="Enter Bio" state={bio} setState={setBio} />
+        </>
+      ) : (
+        <>
+          <Input
+            inputType="number"
+            placeholder="Enter Age"
+            state={age == 0 ? "" : age}
+            setState={setAge}
+          />
+          <Input
+            inputType="number"
+            placeholder="Enter Budget Per Date"
+            state={budget == 0 ? "" : budget}
+            setState={setBudget}
+          />
+          <TextArea
+            placeholder="Enter Relationship Goals"
+            state={goals}
+            setState={setGoals}
+          />
+          <div className={classes.select}>
+            <p onClick={setUser} className={male ? classes.type : ""}>
+              Male
+            </p>
+            <p>|</p>
+            <p onClick={setCupid} className={male ? "" : classes.type}>
+              Female
+            </p>
+          </div>
+        </>
+      )}
+      <p>
+        Already have an account?{" "}
+        <span className="pointer" onClick={signIn}>
+          Sign In
+        </span>
       </p>
-      <Button text="Sign Up" onClickFunc={signUp}></Button>
+      <Button text={buttonText} onClickFunc={signUp}></Button>
     </section>
   );
 }

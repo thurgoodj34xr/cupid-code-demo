@@ -2,52 +2,118 @@ import classes from "./my_account.module.css";
 import { useEffect, useState, useContext } from "react";
 import Navbar from "../../componets/navbar/navbar";
 import AppContext from "../../componets/app_context";
+import * as Api from "../../hook/api";
 import Input from "../../componets/inputs/input";
+import TextArea from "../../componets/text_area/text_area";
 import Button from "../../componets/button/button";
+import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function MyAccount() {
   const context = useContext(AppContext);
   const user = context.getUser();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [email, setEmail] = useState();
-  const [loading, setLoading] = useState(true);
-  const [age, setAge] = useState();
-  const [gender, setGender] = useState();
-  const [goals, setGoals] = useState();
-  
-  useEffect(() => { 
-    setFirstName(user.firstName)
-    setLastName(user.lastName)
-    setEmail(user.email)
-    setAge(user.age)
-    setGender(user.gender)
-    setGoals(user.goals)
-    setLoading(false);
-  }, []);
+  const [email, setEmail] = useState(user.email);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [age, setAge] = useState(user.profile.age);
+  const [dailyBudget, setBudget] = useState(user.profile.dailyBudget);
+  const [relationshipGoals, setGoals] = useState(
+    user.profile.relationshipGoals
+  );
+  const [userType, setUserType] = useState("Standard");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [submitButtonText, setSubmitButtonText] = useState("Update");
 
-  const updateUser = () => {
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.age = age;
-    user.gender = gender;
-    user.goals = goals;
-    console.log({user})
+  const updateProfile = async () => {
+    const userId = user.id;
+    setSubmitButtonText(
+      <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
+    );
+    const response = await Api.PostWithAuth(
+      "/users/update",
+      {
+        userId,
+        firstName,
+        lastName,
+        email,
+        age,
+        dailyBudget,
+        relationshipGoals,
+      },
+      context
+    );
+    if (!response.error) {
+      user.email = email;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.profile.age = age;
+      user.profile.dailyBudget = dailyBudget;
+      user.profile.relationshipGoals = relationshipGoals;
+      setErrorMessage(null);
+      setSuccessMessage(response.message);
+    } else {
+      setSuccessMessage(null);
+      setErrorMessage(response.error);
+    }
+    setSubmitButtonText("Update");
   };
 
   return (
-    loading ? <div></div> : (
-      <div className={classes.container}>
-        <Input text="First Name" placeholder={firstName} onChangeFunc={(v) => setFirstName(v)}/>
-        <Input text="Last Name" placeholder={lastName} onChangeFunc={(v) => setLastName(v)}/>
-        <Input text="Age" placeholder={age} onChangeFunc={(v) => setAge(v)}/>
-        <Input text ="Relationship Goals" placeholder={goals} onChangeFunc={(v) => setGoals(v)}/>
-        <Button text="Update User" onClickFunc={updateUser}/>
-      </div>
-    )
-  )
+    <section className={classes.container}>
+      {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
+      {successMessage && (
+        <ResponseMessage type="success" message={successMessage} />
+      )}
+      <p className="label left">Account Details</p>
+      <section className={classes.main}>
+        <Input
+          inputType="text"
+          placeholder="Enter First Name"
+          state={firstName}
+          setState={setFirstName}
+          require
+        />
+        <Input
+          inputType="text"
+          placeholder="Enter Last Name"
+          state={lastName}
+          setState={setLastName}
+        />
+        <Input
+          inputType="email"
+          placeholder="Enter Email"
+          state={email}
+          setState={setEmail}
+        />
+        {userType != "Standard" ? (
+          ""
+        ) : (
+          <>
+            <Input
+              inputType="number"
+              placeholder="Enter Age"
+              state={age == 0 ? "" : age}
+              setState={setAge}
+            />
+            <Input
+              inputType="number"
+              placeholder="Enter Budget Per Date"
+              state={dailyBudget == 0 ? "" : dailyBudget}
+              setState={setBudget}
+            />
+            <TextArea
+              placeholder="Enter Relationship Goals"
+              state={relationshipGoals}
+              setState={setGoals}
+            />
+          </>
+        )}
+        <Button text={submitButtonText} onClickFunc={updateProfile} />
+      </section>
+    </section>
+  );
 }
-
 
 export default MyAccount;

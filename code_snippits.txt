@@ -27,7 +27,15 @@
 		"scope": "javascriptreact",
 		"prefix": "React Effect Imports",
 		"body": [
-			"import { useEffect, useState } from 'react';",
+			"import { useEffect, useState, useContext } from 'react';",
+		]
+	},
+	"rcontext": {
+		"scope": "javascriptreact",
+		"prefix": "React Context Imports",
+		"body": [
+			"import AppContext from '../../componets/app_context';",
+			"const context = useContext(AppContext)",
 		]
 	},
 	"rconsole": {
@@ -91,6 +99,13 @@
 		"body": [
 			"import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';",
 			"import { $1 } from '@fortawesome/free-solid-svg-icons';",
+		]
+	},
+	"rspinnger": {
+		"scope": "javascriptreact",
+		"prefix": "React fa Spinner",
+		"body": [
+			"<FontAwesomeIcon className='rotate' icon={faSpinner} size='xl' />",
 		]
 	},
 	"ricon": {

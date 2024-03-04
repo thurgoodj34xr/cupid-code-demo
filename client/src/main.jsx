@@ -12,8 +12,10 @@ import AiChat from "./pages/ai_chat/ai_chat";
 import SelectCupid from "./pages/select_cupid/select_cupid";
 import MyAccount from "./pages/my_account/my_account";
 import CupidCash from "./pages/cupid_cash/cupid_cash";
+import CreateNotification from "./pages/createNotification/createNotification.jsx";
 import Purchases from "./pages/purchases/purchases";
-
+import SelectAccount from "./pages/select_account/select_account.jsx";
+import UpdatePassword from "./pages/updatePassword/updatePassword.jsx";
 const router = createHashRouter([
   {
     path: "",
@@ -26,6 +28,10 @@ const router = createHashRouter([
       {
         path: "/signUp",
         element: <SignUp />,
+      },
+      {
+        path: "/selectAccount",
+        element: <SelectAccount />,
       },
       {
         path: "/Home",
@@ -64,10 +70,27 @@ const router = createHashRouter([
         ),
       },
       {
+        path: "/CreateNotification",
+        element: (
+          <ConditionalRoute
+            componetToRender={<CreateNotification />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+      {
         path: "/MyAccount",
         element: (
           <ConditionalRoute
             componetToRender={<MyAccount />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      }, {
+        path: "/ChangePassword",
+        element: (
+          <ConditionalRoute
+            componetToRender={<UpdatePassword />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),

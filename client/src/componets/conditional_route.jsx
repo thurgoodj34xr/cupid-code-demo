@@ -23,11 +23,12 @@ export function ConditionalRoute({ componetToRender }) {
       navigate("/");
       return;
     }
-
-    const resp = await Api.Post("/verifyToken", {
+    console.log("conditional route");
+    const resp = await Api.Post("/token/verify", {
       token,
     });
     if (!resp.user) {
+      localStorage.removeItem("token");
       context.sendNotification("Token Expired");
       navigate("/");
       return "";

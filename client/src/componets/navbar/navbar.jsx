@@ -14,6 +14,8 @@ import {
   faUser,
   faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaKey } from "react-icons/fa";
+import PhotoCircle from "../photo_circle/photo_circle";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
@@ -61,6 +63,11 @@ function Navbar({ title }) {
 
   const myAccount = () => {
     navigate("/MyAccount");
+    hideNavBar();
+  };
+
+  const changePassword = () => {
+    navigate("ChangePassword");
     hideNavBar();
   };
 
@@ -112,11 +119,13 @@ function Navbar({ title }) {
         </section>
         {/* User Info */}
         <section className={classes.container}>
+          <PhotoCircle url={user.photoUrl} />
           <section className={classes.profile}>
             <h2>
               {user.firstName} {user.lastName}
             </h2>
             <p className="label">{user.email}</p>
+            <p className="label">${user.profile.balance}</p>
           </section>
           <hr />
           {/* Home Icon */}
@@ -154,6 +163,12 @@ function Navbar({ title }) {
               <FontAwesomeIcon icon={faUser} size="2xl" />
             </div>
             <h3>My Account</h3>
+          </section>
+          <section className={classes.tile} onClick={changePassword}>
+            <div>
+              <FaKey size="2rem" />
+            </div>
+            <h3>Change Password</h3>
           </section>
           {/* Add Cupid Cash */}
           <section className={classes.tile} onClick={cupidCash}>
