@@ -58,11 +58,11 @@ function Home() {
         <section className={classes.balance}>
           <section>
             <p>Balance</p>
-            <p>${user.profile.balance}</p>
+            {user.profile && <p>${user.profile}</p>}
           </section>
           <section>
             <p>Daily budget</p>
-            <p>${user.profile.dailyBudget}</p>
+            {user.profile && <p>${user.profile}</p>}
           </section>
         </section>
       </section>

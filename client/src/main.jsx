@@ -16,6 +16,7 @@ import CreateNotification from "./pages/createNotification/createNotification.js
 import Purchases from "./pages/purchases/purchases";
 import SelectAccount from "./pages/select_account/select_account.jsx";
 import UpdatePassword from "./pages/updatePassword/updatePassword.jsx";
+import AvaliableJobs from "./pages/avalible_jobs/avaliable_jobs.jsx";
 const router = createHashRouter([
   {
     path: "",
@@ -46,6 +47,7 @@ const router = createHashRouter([
         path: "/AiAssistance",
         element: (
           <ConditionalRoute
+            role="STANDARD"
             componetToRender={<AiAssistance />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -55,6 +57,7 @@ const router = createHashRouter([
         path: "/AiChat",
         element: (
           <ConditionalRoute
+            role="STANDARD"
             componetToRender={<AiChat />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -64,6 +67,7 @@ const router = createHashRouter([
         path: "/SelectCupid",
         element: (
           <ConditionalRoute
+            role="STANDARD"
             componetToRender={<SelectCupid />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -86,7 +90,8 @@ const router = createHashRouter([
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),
-      }, {
+      },
+      {
         path: "/ChangePassword",
         element: (
           <ConditionalRoute
@@ -99,6 +104,7 @@ const router = createHashRouter([
         path: "/CupidCash",
         element: (
           <ConditionalRoute
+            role="STANDARD"
             componetToRender={<CupidCash />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -108,7 +114,18 @@ const router = createHashRouter([
         path: "/Purchases",
         element: (
           <ConditionalRoute
+            role="STANDARD"
             componetToRender={<Purchases />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+      {
+        path: "/AvaliableJobs",
+        element: (
+          <ConditionalRoute
+            role="CUPID"
+            componetToRender={<AvaliableJobs />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),

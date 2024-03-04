@@ -12,7 +12,7 @@ import { useEffect, useState, useContext } from "react";
   */
 }
 
-export function ConditionalRoute({ componetToRender }) {
+export function ConditionalRoute({ componetToRender, role }) {
   const [loading, setLoading] = useState(true);
   let navigate = useNavigate(); // move this into the function
   const context = useContext(AppContext);
@@ -23,7 +23,6 @@ export function ConditionalRoute({ componetToRender }) {
       navigate("/");
       return;
     }
-    console.log("conditional route");
     const resp = await Api.Post("/token/verify", {
       token,
     });
@@ -33,8 +32,19 @@ export function ConditionalRoute({ componetToRender }) {
       navigate("/");
       return "";
     }
+
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
+    // Check if user has the correct role
+    if (role && resp.user.role != role) {
+      /*
+        If they dont, navigate to the home page.
+        In the future, need to create a access denied page.
+      */
+      navigate("/");
+      context.sendNotification("ACCESS DENIED! REDIRECTING TO HOME PAGE");
+      return "";
+    }
     setLoading(false);
   };
 

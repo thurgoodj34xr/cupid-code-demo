@@ -14,7 +14,7 @@ import {
   faUser,
   faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
-import { FaKey } from "react-icons/fa";
+import { FaKey, FaSearch } from "react-icons/fa";
 import PhotoCircle from "../photo_circle/photo_circle";
 
 function Navbar({ title }) {
@@ -81,6 +81,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const avaliableJobs = () => {
+    navigate("/AvaliableJobs");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -125,7 +130,7 @@ function Navbar({ title }) {
               {user.firstName} {user.lastName}
             </h2>
             <p className="label">{user.email}</p>
-            <p className="label">${user.profile.balance}</p>
+            {user.profile && <p className="label">${user.profile.balance}</p>}
           </section>
           <hr />
           {/* Home Icon */}
@@ -135,27 +140,47 @@ function Navbar({ title }) {
             </div>
             <h3>Home</h3>
           </section>
-          {/* Ai Assistance Icon */}
-          <section className={classes.tile} onClick={aiAssistance}>
-            <div>
-              <FontAwesomeIcon icon={faHandshake} size="2xl" />
-            </div>
-            <h3>Ai Assistance</h3>
-          </section>
-          {/* Ai Chat */}
-          <section className={classes.tile} onClick={aiChat}>
-            <div>
-              <FontAwesomeIcon icon={faMessage} size="2xl" />
-            </div>
-            <h3>Ai Chat</h3>
-          </section>
-          {/* Select Cupid */}
-          <section className={classes.tile} onClick={selectCupid}>
-            <div>
-              <FontAwesomeIcon icon={faPeopleLine} size="2xl" />
-            </div>
-            <h3>Select Cupid</h3>
-          </section>
+
+          {/* ************* STANDARD ROLE ********************** */}
+
+          {user.profile && (
+            <>
+              {/* Ai Assistance */}
+              <section className={classes.tile} onClick={aiAssistance}>
+                <div>
+                  <FontAwesomeIcon icon={faHandshake} size="2xl" />
+                </div>
+                <h3>Ai Assistance</h3>
+              </section>
+              {/* Ai Chat */}
+              <section className={classes.tile} onClick={aiChat}>
+                <div>
+                  <FontAwesomeIcon icon={faMessage} size="2xl" />
+                </div>
+                <h3>Ai Chat</h3>
+              </section>
+              {/* Select Cupid */}
+              <section className={classes.tile} onClick={selectCupid}>
+                <div>
+                  <FontAwesomeIcon icon={faPeopleLine} size="2xl" />
+                </div>
+                <h3>Select Cupid</h3>
+              </section>
+            </>
+          )}
+
+          {/* ********************** CUPID ROLE *********************** */}
+          {user.cupid && (
+            <>
+              <section className={classes.tile} onClick={avaliableJobs}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>Avaliable Jobs</h3>
+              </section>
+            </>
+          )}
+
           <hr />
           {/* My Account */}
           <section className={classes.tile} onClick={myAccount}>
