@@ -18,6 +18,7 @@ import * as Cupid from "./services/cupid"
 import UserController from "./src/controllers/user_controller";
 import TokenController from "./src/controllers/token_controller";
 import CupidController from "./src/controllers/cupid_controller";
+import NotificationController from "./src/controllers/notification_controller";
 dotenv.config();
 
 
@@ -104,7 +105,7 @@ app.use((req, res, next) => {
 
 // ************** Protected Endpoints ***************
 app.use("/cupids", CupidController())
-
+app.use("/notifications", NotificationController())
 
 // ************** Adding CupidCash in Account ***************
 
@@ -143,15 +144,7 @@ app.post("/getPurchaseHistory", async (req, res) => {
 });
 
 // ************** Record Notification ***************
-app.post("/recordNotification", async (req, res) => {
-  const { userId, title, message, notificationType } = req.body
-  if (notificationType == NotificationType.ALL) {
-    res.send({ error: "You cannot create a notification type ALL" })
-  }
-  const notification = await Notifications.recordNotification(userId, title, message, notificationType)
-  res.send({ message: "Your message was sent", notification })
-  return;
-});
+
 
 // ************** Get All Notifications for User ***************
 app.post("/getNotificationHistory", async (req, res) => {

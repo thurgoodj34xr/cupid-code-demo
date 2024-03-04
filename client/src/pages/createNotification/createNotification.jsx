@@ -38,7 +38,7 @@ function CreateNotification() {
     }
 
     const response = await Api.PostWithAuth(
-      "/recordNotification",
+      "/notifications/record",
       { userId, title, message, notificationType: workingNotificationType },
       context
     );
@@ -73,7 +73,7 @@ function CreateNotification() {
   useEffect(() => {
     getNotificationHistory();
 
-    return () => {};
+    return () => { };
   }, []);
   return (
     <section>

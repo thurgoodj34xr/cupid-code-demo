@@ -82,6 +82,7 @@ const UserController = () => {
         }
     })
 
+    // ************** Adding CupidCash in Account ***************
     router.post("/cash", async (req, res) => {
         const { changeAmount, userId } = req.body
         try {
@@ -104,6 +105,7 @@ const UserController = () => {
         }
     });
 
+    // ************** Update User Account ***************
     router.post("/update", async (req, res) => {
         const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
         var workingAge = parseInt(age)
@@ -141,6 +143,7 @@ const UserController = () => {
         return;
     });
 
+    // ************** Update User Password ***************
     router.post("/password", async (req, res) => {
         const { userId, currentPassword, newPassword, repeatNew } = req.body
         const user = await User.findUserById(userId);
