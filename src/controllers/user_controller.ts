@@ -9,6 +9,7 @@ import { isStrongPassword } from "../../utils/isStrongPassword";
 import * as Cupid from "../../services/cupid"
 import * as Notifications from "../../services/notifications";
 import { NotificationType } from "@prisma/client";
+import * as Purchases from "../../services/purchases";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -80,6 +81,85 @@ const UserController = () => {
             console.log({ error })
         }
     })
+
+    router.post("/cash", async (req, res) => {
+        const { changeAmount, userId } = req.body
+        try {
+            const user = await User.findUserById(userId);
+            const currentBalance = user!!.profile!!.balance.toNumber();
+            var workingChangeAmount = Math.abs(changeAmount)
+            const newBalance = currentBalance + workingChangeAmount;
+            if (newBalance < 0) {
+                res.send({ error: "Cannot Spend more money then you have!" })
+                return;
+            }
+            await User.updateUserBalance(userId, newBalance)
+            await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
+            res.send({ newBalance });
+            return;
+        } catch (error) {
+            console.log({ error })
+            res.send({ error: "Access Denied" })
+            return;
+        }
+    });
+
+    router.post("/update", async (req, res) => {
+        const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
+        var workingAge = parseInt(age)
+        var workingBudget = parseFloat(dailyBudget)
+
+        // Validate Numbers
+        if (isNaN(workingAge)) {
+            res.send({ error: "Age must be a number" })
+            return;
+        }
+
+        if (isNaN(workingBudget)) {
+            res.send({ error: "Budget must be a number" });
+            return;
+        }
+
+        // Check Email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            res.send({ error: "Invalid Email Provided" })
+            return;
+        }
+        // Check Budget
+        if (workingBudget < 10 && workingBudget != 0) {
+            res.send({ error: "In order to service quality dates, Cupid Code requires a minimum of 10 cupid bucks per date" })
+            return;
+        }
+        // Check Age
+        if (workingAge < 18 && workingAge != 0) {
+            res.send({ error: "To use this service you must be at least 18" })
+            return;
+        }
+        const updatedAccount = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
+        res.send({ message: "Your account was successfully updated", updatedAccount })
+        return;
+    });
+
+    router.post("/password", async (req, res) => {
+        const { userId, currentPassword, newPassword, repeatNew } = req.body
+        const user = await User.findUserById(userId);
+
+        const resultOfStrongCheck = isStrongPassword(newPassword)
+        if (!resultOfStrongCheck.success) {
+            res.send({ error: resultOfStrongCheck.message })
+            return;
+        }
+
+        if (user && bcrypt.compareSync(currentPassword, user.password)) {
+            const profile = await User.updateUserPassword(userId, newPassword)
+            res.send({ message: "Your account was successfully updated", profile })
+            return;
+        } else {
+            res.send({ error: "Incorrect Current Password." });
+            return;
+        }
+    });
 
     return router;
 }

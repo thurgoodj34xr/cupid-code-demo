@@ -17,6 +17,7 @@ import * as Jwt from "./utils/jwt";
 import * as Cupid from "./services/cupid"
 import UserController from "./src/controllers/user_controller";
 import TokenController from "./src/controllers/token_controller";
+import CupidController from "./src/controllers/cupid_controller";
 dotenv.config();
 
 
@@ -102,34 +103,11 @@ app.use((req, res, next) => {
 })
 
 // ************** Protected Endpoints ***************
+app.use("/cupids", CupidController())
 
-app.get("/cupids", async (req, res) => {
-  const cupids = await Cupid.getAll();
-  res.send({ cupids })
-})
 
 // ************** Adding CupidCash in Account ***************
-app.post("/changeCupidCash", async (req, res) => {
-  const { changeAmount, userId } = req.body
-  try {
-    const user = await User.findUserById(userId);
-    const currentBalance = user!!.profile!!.balance.toNumber();
-    var workingChangeAmount = Math.abs(changeAmount)
-    const newBalance = currentBalance + workingChangeAmount;
-    if (newBalance < 0) {
-      res.send({ error: "Cannot Spend more money then you have!" })
-      return;
-    }
-    await User.updateUserBalance(userId, newBalance)
-    await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
-    res.send({ newBalance });
-    return;
-  } catch (error) {
-    console.log({ error })
-    res.send({ error: "Access Denied" })
-    return;
-  }
-});
+
 
 // ************** Record Purchase ***************
 app.post("/recordPurchase", async (req, res) => {
@@ -197,71 +175,10 @@ app.post("/deleteNotification", async (req, res) => {
 });
 
 // ************** Update User Account ***************
-app.post("/updateProfile", async (req, res) => {
-  const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
-  var workingAge = parseInt(age)
-  var workingBudget = parseFloat(dailyBudget)
 
-  // Validate Numbers
-  if (isNaN(workingAge)) {
-    res.send({ error: "Age must be a number" })
-    return;
-  }
-
-  if (isNaN(workingBudget)) {
-    res.send({ error: "Budget must be a number" });
-    return;
-  }
-
-  // Check Email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    res.send({ error: "Invalid Email Provided" })
-    return;
-  }
-  // Check Budget
-  if (workingBudget < 10 && workingBudget != 0) {
-    res.send({ error: "In order to service quality dates, Cupid Code requires a minimum of 10 cupid bucks per date" })
-    return;
-  }
-  // Check Age
-  if (workingAge < 18 && workingAge != 0) {
-    res.send({ error: "To use this service you must be at least 18" })
-    return;
-  }
-  const updatedAccount = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
-  res.send({ message: "Your account was successfully updated", updatedAccount })
-  return;
-});
 
 // ************** Update User Password ***************
-app.post("/updatePassword", async (req, res) => {
-  const { userId, currentPassword, newPassword, repeatNew } = req.body
-  const user = await User.findUserById(userId);
 
-  if (newPassword !== repeatNew) {
-    res.send({ error: "New password fields don't match" })
-    return;
-  }
-  if (newPassword === currentPassword) {
-    res.send({ error: "New password can't be old password" })
-    return;
-  }
-  const resultOfStrongCheck = isStrongPassword(newPassword)
-  if (!resultOfStrongCheck.success) {
-    res.send({ error: resultOfStrongCheck.message })
-    return;
-  }
-
-  if (user && bcrypt.compareSync(currentPassword, user.password)) {
-    const profile = await User.updateUserPassword(userId, newPassword)
-    res.send({ message: "Your account was successfully updated", profile })
-    return;
-  } else {
-    res.send({ error: "Incorrect Current Password." });
-    return;
-  }
-});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);

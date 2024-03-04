@@ -68,7 +68,6 @@ function CupidCash() {
       return false;
     }
 
-
     return true;
   };
 
@@ -90,7 +89,7 @@ function CupidCash() {
 
     // Limit the zip code to a maximum of 5 characters
     const truncatedValue = cleanedValue.slice(0, 5);
-    return truncatedValue
+    return truncatedValue;
   }
 
   function expirationDateValidation(value) {
@@ -101,8 +100,10 @@ function CupidCash() {
     const truncatedValue = cleanedValue.slice(0, 4);
 
     // Format month with a slash after the first two characters
-    if (truncatedValue.length == 2) return truncatedValue
-    const formattedValue = truncatedValue.replace(/(\d{2})(\d{0,2})/, "$1/$2").trim();
+    if (truncatedValue.length == 2) return truncatedValue;
+    const formattedValue = truncatedValue
+      .replace(/(\d{2})(\d{0,2})/, "$1/$2")
+      .trim();
     return formattedValue;
   }
 
@@ -112,7 +113,7 @@ function CupidCash() {
 
     // Limit the cvv to a maximum of 3 characters
     const truncatedValue = cleanedValue.slice(0, 3);
-    return truncatedValue
+    return truncatedValue;
   }
 
   const handleAddBalance = async () => {
@@ -129,7 +130,7 @@ function CupidCash() {
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/changeCupidCash",
+      "/users/cash",
       { changeAmount: amountToAdd, userId },
       context
     );
@@ -145,7 +146,7 @@ function CupidCash() {
       // setExpirationDate('');
       // setCVV('');
       setErrorMessage(null); // Clear any previous error messages
-      setSuccessMessage(`You successfully bought ${amountToAdd} CupidBucks`)
+      setSuccessMessage(`You successfully bought ${amountToAdd} CupidBucks`);
     } else {
       setSuccessMessage(null); // Clear previous success message
       setErrorMessage(response.error);
@@ -158,7 +159,9 @@ function CupidCash() {
         <p className="label">Current balance: {userBalance}</p>
       </div>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
-      {successMessage && <ResponseMessage type="success" message={successMessage} />}
+      {successMessage && (
+        <ResponseMessage type="success" message={successMessage} />
+      )}
       <Input
         inputType="number"
         state={amountToAdd == 0 ? "" : amountToAdd}

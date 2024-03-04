@@ -11,7 +11,7 @@ function SelectCupid() {
   const [cupids, setCupids] = useState([]);
 
   const getCupids = async () => {
-    const { cupids } = await Api.GetWithAuth("/cupids", context);
+    const { cupids } = await Api.GetWithAuth("/cupids/all", context);
     setCupids(cupids);
   };
 

@@ -10,7 +10,6 @@ import ResponseMessage from "../../componets/responseMessage/responseMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-
 function MyAccount() {
   const context = useContext(AppContext);
   const user = context.getUser();
@@ -19,7 +18,9 @@ function MyAccount() {
   const [lastName, setLastName] = useState(user.lastName);
   const [age, setAge] = useState(user.profile.age);
   const [dailyBudget, setBudget] = useState(user.profile.dailyBudget);
-  const [relationshipGoals, setGoals] = useState(user.profile.relationshipGoals);
+  const [relationshipGoals, setGoals] = useState(
+    user.profile.relationshipGoals
+  );
   const [userType, setUserType] = useState("Standard");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -31,8 +32,16 @@ function MyAccount() {
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
     const response = await Api.PostWithAuth(
-      "/updateProfile",
-      { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals },
+      "/users/update",
+      {
+        userId,
+        firstName,
+        lastName,
+        email,
+        age,
+        dailyBudget,
+        relationshipGoals,
+      },
       context
     );
     if (!response.error) {
@@ -48,13 +57,15 @@ function MyAccount() {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
-    setSubmitButtonText("Update")
-  }
+    setSubmitButtonText("Update");
+  };
 
   return (
     <section className={classes.container}>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
-      {successMessage && <ResponseMessage type="success" message={successMessage} />}
+      {successMessage && (
+        <ResponseMessage type="success" message={successMessage} />
+      )}
       <p className="label left">Account Details</p>
       <section className={classes.main}>
         <Input

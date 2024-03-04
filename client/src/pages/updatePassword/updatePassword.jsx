@@ -22,7 +22,7 @@ function UpdatePassword() {
       return;
     }
     const response = await Api.PostWithAuth(
-      "/updatePassword",
+      "/users/password",
       {
         userId,
         currentPassword: current,
