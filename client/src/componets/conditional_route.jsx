@@ -24,7 +24,7 @@ export function ConditionalRoute({ componetToRender }) {
       return;
     }
     console.log("conditional route");
-    const resp = await Api.Post("/verifyToken", {
+    const resp = await Api.Post("/token/verify", {
       token,
     });
     if (!resp.user) {

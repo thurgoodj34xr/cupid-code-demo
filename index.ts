@@ -16,6 +16,7 @@ import { NotificationType } from "@prisma/client";
 import * as Jwt from "./utils/jwt";
 import * as Cupid from "./services/cupid"
 import UserController from "./src/controllers/user_controller";
+import TokenController from "./src/controllers/token_controller";
 dotenv.config();
 
 
@@ -84,18 +85,7 @@ app.use("/users", UserController())
 
 // ***************** Endpoint to verify a token ***********************
 
-app.post("/verifyToken", async (req, res) => {
-  const { token } = req.body;
-  try {
-    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!!) as JwtPayload;
-    const user = await User.findUserById(parseInt(payload.userId))
-    const accessToken = Jwt.generateAccessToken(user);
-    res.send({ user, tokens: { refreshToken: token, accessToken } })
-  } catch (err) {
-    res.send({ error: "Expired" })
-    console.log(err)
-  }
-})
+app.use("/token", TokenController())
 
 // ********** Middleware to validate the access token ***************
 

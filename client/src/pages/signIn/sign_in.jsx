@@ -41,7 +41,7 @@ export default function SignIn() {
       return;
     }
 
-    const resp = await Api.Post("/verifyToken", {
+    const resp = await Api.Post("/token/verify", {
       token,
     });
 
