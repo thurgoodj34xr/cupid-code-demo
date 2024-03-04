@@ -1,7 +1,7 @@
 import * as Api from "./api"
 const HandleDeleteNotification = async (notificationId, context) => {
     return await Api.PostWithAuth(
-        "/deleteNotification",
+        "/notifications/delete",
         { notificationId },
         context
     );

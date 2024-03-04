@@ -1,7 +1,7 @@
 import * as Api from "./api"
 async function GetNotificationHistory(userId, notificationType, context,) {
     var response = await Api.PostWithAuth(
-        "/getNotificationHistory",
+        "/notifications/getAll",
         { userId, notificationType: notificationType },
         context
     );
