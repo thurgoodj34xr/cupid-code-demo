@@ -61,7 +61,7 @@ function Home() {
           </section>
           <section>
             <p>Daily budget</p>
-            {user.profile && <p>${user.profile.budget}</p>}
+            {user.profile && <p>${user.profile.dailyBudget}</p>}
           </section>
         </section>
       </section>

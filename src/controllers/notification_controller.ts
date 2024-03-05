@@ -14,7 +14,7 @@ const NotificationController = () => {
     });
 
     // ************** Get All Notifications for User by Type ***************
-    router.post("/getAll", async (req, res) => {
+    router.post("/all", async (req, res) => {
         const { userId, notificationType } = req.body
         var notifications = null;
         if (notificationType == NotificationType.ALL) {

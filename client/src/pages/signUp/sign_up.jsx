@@ -48,7 +48,6 @@ function SignUp() {
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.keyCode === 13) {
-        console.log("presesd");
         signUp();
       }
     }

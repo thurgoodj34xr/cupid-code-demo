@@ -125,12 +125,14 @@ function Navbar({ title }) {
         {/* User Info */}
         <section className={classes.container}>
           <PhotoCircle url={user.photoUrl} />
-          <section className={classes.profile}>
-            <h2>
+          <section className="flex col g-10">
+            <h2 className="center">
               {user.firstName} {user.lastName}
             </h2>
-            <p className="label">{user.email}</p>
-            {user.profile && <p className="label">${user.profile.balance}</p>}
+            <div className="flex row between">
+              <p className="label">{user.email}</p>
+              {user.profile && <p className="label">${user.profile.balance}</p>}
+            </div>
           </section>
           <hr />
           {/* Home Icon */}
