@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FaKey, FaSearch } from "react-icons/fa";
 import PhotoCircle from "../photo_circle/photo_circle";
+import JobHistory from "../../pages/job_history/job_history";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
@@ -86,6 +87,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const jobHistory = () => {
+    navigate("/JobHistory");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -103,8 +109,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.wrapper} ${classes.fadein}`
-            : `${classes.wrapper} ${classes.fadeout}`
+              ? `${classes.wrapper} ${classes.fadein}`
+              : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -112,8 +118,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.modal} ${classes.slideRight}`
-            : `${classes.modal} ${classes.slideLeft}`
+              ? `${classes.modal} ${classes.slideRight}`
+              : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
@@ -179,6 +185,17 @@ function Navbar({ title }) {
                   <FaSearch size="2rem" />
                 </div>
                 <h3>Avaliable Jobs</h3>
+              </section>
+            </>
+          )}
+
+          {user.cupid && (
+            <>
+              <section className={classes.tile} onClick={jobHistory}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>Job History</h3>
               </section>
             </>
           )}
