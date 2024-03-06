@@ -22,22 +22,30 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-
-
 const UserController = () => {
     const router = Router();
-    router.post("/session", async (req: Request, res: Response) => {
-        const { email, password } = req.body;
-        const user = await User.findUserByEmail(email);
-
-        if (user && bcrypt.compareSync(password, user.password)) {
-            const { accessToken, refreshToken } = Jwt.generateTokens(user);
-            await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-            res.send({ user: user, tokens: { accessToken, refreshToken } });
-        } else {
-            res.send({ error: "Invalid login credentials." });
+    // ************** Adding CupidCash in Account ***************
+    router.post("/cash", async (req, res) => {
+        const { changeAmount, userId } = req.body
+        try {
+            const user = await User.findUserById(userId);
+            const currentBalance = user!!.profile!!.balance.toNumber();
+            var workingChangeAmount = Math.abs(changeAmount)
+            const newBalance = currentBalance + workingChangeAmount;
+            if (newBalance < 0) {
+                res.send({ error: "Cannot Spend more money then you have!" })
+                return;
+            }
+            await User.updateUserBalance(userId, newBalance)
+            await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
+            res.send({ newBalance });
+            return;
+        } catch (error) {
+            console.log({ error })
+            res.send({ error: "Access Denied" })
+            return;
         }
-    })
+    });
 
     router.post("/create", upload.single('file'), async (req, res) => {
         const { userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
@@ -73,6 +81,28 @@ const UserController = () => {
         }
     })
 
+    // ************** Update User Password ***************
+    router.post("/password", async (req, res) => {
+        const { userId, currentPassword, newPassword, repeatNew } = req.body
+        const user = await User.findUserById(userId);
+
+        const resultOfStrongCheck = isStrongPassword(newPassword)
+        if (!resultOfStrongCheck.success) {
+            res.send({ error: resultOfStrongCheck.message })
+            return;
+        }
+
+        if (user && bcrypt.compareSync(currentPassword, user.password)) {
+            const profile = await User.updateUserPassword(userId, newPassword)
+            res.send({ message: "Your account was successfully updated", profile })
+            return;
+        } else {
+            res.send({ error: "Incorrect Current Password." });
+            return;
+        }
+    });
+
+    // ************** Get User Profile Picture ***************
     router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
             const user = await User.updateUserPicture(parseInt(req.body.userId), req!!.file!!.path)
@@ -82,28 +112,21 @@ const UserController = () => {
         }
     })
 
-    router.post("/cash", async (req, res) => {
-        const { changeAmount, userId } = req.body
-        try {
-            const user = await User.findUserById(userId);
-            const currentBalance = user!!.profile!!.balance.toNumber();
-            var workingChangeAmount = Math.abs(changeAmount)
-            const newBalance = currentBalance + workingChangeAmount;
-            if (newBalance < 0) {
-                res.send({ error: "Cannot Spend more money then you have!" })
-                return;
-            }
-            await User.updateUserBalance(userId, newBalance)
-            await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
-            res.send({ newBalance });
-            return;
-        } catch (error) {
-            console.log({ error })
-            res.send({ error: "Access Denied" })
-            return;
-        }
-    });
+    // ************** Session Check ***************
+    router.post("/session", async (req: Request, res: Response) => {
+        const { email, password } = req.body;
+        const user = await User.findUserByEmail(email);
 
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const { accessToken, refreshToken } = Jwt.generateTokens(user);
+            await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            res.send({ user: user, tokens: { accessToken, refreshToken } });
+        } else {
+            res.send({ error: "Invalid login credentials." });
+        }
+    })
+
+    // ************** Update User Account ***************
     router.post("/update", async (req, res) => {
         const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
         var workingAge = parseInt(age)
@@ -141,31 +164,7 @@ const UserController = () => {
         return;
     });
 
-    router.post("/password", async (req, res) => {
-        const { userId, currentPassword, newPassword, repeatNew } = req.body
-        const user = await User.findUserById(userId);
-
-        const resultOfStrongCheck = isStrongPassword(newPassword)
-        if (!resultOfStrongCheck.success) {
-            res.send({ error: resultOfStrongCheck.message })
-            return;
-        }
-
-        if (user && bcrypt.compareSync(currentPassword, user.password)) {
-            const profile = await User.updateUserPassword(userId, newPassword)
-            res.send({ message: "Your account was successfully updated", profile })
-            return;
-        } else {
-            res.send({ error: "Incorrect Current Password." });
-            return;
-        }
-    });
-
     return router;
 }
-
-
-
-
 
 export default UserController;

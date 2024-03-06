@@ -30,7 +30,7 @@ function Purchases() {
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/recordPurchase",
+      "/purchases/record",
       { userId, cupidId, total, jobCost, details },
       context
     );

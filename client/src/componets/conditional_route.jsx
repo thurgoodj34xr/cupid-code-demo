@@ -1,6 +1,6 @@
 import AppContext from "./app_context";
 import * as Api from "./../hook/api";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 
 {
@@ -12,18 +12,14 @@ import { useEffect, useState, useContext } from "react";
   */
 }
 
-export function ConditionalRoute({ componetToRender }) {
+export function ConditionalRoute({ componetToRender, role, route }) {
   const [loading, setLoading] = useState(true);
   let navigate = useNavigate(); // move this into the function
   const context = useContext(AppContext);
 
-  const SigninWithToken = async () => {
+  const Validate = async () => {
+    // Validate that the user has a vaid token
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return;
-    }
-    console.log("conditional route");
     const resp = await Api.Post("/token/verify", {
       token,
     });
@@ -33,15 +29,24 @@ export function ConditionalRoute({ componetToRender }) {
       navigate("/");
       return "";
     }
+
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
+
+    // Check if user has the correct role
+    if (role && resp.user.role != role) {
+      console.log("ACCESS DENIED");
+      context.sendNotification("ACCESS DENIED!!!! REROUTING TO HOME PAGE");
+      navigate("/");
+    }
     setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
-    SigninWithToken();
+    Validate();
   }, [componetToRender]);
 
   return loading ? "" : componetToRender;
 }
+
+export default ConditionalRoute;
