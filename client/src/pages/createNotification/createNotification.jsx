@@ -64,7 +64,7 @@ function CreateNotification() {
   async function getNotificationHistory() {
     const userId = user.id;
     var response = await Api.PostWithAuth(
-      "/getNotificationHistory",
+      "/notifications/all",
       { userId },
       context
     );
@@ -122,14 +122,18 @@ function CreateNotification() {
         <br />
         <button type="submit">Create Notification</button>
       </form>
-      <ul>
-        {notificationHistory.map((notification) => (
-          <li key={notification.id}>
-            <strong>Total:</strong> {notification.title} |{" "}
-            <strong>Details:</strong> {notification.message} |{" "}
-          </li>
-        ))}
-      </ul>
+      {notificationHistory && notificationHistory.length > 0 ? (
+        <ul>
+          {notificationHistory.map((notification) => (
+            <li key={notification.id}>
+              <strong>Total:</strong> {notification.title} |{" "}
+              <strong>Details:</strong> {notification.message} |{" "}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No notifications found.</p>
+      )}
     </section>
   );
 }
