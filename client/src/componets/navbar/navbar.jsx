@@ -174,6 +174,20 @@ function Navbar({ title }) {
                 </div>
                 <h3>Select Cupid</h3>
               </section>
+              {/* Add Cupid Cash */}
+              <section className={classes.tile} onClick={cupidCash}>
+                <div>
+                  <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
+                </div>
+                <h3>Add Cupid Cash</h3>
+              </section>
+              {/* Purchases */}
+              <section className={classes.tile} onClick={purchases}>
+                <div>
+                  <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
+                </div>
+                <h3>Purchases</h3>
+              </section>
             </>
           )}
 
@@ -214,20 +228,8 @@ function Navbar({ title }) {
             </div>
             <h3>Change Password</h3>
           </section>
-          {/* Add Cupid Cash */}
-          <section className={classes.tile} onClick={cupidCash}>
-            <div>
-              <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
-            </div>
-            <h3>Add Cupid Cash</h3>
-          </section>
-          {/* Purchases */}
-          <section className={classes.tile} onClick={purchases}>
-            <div>
-              <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
-            </div>
-            <h3>Purchases</h3>
-          </section>
+
+
         </section>
         {/* Sign */}
         <hr />
