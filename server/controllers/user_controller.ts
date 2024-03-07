@@ -31,23 +31,27 @@ const UserController = (db: PrismaClient) => {
 
 
     router.post("/create", upload.single('file'), async (req, res) => {
-        const { userId, userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
+        const { userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
         const existingUser = await _repository.findByEmail(email)
 
         if (existingUser) {
+            logError("user_controller.ts", "Email already in use")
             res.send({ error: "Email already in use" });
             return;
         }
         const passwordIsStrong = isStrongPassword(password);
         if (!passwordIsStrong.success) {
             res.send({ error: passwordIsStrong.message })
+            logError("user_controller.ts", "Password isnt strong enough")
             return;
         }
+
         switch (userType) {
             case 'Standard':
                 const user = await _repository.create({ firstName, lastName, email, password, age: parseInt(age), dailyBudget: parseInt(budget), relationshipGoals: goals })
                 if (user) {
                     res.send({ userId: user.id });
+                    logInfo(`user_controller.ts`, `${user.email} New Standard Account Created`)
                     await _notificationsRepository.record(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
                 }
                 break;
@@ -55,6 +59,7 @@ const UserController = (db: PrismaClient) => {
                 const cupid = await _cupidRepository.create({ firstName, lastName, email, password, bio })
                 if (cupid) {
                     res.send({ userId: cupid.id });
+                    logInfo(`user_controller.ts`, `${cupid.email} New Cupid Account Created `)
                     await _notificationsRepository.record(cupid.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
                 }
                 break;
@@ -77,6 +82,7 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(currentPassword, user.password)) {
             const profile = await _repository.updatePassword(req.user!!.id, newPassword)
             res.send({ message: "Your account was successfully updated", profile })
+            logInfo(`user_controller.ts`, "changed their password", req.user?.email)
             return;
         } else {
             res.send({ error: "Incorrect Current Password." });
@@ -88,12 +94,12 @@ const UserController = (db: PrismaClient) => {
     router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
             await _repository.updatePicture(parseInt(req.body.userId), req!!.file!!.path)
+            logInfo(`user_controller.ts`, `Sucessfully added a profile picture`)
         } catch (error) {
+            logError("user_controller", error)
             res.send({ error })
-            console.log({ error })
         }
     })
-
 
     // ************** Session Login ***************
     router.post("/session", async (req: Request, res: Response) => {

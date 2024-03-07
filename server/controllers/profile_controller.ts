@@ -25,7 +25,7 @@ const ProfileController = (db: PrismaClient) => {
             res.send({ newBalance });
             return;
         } catch (error) {
-            console.log({ error })
+            logError("profile_controller", error, req.user?.email)
             res.send({ error: "Access Denied" })
             return;
         }

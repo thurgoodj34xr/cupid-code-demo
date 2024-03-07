@@ -1,5 +1,6 @@
 import UserRepository from "../repositories/user_repository";
 import Jwt from "../utils/jwt";
+import Logger from "../utils/logger";
 import { MiddlewareBuilder } from "./middleware";
 
 const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) => {
@@ -9,12 +10,13 @@ const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) 
         const user = await new UserRepository(db).findById(payload.userId)
         req.user = user;
         if (roles && !roles.includes(user!!.role)) {
-            throw Error("USER DOES NOT HAVE PERMISSIONS")
+            logError("authentication.ts", "User does not have correct role")
+        } else {
+            logInfo("authentication.ts", `${user?.email} ${req.url}`)
+            next();
         }
-        console.log("Access Granted")
-        next();
     } catch (error) {
-        console.error(error)
+        Logger.error("Token is expired or invalid")
         res.send({ error })
     }
 }

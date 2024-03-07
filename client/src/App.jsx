@@ -4,12 +4,14 @@ import "./App.css";
 import AppContext from "./componets/app_context";
 import Navbar from "./componets/navbar/navbar";
 import Notification from "./componets/notification/notification";
+import { io } from "socket.io-client";
 
 function App() {
   const [user, setUser] = useState(null);
   const [tokens, setTokens] = useState(null);
   const [notification, setNotification] = useState("");
   const [accountT, setAccountT] = useState("Standard");
+  const [socket, setSocket] = useState(null);
 
   const location = useLocation()
     .pathname.replace("/", "")
@@ -20,6 +22,14 @@ function App() {
       localStorage.setItem("token", tokens.refreshToken);
     }
   }, [tokens]);
+
+  // useEffect(() => {
+  //   const s = io();
+  //   setSocket(s);
+  //   return () => {
+  //     s.disconnect();
+  //   };
+  // }, []);
 
   function updateUser(user) {
     setUser(user);

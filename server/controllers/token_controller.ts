@@ -1,9 +1,8 @@
-import { Router } from "express"
-import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import Jwt from "../utils/jwt";
 import { PrismaClient } from "@prisma/client";
+import { Router } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import UserRepository from "../repositories/user_repository";
+import Jwt from "../utils/jwt";
 
 const TokenController = (db: PrismaClient) => {
     const _repository = new UserRepository(db);
@@ -16,9 +15,10 @@ const TokenController = (db: PrismaClient) => {
             const user = await _repository.findById(payload.userId)
             const accessToken = Jwt.generateAccessToken(user);
             res.send({ user, tokens: { refreshToken: token, accessToken } })
-        } catch (err) {
+            logInfo("token_controller", "created a access token", user?.email)
+        } catch (error) {
+            logError("token_controller", error)
             res.send({ error: "Expired" })
-            console.log(err)
         }
     })
     return router;
