@@ -12,7 +12,7 @@ const PurchasesController = (db: PrismaClient) => {
     const _profileRepository = new ProfileRepository(db);
 
     // ************** Get Purchase History ***************
-    router.post("/history", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
+    router.post("/history", AuthMiddleware(db, [Role.STANDARD, Role.ADMIN, Role.CUPID]), async (req, res) => {
         const purchases = await _repository.findAllByUserId(req.user!!.id)
         res.send({ purchases })
     });

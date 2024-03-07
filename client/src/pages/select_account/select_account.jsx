@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
 import classes from "./select_account.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 function SelectAccount() {
   const context = useContext();

@@ -22,6 +22,7 @@ enum Role {
 
 model User {
   id            Int             @id @default(autoincrement())
+  admin         Admin?
   createdAt     DateTime        @default(now())
   cupid         Cupid?
   email         String          @unique
@@ -64,6 +65,15 @@ model Cupid {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int      @unique
   working   Boolean  @default(false)
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  fired     Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RefreshToken {

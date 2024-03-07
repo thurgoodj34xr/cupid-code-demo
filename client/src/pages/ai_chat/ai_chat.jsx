@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 function AiChat() {
   const context = useContext();

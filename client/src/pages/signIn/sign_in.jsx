@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import SignOn from "../../componets/sign_on/sign_on";
-import Api from "../../hook/api";
+import Api from "../../hooks/api";
 import classes from "./sign_in.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");

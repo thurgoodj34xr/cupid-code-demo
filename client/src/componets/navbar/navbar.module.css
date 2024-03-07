@@ -35,6 +35,11 @@
     z-index: 3;
     transform: translateX(-100%);
 }
+
+.modal::-webkit-scrollbar {
+    display: none;
+}
+
 .exit {
     text-align: right;
 }

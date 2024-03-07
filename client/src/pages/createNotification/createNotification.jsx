@@ -1,7 +1,7 @@
 import { NotificationType } from "@prisma/client";
 import { useEffect, useState } from "react";
-import Api from "../../hook/api";
-import useContext from "../../hook/context";
+import Api from "../../hooks/api";
+import useContext from "../../hooks/context";
 
 function CreateNotification() {
   const context = useContext();

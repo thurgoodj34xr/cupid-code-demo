@@ -18,6 +18,7 @@ import SelectAccount from "./pages/select_account/select_account.jsx";
 import UpdatePassword from "./pages/updatePassword/updatePassword.jsx";
 import AvaliableJobs from "./pages/avalible_jobs/avaliable_jobs.jsx";
 import JobHistory from "./pages/job_history/job_history.jsx";
+import ViewUsers from "./pages/view_users/view_users.jsx";
 const router = createHashRouter([
   {
     path: "",
@@ -148,6 +149,17 @@ const router = createHashRouter([
             key={11}
             role="CUPID"
             componetToRender={<JobHistory />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+      {
+        path: "/ViewUsers",
+        element: (
+          <ConditionalRoute
+            key={12}
+            role="ADMIN"
+            componetToRender={<ViewUsers />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),

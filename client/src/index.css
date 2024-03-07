@@ -105,3 +105,7 @@ h1 {
 .w-50 {
   width: 50%;
 }
+
+.overflowy {
+  overflow-y: auto;
+}

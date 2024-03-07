@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import hashToken from "../utils/hashToken";
+import hashToken from "../utils/hash_token";
 
 export default class AuthRepository {
     private db: PrismaClient;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import PhotoCircle from "../../componets/photo_circle/photo_circle";
-import Api from "../../hook/api";
+import Api from "../../hooks/api";
 import classes from "./select_cupid.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 function SelectCupid() {
   const context = useContext();

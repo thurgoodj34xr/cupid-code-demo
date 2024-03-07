@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -25,6 +25,10 @@ export default class Jwt {
       accessToken,
       refreshToken,
     };
+  }
+
+  static verify(token: string) {
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET!!) as JwtPayload
   }
 }
 

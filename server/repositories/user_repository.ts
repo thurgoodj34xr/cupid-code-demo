@@ -26,6 +26,7 @@ export default class UserRepository {
             include: {
                 profile: true,
                 cupid: true,
+                admin: true,
             },
         });
     }
@@ -62,6 +63,7 @@ export default class UserRepository {
             include: {
                 profile: true,
                 cupid: true,
+                admin: true,
                 refreshToken: true,
             }
         });
@@ -77,8 +79,6 @@ export default class UserRepository {
             },
         })
     }
-
-    
 
     update({ userId, firstName, lastName, email, age, dailyBudget, relationshipGoals }: userPayload) {
         return this.db.user.update({

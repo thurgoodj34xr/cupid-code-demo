@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Api from "./../hook/api";
+import Api from "./../hooks/api";
 import AppContext from "./app_context";
 
 {

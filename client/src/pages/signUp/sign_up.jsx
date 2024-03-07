@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import TextArea from "../../componets/text_area/text_area";
-import Api from "../../hook/api";
+import Api from "../../hooks/api";
 import classes from "./sign_up.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

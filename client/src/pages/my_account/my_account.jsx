@@ -5,9 +5,10 @@ import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
 import TextArea from "../../componets/text_area/text_area";
-import Api from "../../hook/api";
+import Api from "../../hooks/api";
 import classes from "./my_account.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
+1;
 
 function MyAccount() {
   const context = useContext();
@@ -44,6 +45,7 @@ function MyAccount() {
     if (!response.error) {
       user.email = email;
       user.firstName = firstName;
+      1;
       user.lastName = lastName;
       user.profile.age = age;
       user.profile.dailyBudget = dailyBudget;

@@ -5,10 +5,10 @@ import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import Api from "../../hook/api";
-import PurchaseHistory from "../../hook/purchases";
+import PurchaseHistory from "../../hooks/purchases";
 import classes from "./purchases.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 function Purchases() {
   const context = useContext();
   const user = context.getUser();

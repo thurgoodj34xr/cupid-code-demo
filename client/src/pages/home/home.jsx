@@ -4,11 +4,11 @@ import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
-import HandleDeleteNotification from "../../hook/deleteNotification";
-import GetNotificationHistory from "../../hook/notificationHistory";
-import PurchaseHistory from "../../hook/purchases";
+import HandleDeleteNotification from "../../hooks/deleteNotification";
+import GetNotificationHistory from "../../hooks/notificationHistory";
+import PurchaseHistory from "../../hooks/purchases";
 import classes from "./home.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 function Home() {
   const context = useContext();
@@ -64,22 +64,24 @@ function Home() {
 
       {/* Container for Daily Notifications */}
       <p className="label">Daily Notifications</p>
-      {notificationHistory.length > 0 ? (
-        notificationHistory.map((notification) => (
-          <DailyNotification
-            key={notification.id} // Use unique identifier as the key
-            notificationId={notification.id}
-            title={notification.title}
-            body={notification.message}
-            time={notification.timeStamp}
-            onDelete={handleDeleteNotification}
-          />
-        ))
-      ) : (
-        <p className="center label"> You currently have 0 notifications</p>
-      )}
+      <section className={classes.dailyNotifications}>
+        {notificationHistory.length > 0 ? (
+          notificationHistory.map((notification) => (
+            <DailyNotification
+              key={notification.id} // Use unique identifier as the key
+              notificationId={notification.id}
+              title={notification.title}
+              body={notification.message}
+              time={notification.timeStamp}
+              onDelete={handleDeleteNotification}
+            />
+          ))
+        ) : (
+          <p className="center label"> You currently have 0 notifications</p>
+        )}
+      </section>
       <div className="flex row between">
-        <p className="label">Purchase History</p>
+        <p className="label">Recent Purchases</p>
         <p className="pointer" onClick={() => navigate("/Purchases")}>
           View All
         </p>

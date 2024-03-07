@@ -1,80 +1,18 @@
-import { NotificationType, PrismaClient } from '@prisma/client';
-import { config } from "dotenv";
-import bcryptjs from "bcryptjs";
+import { PrismaClient } from '@prisma/client';
+import CreateCupids from './create_cupids';
+import CreateNotifications from './create_notifications';
+import CreatePurchases from './create_purchases';
+import CreateUsers from './create_users';
+import CreateAdmins from './create_admin';
 const db = new PrismaClient();
 
 
 async function main() {
-
-  // *********** Create Standard User ***************
-
-  const user = await db.user.upsert({
-    where: {
-      id: 1,
-    },
-    create: {
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@gmail.com",
-      password: bcryptjs.hashSync('johndoe'),
-      photoUrl: "https://images.pexels.com/photos/1317712/pexels-photo-1317712.jpeg",
-      profile: {
-        create: {
-          age: 23,
-          dailyBudget: 15,
-          relationshipGoals: "Go on a lot of dates",
-        }
-      },
-    },
-    update: {
-      email: "admin@gmail.com"
-    }
-  })
-  const notification = await db.notifications.upsert({
-    where: {
-      id: 1,
-    },
-    create: {
-      id: 1,
-      userId: 1,
-      title: "Welcome to CupidCode!",
-      message: "You have found the path to smoother dating",
-      type: NotificationType.DAILY,
-    },
-    update: {
-
-    }
-  })
-  const purchase = await db.purchases.upsert({
-    where: {
-      id: 1,
-    },
-    create: {
-      userId: 1,
-      total: 10,
-      jobCost: 7,
-      cupidPayout: 3,
-      profit: 5,
-      details: "Panda Express",
-    },
-    update: {}
-  });
-
-  const purchase2 = await db.purchases.upsert({
-    where: {
-      id: 2,
-    },
-    create: {
-      id: 2,
-      userId: 1,
-      total: 15,
-      jobCost: 7,
-      cupidPayout: 3,
-      profit: 5,
-      details: "Movie Tickets",
-    },
-    update: {}
-  });
+  await CreateUsers(db);
+  await CreateCupids(db);
+  await CreateAdmins(db);
+  await CreateNotifications(db);
+  await CreatePurchases(db);
 }
 
 main()

@@ -11,6 +11,7 @@ import PurchasesController from "./server/controllers/purchases_controller";
 import TokenController from "./server/controllers/token_controller";
 import UserController from "./server/controllers/user_controller";
 import ProfileController from "./server/controllers/profile_controller";
+import AdminController from "./server/controllers/admin_controller";
 dotenv.config();
 
 
@@ -65,6 +66,8 @@ app.use("/cupids", CupidController(db))
 app.use("/token", TokenController(db))
 app.use("/notifications", NotificationController(db))
 app.use("/purchases", PurchasesController(db))
+app.use("/admin", AdminController(db))
+
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT || 3000}...`);

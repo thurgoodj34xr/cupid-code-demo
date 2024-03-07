@@ -6,10 +6,10 @@ import Button from "../../componets/button/button";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
-import HandleDeleteNotification from "../../hook/deleteNotification";
-import GetNotificationHistory from "../../hook/notificationHistory";
+import HandleDeleteNotification from "../../hooks/deleteNotification";
+import GetNotificationHistory from "../../hooks/notificationHistory";
 import classes from "./ai_assistance.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
 
 function AiAssistance() {
   const context = useContext();
@@ -42,8 +42,8 @@ function AiAssistance() {
   let navigate = useNavigate();
 
   const purchases = () => {
-    navigate("/Purchases");
-  };
+    navigate("/Purchases");1
+  };1
 
   return (
     <section className={classes.main}>

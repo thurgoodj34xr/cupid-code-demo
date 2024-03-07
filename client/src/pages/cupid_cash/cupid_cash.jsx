@@ -2,9 +2,9 @@ import { useState } from "react";
 import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import Api from "../../hook/api";
 import classes from "./cupid_cash.module.css";
-import useContext from "../../hook/context";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 
 function CupidCash() {
   const context = useContext();

@@ -7,7 +7,7 @@ import AuthRepository from "../repositories/auth_repository";
 import CupidRepository from "../repositories/cupid_repository";
 import NotificationRepository from "../repositories/notification_repository";
 import UserRepository from "../repositories/user_repository";
-import { isStrongPassword } from "../utils/isStrongPassword";
+import { isStrongPassword } from "../utils/strong_password";
 import Jwt from "../utils/jwt";
 
 const storage = multer.diskStorage({

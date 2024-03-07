@@ -1,28 +1,28 @@
-import classes from "./navbar.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AppContext from "../app_context";
 import {
-  faHouse,
-  faRightFromBracket,
+  faBars,
   faHandshake,
+  faHouse,
   faMessage,
   faMoneyBill,
+  faPeopleLine,
+  faRightFromBracket,
   faShoppingCart,
   faUser,
-  faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { FaHistory, FaKey, FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
-import JobHistory from "../../pages/job_history/job_history";
+import classes from "./navbar.module.css";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
   const [init, setInit] = useState(true);
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
+
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -89,6 +89,11 @@ function Navbar({ title }) {
 
   const jobHistory = () => {
     navigate("/JobHistory");
+    hideNavBar();
+  };
+
+  const viewUsers = () => {
+    navigate("ViewUsers");
     hideNavBar();
   };
 
@@ -174,6 +179,60 @@ function Navbar({ title }) {
                 </div>
                 <h3>Select Cupid</h3>
               </section>
+            </>
+          )}
+          {/* ***************** END OF STANDARD ROLE ***************** */}
+
+          {/* ********************** CUPID ROLE *********************** */}
+          {user.cupid && (
+            <>
+              <section className={classes.tile} onClick={avaliableJobs}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>Avaliable Jobs</h3>
+              </section>
+              <section className={classes.tile} onClick={jobHistory}>
+                <div>
+                  <FaHistory size="2rem" />
+                </div>
+                <h3>Job History</h3>
+              </section>
+            </>
+          )}
+          {/* *************** END OF CUPID ROLE ************* */}
+
+          {/* ****************** ADMIN ROLE ************************* */}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewUsers}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>View Users</h3>
+              </section>
+            </>
+          )}
+          {/* ****************** END OF ADMIN ROLE *************** */}
+
+          <hr />
+          {/* My Account */}
+          <section className={classes.tile} onClick={myAccount}>
+            <div>
+              <FontAwesomeIcon icon={faUser} size="2xl" />
+            </div>
+            <h3>My Account</h3>
+          </section>
+          <section className={classes.tile} onClick={changePassword}>
+            <div>
+              <FaKey size="2rem" />
+            </div>
+            <h3>Change Password</h3>
+          </section>
+
+          {/* **************** STANDARD ROLE*************** */}
+          {user.profile && (
+            <>
               {/* Add Cupid Cash */}
               <section className={classes.tile} onClick={cupidCash}>
                 <div>
@@ -190,44 +249,7 @@ function Navbar({ title }) {
               </section>
             </>
           )}
-
-          {/* ********************** CUPID ROLE *********************** */}
-          {user.cupid && (
-            <>
-              <section className={classes.tile} onClick={avaliableJobs}>
-                <div>
-                  <FaSearch size="2rem" />
-                </div>
-                <h3>Avaliable Jobs</h3>
-              </section>
-            </>
-          )}
-
-          {user.cupid && (
-            <>
-              <section className={classes.tile} onClick={jobHistory}>
-                <div>
-                  <FaHistory size="2rem" />
-                </div>
-                <h3>Job History</h3>
-              </section>
-            </>
-          )}
-
-          <hr />
-          {/* My Account */}
-          <section className={classes.tile} onClick={myAccount}>
-            <div>
-              <FontAwesomeIcon icon={faUser} size="2xl" />
-            </div>
-            <h3>My Account</h3>
-          </section>
-          <section className={classes.tile} onClick={changePassword}>
-            <div>
-              <FaKey size="2rem" />
-            </div>
-            <h3>Change Password</h3>
-          </section>
+          {/* **************** END OF STANDARD ROLE*************** */}
         </section>
         {/* Sign */}
         <hr />

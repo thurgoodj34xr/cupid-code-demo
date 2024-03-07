@@ -8,6 +8,10 @@
     overflow-y: auto;
 }
 
+.container::-webkit-scrollbar {
+    display: none;
+}
+
 @keyframes fade-in {
     0% {
         opacity: .2;
@@ -38,4 +42,17 @@ hr {
 
 .balance section {
     width: 50%;
+}
+
+.dailyNotifications {
+    max-height: 30vh;
+    min-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px
+}
+
+.dailyNotifications::-webkit-scrollbar {
+    display: none;
 }
