@@ -10,7 +10,6 @@ import TextArea from "../../componets/text_area/text_area";
 import Api from "../../hook/api";
 import classes from "./sign_up.module.css";
 import useContext from "../../hook/context";
-11
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,7 +118,6 @@ function SignUp() {
       bio,
       profileImage,
     });
-
     if (res.error) {
       setError(res.error);
       setButtonText("Sign Up");

@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`)
-  if (req.url.includes("/Images")) {
+  if (req.url.includes("/images")) {
     res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
   } else {
     next();

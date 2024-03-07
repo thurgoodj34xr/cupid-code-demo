@@ -12,7 +12,7 @@ import Jwt from "../utils/jwt";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        return cb(null, "./Images")
+        return cb(null, "./server/images")
     },
     filename: function (req, file, cb) {
         return cb(null, `${Date.now()}_${file.originalname}`)
@@ -31,7 +31,7 @@ const UserController = (db: PrismaClient) => {
 
 
     router.post("/create", upload.single('file'), async (req, res) => {
-        const { userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
+        const { userId, userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
         const existingUser = await _repository.findByEmail(email)
 
         if (existingUser) {
@@ -85,13 +85,15 @@ const UserController = (db: PrismaClient) => {
     });
 
     // ************** Update User Profile Picture ***************
-    router.post('/profileUrl', AuthMiddleware(db), upload.single('file'), async (req, res) => {
+    router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
-            await _repository.updatePicture(req.user!!.id, req!!.file!!.path)
+            await _repository.updatePicture(parseInt(req.body.userId), req!!.file!!.path)
         } catch (error) {
             res.send({ error })
+            console.log({ error })
         }
     })
+
 
     // ************** Session Login ***************
     router.post("/session", async (req: Request, res: Response) => {
