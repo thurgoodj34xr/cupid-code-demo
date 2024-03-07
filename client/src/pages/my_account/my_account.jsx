@@ -1,17 +1,16 @@
-import classes from "./my_account.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
-import Input from "../../componets/inputs/input";
-import TextArea from "../../componets/text_area/text_area";
-import Button from "../../componets/button/button";
-import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
+import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import TextArea from "../../componets/text_area/text_area";
+import Api from "../../hook/api";
+import classes from "./my_account.module.css";
+import useContext from "../../hook/context";
 
 function MyAccount() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [email, setEmail] = useState(user.email);
   const [firstName, setFirstName] = useState(user.firstName);
@@ -27,14 +26,12 @@ function MyAccount() {
   const [submitButtonText, setSubmitButtonText] = useState("Update");
 
   const updateProfile = async () => {
-    const userId = user.id;
     setSubmitButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
     const response = await Api.PostWithAuth(
       "/users/update",
       {
-        userId,
         firstName,
         lastName,
         email,

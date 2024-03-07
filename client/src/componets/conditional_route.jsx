@@ -1,7 +1,7 @@
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Api from "./../hook/api";
 import AppContext from "./app_context";
-import * as Api from "./../hook/api";
-import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
 
 {
   /* 
@@ -35,9 +35,8 @@ export function ConditionalRoute({ componetToRender, role, route }) {
 
     // Check if user has the correct role
     if (role && resp.user.role != role) {
-      console.log("ACCESS DENIED");
       context.sendNotification("ACCESS DENIED!!!! REROUTING TO HOME PAGE");
-      navigate("/");
+      navigate(route);
     }
     setLoading(false);
   };

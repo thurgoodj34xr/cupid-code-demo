@@ -1,21 +1,20 @@
-import Navbar from "../../componets/navbar/navbar";
-import classes from "./home.module.css";
-import DailyNotification from "../../componets/daily_notification/daily_notification";
-import { useEffect, useState, useContext } from "react";
-import AppContext from "../../componets/app_context";
 import { NotificationType } from "@prisma/client";
-import PurchaseHistory from "../../hook/purchases";
-import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import { useEffect, useState } from "react";
 import { FaMoneyBill } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import GetNotificationHistory from "../../hook/notificationHistory";
+import DailyNotification from "../../componets/daily_notification/daily_notification";
+import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import HandleDeleteNotification from "../../hook/deleteNotification";
+import GetNotificationHistory from "../../hook/notificationHistory";
+import PurchaseHistory from "../../hook/purchases";
+import classes from "./home.module.css";
+import useContext from "../../hook/context";
 
 function Home() {
-  const context = useContext(AppContext);
+  const context = useContext();
+  const navigate = useNavigate();
   const [notificationHistory, setNotificationHistory] = useState([]);
   const [purchaseHistory, setPurchaseHistory] = useState();
-  const navigate = useNavigate();
 
   const user = context.getUser();
 
@@ -27,10 +26,6 @@ function Home() {
     );
     setNotificationHistory(notifications);
   };
-  useEffect(() => {
-    getNotificationHistory();
-    return () => {};
-  }, []);
 
   const handleDeleteNotification = async (notificationId) => {
     const response = await HandleDeleteNotification(notificationId, context);
@@ -45,6 +40,7 @@ function Home() {
 
   useEffect(() => {
     PurchaseHistory(user.id, context, setPurchaseHistory);
+    getNotificationHistory();
   }, []);
 
   return (

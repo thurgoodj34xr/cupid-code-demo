@@ -1,34 +1,35 @@
-import classes from "./ai_assistance.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
+import { NotificationType } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { FaTicketAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Button from "../../componets/button/button";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
-import { FaGoodreads, FaTicketAlt } from "react-icons/fa";
-import Button from "../../componets/button/button";
-import { useNavigate } from "react-router-dom";
+import HandleDeleteNotification from "../../hook/deleteNotification";
 import GetNotificationHistory from "../../hook/notificationHistory";
-import HandleDeleteNotification from "../../hook/deleteNotification"
-import { NotificationType } from "@prisma/client";
-
+import classes from "./ai_assistance.module.css";
+import useContext from "../../hook/context";
 
 function AiAssistance() {
-
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [notificationHistory, setNotificationHistory] = useState([]);
   const getNotificationHistory = async () => {
-    const notifications = await GetNotificationHistory(user.id, NotificationType.AIGEN, context);
-    setNotificationHistory(notifications)
-  }
+    const notifications = await GetNotificationHistory(
+      user.id,
+      NotificationType.AIGEN,
+      context
+    );
+    setNotificationHistory(notifications);
+  };
   useEffect(() => {
     getNotificationHistory();
 
-    return () => { };
+    return () => {};
   }, []);
   const handleDeleteNotification = async (notificationId) => {
-    const response = await HandleDeleteNotification(notificationId, context)
+    const response = await HandleDeleteNotification(notificationId, context);
     if (!response.error) {
       // Filter out the notification with the specified ID
       const updatedNotificationHistory = notificationHistory.filter(
@@ -36,7 +37,7 @@ function AiAssistance() {
       );
       setNotificationHistory(updatedNotificationHistory);
     }
-  }
+  };
 
   let navigate = useNavigate();
 

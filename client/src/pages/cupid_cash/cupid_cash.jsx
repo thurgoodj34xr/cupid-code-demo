@@ -1,13 +1,13 @@
-import classes from "./cupid_cash.module.css";
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
-import Input from "../../componets/inputs/input";
+import { useState } from "react";
 import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import Api from "../../hook/api";
+import classes from "./cupid_cash.module.css";
+import useContext from "../../hook/context";
 
 function CupidCash() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [amountToAdd, setAmountToAdd] = useState(0);
   const [creditCard, setCreditCard] = useState("");
@@ -130,11 +130,10 @@ function CupidCash() {
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/users/cash",
+      "/profile/cash",
       { changeAmount: amountToAdd, userId },
       context
     );
-    
 
     if (!response.error) {
       // Update user profile with the new balance

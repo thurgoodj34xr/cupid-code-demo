@@ -39,6 +39,7 @@ const router = createHashRouter([
         path: "/Home",
         element: (
           <ConditionalRoute
+            key={1}
             componetToRender={<Home />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -48,6 +49,7 @@ const router = createHashRouter([
         path: "/AiAssistance",
         element: (
           <ConditionalRoute
+            key={2}
             role="STANDARD"
             componetToRender={<AiAssistance />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -58,6 +60,7 @@ const router = createHashRouter([
         path: "/AiChat",
         element: (
           <ConditionalRoute
+            key={3}
             role="STANDARD"
             componetToRender={<AiChat />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -68,6 +71,7 @@ const router = createHashRouter([
         path: "/SelectCupid",
         element: (
           <ConditionalRoute
+            key={4}
             role="STANDARD"
             componetToRender={<SelectCupid />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -78,6 +82,7 @@ const router = createHashRouter([
         path: "/CreateNotification",
         element: (
           <ConditionalRoute
+            key={5}
             componetToRender={<CreateNotification />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -87,6 +92,7 @@ const router = createHashRouter([
         path: "/MyAccount",
         element: (
           <ConditionalRoute
+            key={6}
             componetToRender={<MyAccount />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -96,6 +102,7 @@ const router = createHashRouter([
         path: "/ChangePassword",
         element: (
           <ConditionalRoute
+            key={7}
             componetToRender={<UpdatePassword />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
@@ -105,6 +112,7 @@ const router = createHashRouter([
         path: "/CupidCash",
         element: (
           <ConditionalRoute
+            key={8}
             role="STANDARD"
             componetToRender={<CupidCash />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -115,6 +123,7 @@ const router = createHashRouter([
         path: "/Purchases",
         element: (
           <ConditionalRoute
+            key={9}
             role="STANDARD"
             componetToRender={<Purchases />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -125,6 +134,7 @@ const router = createHashRouter([
         path: "/AvaliableJobs",
         element: (
           <ConditionalRoute
+            key={10}
             role="CUPID"
             componetToRender={<AvaliableJobs />}
             route={"/" /* Redirects to login if there is no auth user */}
@@ -135,6 +145,7 @@ const router = createHashRouter([
         path: "/JobHistory",
         element: (
           <ConditionalRoute
+            key={11}
             role="CUPID"
             componetToRender={<JobHistory />}
             route={"/" /* Redirects to login if there is no auth user */}

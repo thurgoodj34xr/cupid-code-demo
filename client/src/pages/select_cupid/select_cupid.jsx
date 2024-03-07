@@ -1,13 +1,12 @@
-import classes from "./select_cupid.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
+import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
-import * as Api from "../../hook/api";
 import PhotoCircle from "../../componets/photo_circle/photo_circle";
+import Api from "../../hook/api";
+import classes from "./select_cupid.module.css";
+import useContext from "../../hook/context";
 
 function SelectCupid() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const [cupids, setCupids] = useState([]);
 
   const getCupids = async () => {
@@ -23,7 +22,6 @@ function SelectCupid() {
       <p className="label left">Avaliable cupids</p>
       {cupids &&
         cupids.map((cupid, idx) => {
-          console.log(cupid.photoUrl);
           return (
             <CupidTile
               key={idx}

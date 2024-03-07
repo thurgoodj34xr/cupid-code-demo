@@ -1,4 +1,4 @@
-import * as Api from "./api"
+import Api from "./api"
 async function PurchaseHistory(userId, context, setState) {
   var resp = await Api.PostWithAuth(
     "/purchases/history",
