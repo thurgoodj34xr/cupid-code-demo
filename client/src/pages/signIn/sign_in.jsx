@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import classes from "./sign_in.module.css";
 import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
-import Button2 from "../../componets/button/button";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../componets/app_context";
 import * as Api from "../../hook/api";

@@ -124,7 +124,7 @@ function App() {
           <Outlet />
         </div>
       </div>
-              </div>
+              
     </AppContext.Provider>
   );
 }
