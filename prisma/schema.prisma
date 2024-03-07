@@ -35,20 +35,7 @@ model User {
   purchase      Purchases[]
   role          Role            @default(STANDARD)
   updatedAt     DateTime        @updatedAt
-}
-
-// This is the Standard user schema.
-// Will need to create schemas for cupids and managers
-model Profile {
-  id                Int      @id @default(autoincrement())
-  age               Int?
-  balance           Decimal  @default(25)
-  createdAt         DateTime @default(now())
-  dailyBudget       Decimal  @default(0)
-  relationshipGoals String?
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id])
-  userId            Int      @unique
+  Jobs          Jobs[]
 }
 
 model Cupid {
@@ -57,6 +44,7 @@ model Cupid {
   createdAt DateTime @default(now())
   earnings  Decimal  @default(0)
   fired     Boolean  @default(false)
+  jobs      Jobs[]
   longitude Decimal  @default(0)
   latitude  Decimal  @default(0)
   rating    Decimal  @default(0)
@@ -66,27 +54,15 @@ model Cupid {
   working   Boolean  @default(false)
 }
 
-model RefreshToken {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  hashedToken String   @unique
-  revoked     Boolean  @default(false)
-  updatedAt   DateTime @updatedAt
-  User        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
-}
-
-model Purchases {
-  id          Int      @id @default(autoincrement())
-  cupidId     Int?
+model Jobs {
+  id          Int     @id @default(autoincrement())
+  cupidId     Int // Remove @relation attribute here
+  userId      Int // Remove @relation attribute here
+  longitude   Decimal @default(0)
+  latitude    Decimal @default(0)
   cupidPayout Decimal
-  details     String   @default("Cupid Code Intervention")
-  jobCost     Decimal
-  profit      Decimal
-  timestamp   DateTime @default(now())
-  total       Decimal
-  User        User     @relation(fields: [userId], references: [id])
-  userId      Int
+  cupid       Cupid   @relation(fields: [cupidId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
 }
 
 model Notifications {
@@ -103,4 +79,41 @@ enum NotificationType {
   AIGEN
   ALL
   DAILY
+}
+
+// This is the Standard user schema.
+// Will need to create schemas for cupids and managers
+model Profile {
+  id                Int      @id @default(autoincrement())
+  age               Int?
+  balance           Decimal  @default(25)
+  createdAt         DateTime @default(now())
+  dailyBudget       Decimal  @default(0)
+  relationshipGoals String?
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+  userId            Int      @unique
+}
+
+model Purchases {
+  id          Int      @id @default(autoincrement())
+  cupidId     Int?
+  cupidPayout Decimal
+  details     String   @default("Cupid Code Intervention")
+  jobCost     Decimal
+  profit      Decimal
+  timestamp   DateTime @default(now())
+  total       Decimal
+  User        User     @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model RefreshToken {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  hashedToken String   @unique
+  revoked     Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  User        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
 }

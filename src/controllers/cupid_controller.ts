@@ -7,6 +7,15 @@ const CupidController = () => {
         const cupids = await Cupid.getAll();
         res.send({ cupids })
     })
+
+    router.get("/changeEmployment", async (req, res) => {
+        const { userId, employmentStatus } = req.body
+        const response = await Cupid.switchFired(userId, employmentStatus);
+        if (response) {
+            res.send({ response })
+            return;
+        } res.send({ error: "Couldn't update employment status" })
+    })
     return router;
 }
 

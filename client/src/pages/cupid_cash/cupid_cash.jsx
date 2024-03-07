@@ -134,7 +134,6 @@ function CupidCash() {
       { changeAmount: amountToAdd, userId },
       context
     );
-    
 
     if (!response.error) {
       // Update user profile with the new balance
