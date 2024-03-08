@@ -1,0 +1,20 @@
+.purchase_form {
+    padding: 20px;
+    width: 100%;
+    border-width: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    width: 90vw;
+    max-width: 600px;
+    top: 55%;
+    transform: translateY(-50%);
+    animation: fadein 2s forwards;
+    align-items: center;
+    overflow: scroll;
+    max-height: 80vh;
+}

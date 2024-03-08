@@ -7,11 +7,13 @@ function MyAccount() {
   const context = useContext(AppContext);
   const { firstName, lastName, email, profile } = context.getUser();
   return (
-    <section>
+    <div className={classes.purchase_form}>
+    <section >
       <p>First:{firstName}</p>
       <p>Last:{lastName}</p>
       <p>Email:{email}</p>
     </section>
+    </div>
   );
 }
 
