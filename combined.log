@@ -1,0 +1,6 @@
+{"level":"info","message":"GET /","service":"user-service"}
+{"level":"info","message":"POST /token/verify","service":"user-service"}
+{"level":"info","message":"GET /cupidCode.png","service":"user-service"}
+{"level":"info","message":"GET /"}
+{"level":"info","message":"POST /token/verify"}
+{"level":"info","message":"GET /cupidCode.png"}

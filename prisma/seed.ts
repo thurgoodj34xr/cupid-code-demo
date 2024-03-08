@@ -1,31 +1,18 @@
 import { PrismaClient } from '@prisma/client';
-import db from "../utils/prisma";
-import { config } from "dotenv";
-import bcryptjs from "bcryptjs";
-config();
+import CreateCupids from './create_cupids';
+import CreateNotifications from './create_notifications';
+import CreatePurchases from './create_purchases';
+import CreateUsers from './create_users';
+import CreateAdmins from './create_admin';
+const db = new PrismaClient();
 
 
 async function main() {
-  // const user = await db.user.upsert({
-  //   where: {
-  //     id: 1,
-  //   },
-  //   create : {
-  //     firstName: "SITE",
-  //     lastName: "ADMIN",
-  //     email: "admin@gmail.com",
-  //     password: bcryptjs.hashSync('admin'),
-  //     profile: {
-  //       create: {
-
-  //       }
-  //     },
-  //   },
-  //   update: {
-  //     email: "admin@gmail.com"
-  //   }
-  // })
-  // console.log(user);
+  await CreateUsers(db);
+  await CreateCupids(db);
+  await CreateAdmins(db);
+  await CreateNotifications(db);
+  await CreatePurchases(db);
 }
 
 main()

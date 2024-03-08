@@ -1,27 +1,14 @@
-import { useState, useEffect, useContext } from "react";
-import classes from "./sign_in.module.css";
-import Input from "../../componets/inputs/input";
-import Button from "../../componets/button/button";
-import { useNavigate } from "react-router-dom";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSpinner,
-  faAppleWhole,
-  faBook,
-  faSitemap,
-} from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
 import SignOn from "../../componets/sign_on/sign_on";
-import {
-  FaApple,
-  FaBeer,
-  FaFacebook,
-  FaFacebookMessenger,
-  FaFacebookSquare,
-  FaGoogle,
-  FaGooglePay,
-} from "react-icons/fa";
+import Api from "../../hooks/api";
+import classes from "./sign_in.module.css";
+import useContext from "../../hooks/context";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -30,7 +17,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Sign in");
 
-  const context = useContext(AppContext);
+  const context = useContext();
 
   let navigate = useNavigate();
 
@@ -41,7 +28,7 @@ export default function SignIn() {
       return;
     }
 
-    const resp = await Api.Post("/verifyToken", {
+    const resp = await Api.Post("/token/verify", {
       token,
     });
 
@@ -61,6 +48,7 @@ export default function SignIn() {
   {
     /* Enables a user to use the enter key instead of clicking on submit */
   }
+
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.keyCode === 13) {
@@ -80,7 +68,7 @@ export default function SignIn() {
     setButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
-    const res = await Api.Post("/signin", {
+    const res = await Api.Post("/users/session", {
       email,
       password,
     });

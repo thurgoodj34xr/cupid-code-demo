@@ -6,10 +6,20 @@
     padding: 10px;
     width: 100%;
     border-radius: 8px;
+    animation: fade-in 1s forwards;
 }
 
 .row {
     display: flex;
     gap: 10px;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: .2;
+        transform: translateY(50%);
+    }
+    100% {
+    }
 }
 

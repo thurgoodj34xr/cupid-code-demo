@@ -1,25 +1,34 @@
-import classes from "./navbar.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AppContext from "../app_context";
 import {
-  faHouse,
-  faRightFromBracket,
+  faBars,
   faHandshake,
+  faHouse,
   faMessage,
   faMoneyBill,
+  faPeopleLine,
+  faRightFromBracket,
   faShoppingCart,
   faUser,
-  faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import {
+  FaBook,
+  FaHistory,
+  FaKey,
+  FaSearch,
+  FaSubscript,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import useContext from "../../hooks/context";
+import PhotoCircle from "../photo_circle/photo_circle";
+import classes from "./navbar.module.css";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
   const [init, setInit] = useState(true);
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
+
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -34,6 +43,11 @@ function Navbar({ title }) {
   const signout = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("token");
+    context.Socket().emit("log", {
+      file: "navbar.jsx",
+      message: "signed out",
+      user: `${user.email}`,
+    });
     navigate("/");
     context.updateUser(null);
     context.updateTokens(null);
@@ -64,6 +78,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const changePassword = () => {
+    navigate("ChangePassword");
+    hideNavBar();
+  };
+
   const cupidCash = () => {
     navigate("/CupidCash");
     hideNavBar();
@@ -71,6 +90,26 @@ function Navbar({ title }) {
 
   const purchases = () => {
     navigate("/Purchases");
+    hideNavBar();
+  };
+
+  const avaliableJobs = () => {
+    navigate("/AvaliableJobs");
+    hideNavBar();
+  };
+
+  const jobHistory = () => {
+    navigate("/JobHistory");
+    hideNavBar();
+  };
+
+  const viewUsers = () => {
+    navigate("/ViewUsers");
+    hideNavBar();
+  };
+
+  const viewLogs = () => {
+    navigate("/Logs");
     hideNavBar();
   };
 
@@ -112,11 +151,15 @@ function Navbar({ title }) {
         </section>
         {/* User Info */}
         <section className={classes.container}>
-          <section className={classes.profile}>
-            <h2>
+          <PhotoCircle url={user.photoUrl} />
+          <section className="flex col g-10">
+            <h2 className="center">
               {user.firstName} {user.lastName}
             </h2>
-            <p className="label">{user.email}</p>
+            <div className="flex row between">
+              <p className="label">{user.email}</p>
+              {user.profile && <p className="label">${user.profile.balance}</p>}
+            </div>
           </section>
           <hr />
           {/* Home Icon */}
@@ -126,27 +169,78 @@ function Navbar({ title }) {
             </div>
             <h3>Home</h3>
           </section>
-          {/* Ai Assistance Icon */}
-          <section className={classes.tile} onClick={aiAssistance}>
-            <div>
-              <FontAwesomeIcon icon={faHandshake} size="2xl" />
-            </div>
-            <h3>Ai Assistance</h3>
-          </section>
-          {/* Ai Chat */}
-          <section className={classes.tile} onClick={aiChat}>
-            <div>
-              <FontAwesomeIcon icon={faMessage} size="2xl" />
-            </div>
-            <h3>Ai Chat</h3>
-          </section>
-          {/* Select Cupid */}
-          <section className={classes.tile} onClick={selectCupid}>
-            <div>
-              <FontAwesomeIcon icon={faPeopleLine} size="2xl" />
-            </div>
-            <h3>Select Cupid</h3>
-          </section>
+
+          {/* ************* STANDARD ROLE ********************** */}
+
+          {user.profile && (
+            <>
+              {/* Ai Assistance */}
+              <section className={classes.tile} onClick={aiAssistance}>
+                <div>
+                  <FontAwesomeIcon icon={faHandshake} size="2xl" />
+                </div>
+                <h3>Ai Assistance</h3>
+              </section>
+              {/* Ai Chat */}
+              <section className={classes.tile} onClick={aiChat}>
+                <div>
+                  <FontAwesomeIcon icon={faMessage} size="2xl" />
+                </div>
+                <h3>Ai Chat</h3>
+              </section>
+              {/* Select Cupid */}
+              <section className={classes.tile} onClick={selectCupid}>
+                <div>
+                  <FontAwesomeIcon icon={faPeopleLine} size="2xl" />
+                </div>
+                <h3>Select Cupid</h3>
+              </section>
+            </>
+          )}
+          {/* ***************** END OF STANDARD ROLE ***************** */}
+
+          {/* ********************** CUPID ROLE *********************** */}
+          {user.cupid && (
+            <>
+              <section className={classes.tile} onClick={avaliableJobs}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>Avaliable Jobs</h3>
+              </section>
+              <section className={classes.tile} onClick={jobHistory}>
+                <div>
+                  <FaHistory size="2rem" />
+                </div>
+                <h3>Job History</h3>
+              </section>
+            </>
+          )}
+          {/* *************** END OF CUPID ROLE ************* */}
+
+          {/* ****************** ADMIN ROLE ************************* */}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewUsers}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>View Users</h3>
+              </section>
+            </>
+          )}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewLogs}>
+                <div>
+                  <FaBook size="2rem" />
+                </div>
+                <h3>Logs</h3>
+              </section>
+            </>
+          )}
+          {/* ****************** END OF ADMIN ROLE *************** */}
+
           <hr />
           {/* My Account */}
           <section className={classes.tile} onClick={myAccount}>
@@ -155,20 +249,33 @@ function Navbar({ title }) {
             </div>
             <h3>My Account</h3>
           </section>
-          {/* Add Cupid Cash */}
-          <section className={classes.tile} onClick={cupidCash}>
+          <section className={classes.tile} onClick={changePassword}>
             <div>
-              <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
+              <FaKey size="2rem" />
             </div>
-            <h3>Add Cupid Cash</h3>
+            <h3>Change Password</h3>
           </section>
-          {/* Purchases */}
-          <section className={classes.tile} onClick={purchases}>
-            <div>
-              <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
-            </div>
-            <h3>Purchases</h3>
-          </section>
+
+          {/* **************** STANDARD ROLE*************** */}
+          {user.profile && (
+            <>
+              {/* Add Cupid Cash */}
+              <section className={classes.tile} onClick={cupidCash}>
+                <div>
+                  <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
+                </div>
+                <h3>Add Cupid Cash</h3>
+              </section>
+              {/* Purchases */}
+              <section className={classes.tile} onClick={purchases}>
+                <div>
+                  <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
+                </div>
+                <h3>Purchases</h3>
+              </section>
+            </>
+          )}
+          {/* **************** END OF STANDARD ROLE*************** */}
         </section>
         {/* Sign */}
         <hr />

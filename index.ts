@@ -1,34 +1,51 @@
+import { PrismaClient } from "@prisma/client";
+import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
 import express from "express";
 import { engine } from 'express-handlebars';
 import fs from "fs";
-import * as dotenv from "dotenv";
-import bodyParser from "body-parser";
-import * as User from "./services/user";
-import * as Auth from "./services/auth";
-import * as Purchases from "./services/purchases";
-import * as Jwt from "./utils/jwt";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { v4 as uuid } from "uuid";
-import bcrypt from "bcryptjs";
-import tokenHasher from "./utils/hashToken";
-import { Decimal } from "@prisma/client/runtime/library";
+import path from "path";
+import AdminController from "./server/controllers/admin_controller";
+import CupidController from "./server/controllers/cupid_controller";
+import NotificationController from "./server/controllers/notification_controller";
+import ProfileController from "./server/controllers/profile_controller";
+import PurchasesController from "./server/controllers/purchases_controller";
+import TokenController from "./server/controllers/token_controller";
+import UserController from "./server/controllers/user_controller";
+import { createServer } from "node:http";
+import { Server } from "socket.io"
+import "./global";
 dotenv.config();
-
 
 const DEBUG = process.env.NODE_ENV !== "production";
 const MANIFEST: Record<string, any> = DEBUG ? {} : JSON.parse(fs.readFileSync("static/.vite/manifest.json").toString())
+const db = new PrismaClient();
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
+export default io;
+io.on('connection', (socket) => {
+  socket.on("log", (data) => {
+    logInfo(data.file, data.message, data.user);
+  })
+})
+
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
-app.set('views', './views');
+app.set('views', './server/views');
 
 app.use(bodyParser.json());
-
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`)
-  next()
+  // logInfo(`index.ts`, `${req.method} ${req.url}`);
+  if (req.url.includes("/images")) {
+    res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
+  } else {
+    next();
+  }
 });
+
+
 
 if (!DEBUG) {
   app.use(express.static('static'));
@@ -43,9 +60,6 @@ if (!DEBUG) {
   });
 }
 
-// ***************** Un-Protected Routes *******************
-
-
 app.get(['/'], (req, res) => {
   res.render('index', {
     debug: DEBUG,
@@ -56,140 +70,17 @@ app.get(['/'], (req, res) => {
   });
 });
 
+app.use("/users", UserController(db))
+app.use("/profile", ProfileController(db))
+app.use("/cupids", CupidController(db))
+app.use("/token", TokenController(db))
+app.use("/notifications", NotificationController(db))
+app.use("/purchases", PurchasesController(db))
+app.use("/admin", AdminController(db))
 
 
-// ***************** Un-Protected EndPoints ***************
-
-
-
-// ***************** Signin Endpoint ******************
-
-app.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findUserByEmail(email);
-
-  if (user && bcrypt.compareSync(password, user.password)) {
-    const { accessToken, refreshToken } = Jwt.generateTokens(user);
-    await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-    res.send({ user: user, tokens: { accessToken, refreshToken } });
-  } else {
-    res.send({ error: "Invalid login credentials." });
-  }
-})
-
-// ******************* Sign up Endpoint *************************
-
-app.post("/signup", async (req, res) => {
-  const { userType, firstName, lastName, email, password, age, budget, goals, } = req.body;
-  const existingUser = await User.findUserByEmail(email);
-
-  if (existingUser) {
-    res.send({ error: "Email already in use" });
-    return;
-  }
-
-  switch (userType) {
-    case 'Standard':
-      if (await User.createUser({ firstName, lastName, email, password, age, budget, goals })) {
-        res.send({ success: true });
-      } else {
-        res.send({ error: "An error occured" });
-      }
-      break;
-    default:
-      res.send({ error: "Invalid user type" })
-  }
-})
-
-// ***************** Endpoint to verify a token ***********************
-
-app.post("/verifyToken", async (req, res) => {
-  const { token } = req.body;
-  try {
-    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!!) as JwtPayload;
-    const user = await User.findUserById(parseInt(payload.userId))
-    const accessToken = Jwt.generateAccessToken(user);
-    res.send({ user, tokens: { refreshToken: token, accessToken } })
-  } catch (err) {
-    res.send({ error: "Expired" })
-    console.log(err)
-  }
-})
-
-// ********** Middleware to validate the access token ***************
-
-app.use((req, res, next) => {
-  const { authorization } = req.headers;
-  try {
-    jwt.verify(authorization!!, process.env.JWT_ACCESS_SECRET!!);
-    console.log("Access Granted")
-    next();
-  } catch (err) {
-    console.log("Token expired")
-    res.send({ error: err })
-  }
-})
-
-// ************** Protected Endpoints ***************
-
-// ************** Adding CupidCash in Account ***************
-app.post("/changeCupidCash", async (req, res) => {
-  const { changeAmount, userId } = req.body
-  try {
-    const user = await User.findUserById(userId);
-    const currentBalance = user!!.profile!!.balance.toNumber();
-    var workingChangeAmount = Math.abs(changeAmount)
-    const newBalance = currentBalance + workingChangeAmount;
-    if (newBalance < 0) {
-      res.send({ error: "Cannot Spend more money then you have!" })
-      return;
-    }
-    await User.updateUserBalance(userId, newBalance)
-    await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
-    res.send({ newBalance });
-    return;
-  } catch (error) {
-    console.log({ error })
-    res.send({ error: "Access Denied" })
-    return;
-  }
-});
-
-// ************** Record Purchase ***************
-app.post("/recordPurchase", async (req, res) => {
-  const { userId, cupidId, total, jobCost, details } = req.body
-  try {
-    var workingTotal = Math.abs(total)
-    var workingJobCost = Math.abs(jobCost)
-    const user = await User.findUserById(userId);
-    const currentBalance = user!!.profile!!.balance.toNumber();
-    const newBalance = currentBalance - workingTotal;
-    if (newBalance < 0) {
-      res.send({ error: "Cannot Spend more money then you have!" })
-      return;
-    }
-    await User.updateUserBalance(userId, newBalance)
-    const cupidPayout = (workingTotal - workingJobCost) * .6
-    const profit = (workingTotal - workingJobCost) * .4
-    var purchase = await Purchases.recordPurchase(userId, cupidId, workingTotal, workingJobCost, cupidPayout, profit, details)
-    res.send({ message: "Purchase successfully completed", purchase, newBalance: newBalance })
-    return;
-  } catch (error) {
-    console.log({ error })
-    res.send({ error: "Access Denied" })
-  }
-});
-
-// ************** Get Full Purchase History ***************
-app.post("/getPurchaseHistory", async (req, res) => {
-  const { userId } = req.body
-  const purchases = await Purchases.findAllByUserId(userId)
-  res.send({ purchases })
-  return;
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Listening on port ${process.env.PORT || 3000}...`);
+server.listen(process.env.PORT || 3000, () => {
+  logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
 });
 
 

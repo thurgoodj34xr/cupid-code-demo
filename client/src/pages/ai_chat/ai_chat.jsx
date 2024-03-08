@@ -1,11 +1,8 @@
-import classes from "./ai_chat.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
 import { useNavigate } from "react-router-dom";
+import useContext from "../../hooks/context";
 
 function AiChat() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const navigate = useNavigate();
 
   const home = () => {

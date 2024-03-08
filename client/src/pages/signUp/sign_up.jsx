@@ -1,14 +1,15 @@
-import { useEffect, useState, useContext } from "react";
-import classes from "./sign_up.module.css";
-import Input from "../../componets/inputs/input";
-import Button from "../../componets/button/button";
-import { useNavigate } from "react-router-dom";
-import * as Api from "../../hook/api";
+import { faAngleLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import AppContext from "../../componets/app_context";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaCameraRetro } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
 import TextArea from "../../componets/text_area/text_area";
-
+import Api from "../../hooks/api";
+import classes from "./sign_up.module.css";
+import useContext from "../../hooks/context";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +22,11 @@ function SignUp() {
   const [goals, setGoals] = useState("");
   const [male, setMale] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [bio, setBio] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [file, setFile] = useState();
 
-  const context = useContext(AppContext);
+  const context = useContext();
   const userType = context.getAccountType();
   let navigate = useNavigate();
 
@@ -34,13 +38,23 @@ function SignUp() {
     setMale(false);
   };
 
-  function handleEmail(email) {
-    setEmail(email);
-  }
+  useEffect(() => {
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
+  }, [file]);
 
-  function handlePassword(password) {
-    setPassword(password);
-  }
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.keyCode === 13) {
+        signUp();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const signUp = async () => {
     if (password != confirmPassword) {
@@ -48,10 +62,51 @@ function SignUp() {
       return;
     }
 
+    if (!firstName) {
+      setError("First Name Required");
+      return;
+    }
+    if (!lastName) {
+      setError("Last Name Required");
+      return;
+    }
+    if (!email) {
+      setError("Email Required");
+      return;
+    }
+    if (!password) {
+      setError("Password Required");
+      return;
+    }
+
+    switch (userType) {
+      case "Standard":
+        if (!age) {
+          setError("Age Required");
+          return;
+        }
+        if (!budget) {
+          setError("Budget Required");
+          return;
+        }
+        break;
+      case "Cupid":
+        if (!bio) {
+          setError("Bio Required");
+          return;
+        }
+        break;
+      default:
+    }
+
+    if (!profileImage) {
+      setError("Profile Image Required");
+      return;
+    }
     setButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
-    const res = await Api.Post("/signup", {
+    const res = await Api.Post("/users/create", {
       userType,
       firstName,
       lastName,
@@ -60,12 +115,21 @@ function SignUp() {
       age,
       budget,
       goals,
+      bio,
+      profileImage,
     });
-
     if (res.error) {
       setError(res.error);
       setButtonText("Sign Up");
     } else {
+      // Update the profile picture
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("userId", res.userId);
+      axios
+        .post("/users/profileUrl", formData)
+        .then((res) => {})
+        .catch((er) => console.log(er));
       navigate("/");
     }
   };
@@ -86,6 +150,29 @@ function SignUp() {
       </div>
       <h1>Create Account</h1>
       <p className="label">Create an account by filling out the form below.</p>
+      <span className={classes.profilePhoto}>
+        <img
+          src={
+            profileImage
+              ? profileImage
+              : "https://images.pexels.com/photos/1317712/pexels-photo-1317712.jpeg"
+          }
+          width="120px"
+          height="120px"
+          accept="image/*"
+        />
+        <div className={classes.cameraContainer}>
+          <label className={classes.label} htmlFor="file-input">
+            <FaCameraRetro className={classes.camera} size="22px" />
+          </label>
+          <input
+            className={classes.fileInput}
+            id="file-input"
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
+      </span>
       {error && <p className="error">{error}</p>}
       <Input
         inputType="text"
@@ -119,7 +206,9 @@ function SignUp() {
         setState={setConfirmPassword}
       />
       {userType != "Standard" ? (
-        ""
+        <>
+          <TextArea placeholder="Enter Bio" state={bio} setState={setBio} />
+        </>
       ) : (
         <>
           <Input

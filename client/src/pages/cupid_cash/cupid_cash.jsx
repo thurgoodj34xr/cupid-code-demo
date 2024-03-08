@@ -1,20 +1,22 @@
-import classes from "./cupid_cash.module.css";
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
-import Input from "../../componets/inputs/input";
+import { useState } from "react";
 import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
+import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import classes from "./cupid_cash.module.css";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 
 function CupidCash() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [amountToAdd, setAmountToAdd] = useState(0);
   const [creditCard, setCreditCard] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvv, setCVV] = useState("");
   const [userBalance, setUserBalance] = useState(user.profile.balance);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [zip, setZip] = useState(0);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   // Client-side validation function
   const validateAmount = (value) => {
@@ -66,13 +68,7 @@ function CupidCash() {
       return false;
     }
 
-
     return true;
-  };
-
-  const handleAmountChange = (v) => {
-    const newValue = parseInt(v, 10) || 0;
-    setAmountToAdd(newValue);
   };
 
   function creditCardValidation(value) {
@@ -93,7 +89,7 @@ function CupidCash() {
 
     // Limit the zip code to a maximum of 5 characters
     const truncatedValue = cleanedValue.slice(0, 5);
-    return truncatedValue
+    return truncatedValue;
   }
 
   function expirationDateValidation(value) {
@@ -104,8 +100,10 @@ function CupidCash() {
     const truncatedValue = cleanedValue.slice(0, 4);
 
     // Format month with a slash after the first two characters
-    if (truncatedValue.length == 2) return truncatedValue
-    const formattedValue = truncatedValue.replace(/(\d{2})(\d{0,2})/, "$1/$2").trim();
+    if (truncatedValue.length == 2) return truncatedValue;
+    const formattedValue = truncatedValue
+      .replace(/(\d{2})(\d{0,2})/, "$1/$2")
+      .trim();
     return formattedValue;
   }
 
@@ -115,7 +113,7 @@ function CupidCash() {
 
     // Limit the cvv to a maximum of 3 characters
     const truncatedValue = cleanedValue.slice(0, 3);
-    return truncatedValue
+    return truncatedValue;
   }
 
   const handleAddBalance = async () => {
@@ -132,7 +130,7 @@ function CupidCash() {
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/changeCupidCash",
+      "/profile/cash",
       { changeAmount: amountToAdd, userId },
       context
     );
@@ -148,7 +146,9 @@ function CupidCash() {
       // setExpirationDate('');
       // setCVV('');
       setErrorMessage(null); // Clear any previous error messages
+      setSuccessMessage(`You successfully bought ${amountToAdd} CupidBucks`);
     } else {
+      setSuccessMessage(null); // Clear previous success message
       setErrorMessage(response.error);
     }
   };
@@ -158,10 +158,9 @@ function CupidCash() {
       <div>
         <p className="label">Current balance: {userBalance}</p>
       </div>
-      {errorMessage && (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          Error: {errorMessage}
-        </div>
+      {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
+      {successMessage && (
+        <ResponseMessage type="success" message={successMessage} />
       )}
       <Input
         inputType="number"

@@ -14,17 +14,28 @@ datasource db {
 // createdAt DateTime @default(now())
 // updatedAt DateTime @updatedAt
 
+enum Role {
+  ADMIN
+  CUPID
+  STANDARD
+}
+
 model User {
-  id           Int           @id @default(autoincrement())
-  firstName    String
-  lastName     String
-  email        String        @unique
-  password     String
-  refreshToken RefreshToken?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  profile      Profile?
-  purchase     Purchases[]
+  id            Int             @id @default(autoincrement())
+  admin         Admin?
+  createdAt     DateTime        @default(now())
+  cupid         Cupid?
+  email         String          @unique
+  firstName     String
+  lastName      String
+  notifications Notifications[]
+  refreshToken  RefreshToken?
+  password      String
+  photoUrl      String?
+  profile       Profile?
+  purchase      Purchases[]
+  role          Role            @default(STANDARD)
+  updatedAt     DateTime        @updatedAt
 }
 
 // This is the Standard user schema.
@@ -32,20 +43,44 @@ model User {
 model Profile {
   id                Int      @id @default(autoincrement())
   age               Int?
-  relationshipGoals String?
   balance           Decimal  @default(25)
-  dailyBudget       Decimal  @default(0)
   createdAt         DateTime @default(now())
+  dailyBudget       Decimal  @default(0)
+  relationshipGoals String?
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id])
   userId            Int      @unique
 }
 
+model Cupid {
+  id        Int      @id @default(autoincrement())
+  bio       String
+  createdAt DateTime @default(now())
+  earnings  Decimal  @default(0)
+  fired     Boolean  @default(false)
+  longitude Decimal  @default(0)
+  latitude  Decimal  @default(0)
+  rating    Decimal  @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  working   Boolean  @default(false)
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  fired     Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model RefreshToken {
   id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
   hashedToken String   @unique
   revoked     Boolean  @default(false)
-  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
@@ -54,12 +89,28 @@ model RefreshToken {
 model Purchases {
   id          Int      @id @default(autoincrement())
   cupidId     Int?
-  total       Decimal
-  jobCost     Decimal
   cupidPayout Decimal
-  profit      Decimal
   details     String   @default("Cupid Code Intervention")
+  jobCost     Decimal
+  profit      Decimal
   timestamp   DateTime @default(now())
+  total       Decimal
   User        User     @relation(fields: [userId], references: [id])
   userId      Int
+}
+
+model Notifications {
+  id        Int              @id @default(autoincrement())
+  message   String
+  title     String
+  timeStamp DateTime         @default(now())
+  type      NotificationType @default(DAILY)
+  User      User             @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+enum NotificationType {
+  AIGEN
+  ALL
+  DAILY
 }
