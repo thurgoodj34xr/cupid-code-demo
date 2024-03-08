@@ -19,7 +19,7 @@ import UpdatePassword from "./pages/updatePassword/updatePassword.jsx";
 import AvaliableJobs from "./pages/avalible_jobs/avaliable_jobs.jsx";
 import JobHistory from "./pages/job_history/job_history.jsx";
 import ViewUsers from "./pages/view_users/view_users.jsx";
-import Logs from "./pages/logs/logs.jsx";
+import Logs from "./pages/log/logs.jsx";
 const router = createHashRouter([
   {
     path: "",
