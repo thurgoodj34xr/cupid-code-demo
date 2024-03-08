@@ -71,14 +71,12 @@ export default class AuthRepository {
 
     // soft delete tokens after usage.
     deleteRefreshTokenByUser(userId: number) {
-        console.log(`Deleting ${userId}`)
         return this.db.refreshToken.deleteMany({
             where: {
                 userId: userId,
             },
         });
     }
-
 
     revokeTokens(userId: number) {
         return this.db.refreshToken.updateMany({

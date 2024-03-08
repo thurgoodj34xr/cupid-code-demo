@@ -11,7 +11,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { FaHistory, FaKey, FaSearch } from "react-icons/fa";
+import {
+  FaBook,
+  FaHistory,
+  FaKey,
+  FaSearch,
+  FaSubscript,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
@@ -37,6 +43,11 @@ function Navbar({ title }) {
   const signout = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("token");
+    context.Socket().emit("log", {
+      file: "navbar.jsx",
+      message: "signed out",
+      user: `${user.email}`,
+    });
     navigate("/");
     context.updateUser(null);
     context.updateTokens(null);
@@ -93,7 +104,12 @@ function Navbar({ title }) {
   };
 
   const viewUsers = () => {
-    navigate("ViewUsers");
+    navigate("/ViewUsers");
+    hideNavBar();
+  };
+
+  const viewLogs = () => {
+    navigate("/Logs");
     hideNavBar();
   };
 
@@ -210,6 +226,16 @@ function Navbar({ title }) {
                   <FaSearch size="2rem" />
                 </div>
                 <h3>View Users</h3>
+              </section>
+            </>
+          )}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewLogs}>
+                <div>
+                  <FaBook size="2rem" />
+                </div>
+                <h3>Logs</h3>
               </section>
             </>
           )}

@@ -35,15 +35,13 @@ const PurchasesController = (db: PrismaClient) => {
             const profit = (workingTotal - workingJobCost) * .4
             var purchase = await _repository.record(req.user!!.id, cupidId, workingTotal, workingJobCost, cupidPayout, profit, details)
             res.send({ message: "Purchase successfully completed", purchase, newBalance: newBalance })
-            logInfo("purchases_controller", "created a purchase", req.user?.email)
+            logInfo("purchases_controller", `purchased ${details}`, req.user?.email)
             return;
         } catch (error) {
             logError("purchases_controller", error, req.user?.email)
             res.send({ error: "Access Denied" })
         }
     });
-
-
     return router;
 }
 export default PurchasesController

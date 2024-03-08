@@ -12,7 +12,7 @@ const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) 
         if (roles && !roles.includes(user!!.role)) {
             logError("authentication.ts", "User does not have correct role")
         } else {
-            logInfo("authentication.ts", `${user?.email} ${req.url}`)
+            //logInfo("authentication.ts", `${user?.email} ${req.url}`)
             next();
         }
     } catch (error) {

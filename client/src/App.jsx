@@ -23,13 +23,13 @@ function App() {
     }
   }, [tokens]);
 
-  // useEffect(() => {
-  //   const s = io();
-  //   setSocket(s);
-  //   return () => {
-  //     s.disconnect();
-  //   };
-  // }, []);
+  useEffect(() => {
+    const s = io();
+    setSocket(s);
+    return () => {
+      s.disconnect();
+    };
+  }, []);
 
   function updateUser(user) {
     setUser(user);
@@ -53,6 +53,10 @@ function App() {
 
   function RefreshToken() {
     return tokens.refreshToken;
+  }
+
+  function Socket() {
+    return socket;
   }
 
   function updateAccessToken(t) {
@@ -99,6 +103,7 @@ function App() {
     getNotification,
     setAccountType,
     getAccountType,
+    Socket,
   };
   /*
         **************  Context Setup ******************

@@ -116,6 +116,13 @@ body {
   justify-content: center;
 }
 
+.centerx {
+  justify-content: center;
+}
+.centery {
+  align-items: center;
+}
+
 .g-10 {
   gap: 10px;
 }

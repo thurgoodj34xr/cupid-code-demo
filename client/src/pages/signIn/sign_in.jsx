@@ -48,6 +48,7 @@ export default function SignIn() {
   {
     /* Enables a user to use the enter key instead of clicking on submit */
   }
+
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.keyCode === 13) {

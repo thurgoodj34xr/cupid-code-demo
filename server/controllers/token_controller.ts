@@ -15,7 +15,7 @@ const TokenController = (db: PrismaClient) => {
             const user = await _repository.findById(payload.userId)
             const accessToken = Jwt.generateAccessToken(user);
             res.send({ user, tokens: { refreshToken: token, accessToken } })
-            logInfo("token_controller", "created a access token", user?.email)
+            //logInfo("token_controller", "created a access token", user?.email)
         } catch (error) {
             logError("token_controller", error)
             res.send({ error: "Expired" })

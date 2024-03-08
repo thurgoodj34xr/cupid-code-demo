@@ -109,6 +109,7 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             const { accessToken, refreshToken } = Jwt.generateTokens(user);
             await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            logInfo("user_controller", "signed in", user.email)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
             res.send({ error: "Invalid login credentials." });

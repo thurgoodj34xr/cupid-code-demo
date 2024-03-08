@@ -19,10 +19,6 @@ function ViewUsers() {
     getUsers();
   }, []);
 
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
-
   return loading ? null : (
     <>
       <p className="label">Current Users: {users.length}</p>

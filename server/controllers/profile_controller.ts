@@ -23,6 +23,7 @@ const ProfileController = (db: PrismaClient) => {
             await _repository.updateBalance(req.user!!.id, newBalance)
             await _purchasesRepository.record(req.user!!.id, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
             res.send({ newBalance });
+            logInfo("profile_controller", `purchased ${changeAmount} cupid cash`, req.user?.email)
             return;
         } catch (error) {
             logError("profile_controller", error, req.user?.email)

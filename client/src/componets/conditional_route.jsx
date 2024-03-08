@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Api from "./../hooks/api";
 import AppContext from "./app_context";
 
@@ -16,6 +16,7 @@ export function ConditionalRoute({ componetToRender, role, route }) {
   const [loading, setLoading] = useState(true);
   let navigate = useNavigate(); // move this into the function
   const context = useContext(AppContext);
+  const location = useLocation();
 
   const Validate = async () => {
     // Validate that the user has a vaid token
@@ -36,6 +37,12 @@ export function ConditionalRoute({ componetToRender, role, route }) {
     // Check if user has the correct role
     if (role && resp.user.role != role) {
       context.sendNotification("ACCESS DENIED!!!! REROUTING TO HOME PAGE");
+      context.Socket().emit("log", {
+        file: "conditional_route",
+        message: `tried to access ${location.pathname} [${role}]`,
+        user: `${resp.user.email} [${resp.user.role}]`,
+      });
+
       navigate(route);
     }
     setLoading(false);

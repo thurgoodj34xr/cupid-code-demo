@@ -12,6 +12,8 @@ import ProfileController from "./server/controllers/profile_controller";
 import PurchasesController from "./server/controllers/purchases_controller";
 import TokenController from "./server/controllers/token_controller";
 import UserController from "./server/controllers/user_controller";
+import { createServer } from "node:http";
+import { Server } from "socket.io"
 import "./global";
 dotenv.config();
 
@@ -20,7 +22,14 @@ const MANIFEST: Record<string, any> = DEBUG ? {} : JSON.parse(fs.readFileSync("s
 const db = new PrismaClient();
 
 const app = express();
-
+const server = createServer(app);
+const io = new Server(server);
+export default io;
+io.on('connection', (socket) => {
+  socket.on("log", (data) => {
+    logInfo(data.file, data.message, data.user);
+  })
+})
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -28,7 +37,7 @@ app.set('views', './server/views');
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  logInfo(`index.ts`, `${req.method} ${req.url}`);
+  // logInfo(`index.ts`, `${req.method} ${req.url}`);
   if (req.url.includes("/images")) {
     res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
   } else {
@@ -70,7 +79,7 @@ app.use("/purchases", PurchasesController(db))
 app.use("/admin", AdminController(db))
 
 
-app.listen(process.env.PORT || 3000, () => {
+server.listen(process.env.PORT || 3000, () => {
   logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
 });
 

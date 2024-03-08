@@ -1,4 +1,5 @@
 import Logger from "./server/utils/logger";
+import io from "./index";
 
 declare global {
     export var getLog: (error: unknown) => string;
@@ -14,6 +15,7 @@ global.getLog = (error) => {
     }
     return "Paring Error"
 }
+
 global.logError = (fileName, error, email) => {
     let msg = "";
     if (error instanceof Error) {
@@ -23,15 +25,23 @@ global.logError = (fileName, error, email) => {
     } else {
         msg = "error parsing log"
     }
+
     if (email) {
         Logger.error(`${fileName} -> ${email} ${msg}`);
+        io.emit("log", `${fileName} -> ${email} ${msg}`)
+    } else {
+        io.emit("log", `${fileName} -> ${msg}`)
+        Logger.error(`${fileName} -> ${msg}`);
     }
-    Logger.error(`${fileName} -> ${msg}`);
 }
 
 global.logInfo = (fileName, msg, email) => {
+    let log = "";
     if (email) {
-        Logger.info(`${fileName} -> ${email} ${msg}`)
+        log = `${fileName} -> ${email} ${msg}`
+    } else {
+        log = `${fileName} -> ${msg}`;
     }
-    Logger.info(`${fileName} -> ${msg}`)
+    io.emit("log", log);
+    Logger.info(log)
 }

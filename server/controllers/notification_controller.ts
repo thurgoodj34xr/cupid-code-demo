@@ -12,7 +12,7 @@ const NotificationController = (db: PrismaClient) => {
     router.post("/delete", AuthMiddleware(db), async (req, res) => {
         const { notificationId } = req.body
         const notification = await _respository.delete(notificationId)
-        logInfo("notification_controller", `${req.user} deleted a notification`)
+        logInfo("notification_controller", `${req.user?.email} deleted the notification '${notification.title}'`)
         res.send({ notification })
         return;
     });
