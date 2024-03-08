@@ -1,0 +1,33 @@
+.container {
+    background-color: black;
+  background-image: radial-gradient(
+    rgba(0, 150, 0, 0.75), black 120%
+  );
+  width: 90vw;
+  height: 90vh;
+  overflow-y: auto;
+  color: white;
+  font: 1.3rem Inconsolata, monospace;
+  text-shadow: 0 0 5px #C8C8C8;
+}
+
+.container::after {
+  content: "";
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(black, 0.15),
+    rgba(black, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+.container::selection {
+  background: #0080FF;
+  text-shadow: none;
+}
