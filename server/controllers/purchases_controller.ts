@@ -14,7 +14,7 @@ const PurchasesController = (db: PrismaClient) => {
     // ************** Get Purchase History ***************
     router.post("/history", AuthMiddleware(db, [Role.STANDARD, Role.ADMIN, Role.CUPID]), async (req, res) => {
         const purchases = await _repository.findAllByUserId(req.user!!.id)
-        res.send({ purchases })
+        res.send(purchases)
     });
 
     // ************** Record Purchase ***************
@@ -35,10 +35,10 @@ const PurchasesController = (db: PrismaClient) => {
             const profit = (workingTotal - workingJobCost) * .4
             var purchase = await _repository.record(req.user!!.id, cupidId, workingTotal, workingJobCost, cupidPayout, profit, details)
             res.send({ message: "Purchase successfully completed", purchase, newBalance: newBalance })
-            logInfo("purchases_controller", `purchased ${details}`, req.user?.email)
+            logInfo("purchases_controller", `purchased ${details}`, req.user!!)
             return;
         } catch (error) {
-            logError("purchases_controller", error, req.user?.email)
+            logError("purchases_controller", error, req.user!!)
             res.send({ error: "Access Denied" })
         }
     });

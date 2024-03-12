@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaMoneyBill } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import PurchaseHistory from "../../hooks/purchases";
+import Api from "../../hooks/api";
+import useInit from "../../hooks/useInit";
+import usePostWithAuth from "../../hooks/usePost";
 import classes from "./purchases.module.css";
 import useContext from "../../hooks/context";
-import Api from "../../hooks/api";
 function Purchases() {
+  const { user, setUser, navigate } = useInit();
   const context = useContext();
-  const user = context.getUser();
-  const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const { data: purchaseHistory, setData } = usePostWithAuth(
+    "/purchases/history",
+    {}
+  );
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
@@ -30,7 +33,12 @@ function Purchases() {
 
     const response = await Api.PostWithAuth(
       "/purchases/record",
-      { cupidId, total, jobCost, details },
+      {
+        cupidId,
+        total,
+        jobCost,
+        details,
+      },
       context
     );
     if (!response.error) {
@@ -39,18 +47,13 @@ function Purchases() {
       context.updateUser(user);
       setErrorMessage(null);
       setSuccessMessage(response.message);
-      setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
+      setData((prevHistory) => [...prevHistory, response.purchase]);
     } else {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
   };
 
-  useEffect(() => {
-    PurchaseHistory(user.Id, context, setPurchaseHistory);
-  }, []);
-
-  let navigate = useNavigate();
   return (
     <section className={classes.main}>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
@@ -90,14 +93,15 @@ function Purchases() {
       </form>
       <p className="label left">Recent Purchases</p>
       <div className={classes.purchases}>
-        {purchaseHistory.map((purchase, idx) => (
-          <PurchaseTile
-            key={idx}
-            title={purchase.details}
-            amount={purchase.total}
-            icon={<FaMoneyBill size="2rem" />}
-          />
-        ))}
+        {purchaseHistory &&
+          purchaseHistory.map((purchase, idx) => (
+            <PurchaseTile
+              key={idx}
+              title={purchase.details}
+              amount={purchase.total}
+              icon={<FaMoneyBill size="2rem" />}
+            />
+          ))}
       </div>
       <div className="flex row between">
         <p className="label">Need more CupidCash?</p>

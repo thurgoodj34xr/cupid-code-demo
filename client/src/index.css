@@ -105,7 +105,13 @@ h1 {
 .w-50 {
   width: 50%;
 }
+.w-fit {
+  width: fit-content;
+}
 
 .overflowy {
   overflow-y: auto;
+}
+.overflowx {
+  overflow-x: auto;
 }

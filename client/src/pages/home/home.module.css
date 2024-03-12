@@ -46,7 +46,6 @@ hr {
 
 .dailyNotifications {
     max-height: 30vh;
-    min-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;

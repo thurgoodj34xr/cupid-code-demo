@@ -31,6 +31,12 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      socket.emit("user", user);
+    }
+  }, [user]);
+
   function updateUser(user) {
     setUser(user);
   }
@@ -134,7 +140,6 @@ function App() {
       <div className={user ? "background" : "background gradient"}>
         <div className="main">
           {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
-
           <Outlet />
         </div>
       </div>

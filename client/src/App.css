@@ -134,6 +134,14 @@ body {
   background-color: white !important;
 }
 
+.bg-red {
+  background-color: red !important;
+}
+
+.red {
+color: red;
+}
+
 .white {
   color: white;
 }

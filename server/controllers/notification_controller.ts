@@ -12,7 +12,7 @@ const NotificationController = (db: PrismaClient) => {
     router.post("/delete", AuthMiddleware(db), async (req, res) => {
         const { notificationId } = req.body
         const notification = await _respository.delete(notificationId)
-        logInfo("notification_controller", `${req.user?.email} deleted the notification '${notification.title}'`)
+        logInfo("notification_controller", `dismissed the notification '${notification.title}'`, req.user!!)
         res.send({ notification })
         return;
     });
@@ -26,7 +26,7 @@ const NotificationController = (db: PrismaClient) => {
         } else {
             notifications = await _respository.findAllByUserIdWithType(req.user!!.id, notificationType)
         }
-        res.send({ notifications })
+        res.send(notifications)
         return;
     });
 
@@ -35,11 +35,11 @@ const NotificationController = (db: PrismaClient) => {
         const { title, message, notificationType } = req.body
         if (notificationType == NotificationType.ALL) {
             res.send({ error: "You cannot create a notification type ALL" })
-            logError("notification_controller.ts", "Failed to create notification")
+            logError("notification_controller.ts", "Failed to create notification", req.user!!)
         }
         const notification = await _respository.record(req.user!!.id, title, message, notificationType)
         res.send({ message: "Your message was sent", notification })
-        logInfo("notifiation_controller", `created a notification`, req.user?.email)
+        logInfo("notifiation_controller", `created a notification`, req.user!!)
         return;
     });
 

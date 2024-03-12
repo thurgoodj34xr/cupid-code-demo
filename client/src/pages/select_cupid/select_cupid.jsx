@@ -1,22 +1,11 @@
-import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import PhotoCircle from "../../componets/photo_circle/photo_circle";
-import Api from "../../hooks/api";
+import useGet from "../../hooks/useGet";
 import classes from "./select_cupid.module.css";
-import useContext from "../../hooks/context";
 
 function SelectCupid() {
-  const context = useContext();
-  const [cupids, setCupids] = useState([]);
+  const { data: cupids, error } = useGet("/cupids/all");
 
-  const getCupids = async () => {
-    const { cupids } = await Api.GetWithAuth("/cupids/all", context);
-    setCupids(cupids);
-  };
-
-  useEffect(() => {
-    getCupids();
-  }, []);
   return (
     <section className={classes.main}>
       <p className="label left">Avaliable cupids</p>
