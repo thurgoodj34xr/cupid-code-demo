@@ -11,10 +11,6 @@ function Logs() {
   const [connected, setConnected] = useState([]);
 
   useEffect(() => {
-    console.log(logs);
-  }, [logs]);
-
-  useEffect(() => {
     const callback = (log) => {
       setLogs((curr) => curr.concat(log));
     };
@@ -47,9 +43,9 @@ function Logs() {
       )}
       <p className="label">Currently Connected Users: {connected.length}</p>
       <div className="flex row g-20 w-100 overflowx">
-        {connected.map((u) => {
+        {connected.map((u, idx) => {
           return (
-            <div className="bg-white br p-20">
+            <div key={idx} className="bg-white br p-20">
               {u.firstName} {u.lastName}
             </div>
           );
@@ -61,35 +57,33 @@ function Logs() {
         {logs &&
           logs.map((log, idx) => {
             return (
-              <>
-                <div
-                  key={idx}
-                  className="flex row g-20 ycenter bg-white p-20 br between"
-                >
-                  <div className="flex row g-10 ycenter">
-                    {log.user && (
-                      <>
-                        <PhotoCircle url={log.user.photoUrl} size="60px" />
-                        <p>
-                          {log.user.firstName} {log.user.lastName}
-                        </p>
-                      </>
-                    )}
-                    <p
-                      className={`${classes.message} ${
-                        log.type == "error" ? "red" : ""
-                      }`}
-                    >
-                      {log.message}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="pointer" onClick={() => setModal(log)}>
-                      view
-                    </p>
-                  </div>
+              <div
+                key={idx}
+                className="flex row g-20 ycenter bg-white p-20 br between"
+              >
+                <div className="flex row g-10 ycenter">
+                  {log.user && (
+                    <>
+                      <PhotoCircle url={log.user.photoUrl} size="60px" />
+                      <p>
+                        {log.user.firstName} {log.user.lastName}
+                      </p>
+                    </>
+                  )}
+                  <p
+                    className={`${classes.message} ${
+                      log.type == "error" ? "red" : ""
+                    }`}
+                  >
+                    {log.message}
+                  </p>
                 </div>
-              </>
+                <div>
+                  <p className="pointer" onClick={() => setModal(log)}>
+                    view
+                  </p>
+                </div>
+              </div>
             );
           })}
       </section>

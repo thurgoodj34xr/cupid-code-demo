@@ -12,10 +12,8 @@ import useContext from "../../hooks/context";
 function Purchases() {
   const { user, setUser, navigate } = useInit();
   const context = useContext();
-  const { data: purchaseHistory, setData } = usePostWithAuth(
-    "/purchases/history",
-    {}
-  );
+  const { data: purchaseHistory, setData } =
+    usePostWithAuth("/purchases/history");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({

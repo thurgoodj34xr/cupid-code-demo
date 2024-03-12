@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Api from "./api";
 import useContext from "./context";
 
-const usePost = (url, body, auth = true) => {
+const usePost = (url, body = {}, auth = true) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const context = useContext();

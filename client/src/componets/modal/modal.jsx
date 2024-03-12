@@ -24,6 +24,13 @@ export default function Modal({ log, closeFunc }) {
           <p>Email</p>
           <p>{log.user.email}</p>
         </div>
+        {/* Email */}
+        <div className="flex row between">
+          <p>Metadata</p>
+          <p className="pointer" onClick={() => console.log(log.user)}>
+            View
+          </p>
+        </div>
         {/* FileName */}
         <div className="flex row between">
           <p>Filename</p>

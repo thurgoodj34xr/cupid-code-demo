@@ -1,13 +1,13 @@
 import { NotificationType } from "@prisma/client";
+import { useContext } from "react";
 import { FaMoneyBill } from "react-icons/fa";
+import AppContext from "../../componets/app_context";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import HandleDeleteNotification from "../../hooks/deleteNotification";
 import useInit from "../../hooks/useInit";
-import classes from "./home.module.css";
 import usePost from "../../hooks/usePost";
-import { useContext, useEffect } from "react";
-import AppContext from "../../componets/app_context";
+import classes from "./home.module.css";
 
 function Home() {
   const { user, navigate } = useInit();
@@ -15,7 +15,7 @@ function Home() {
     notficationType: NotificationType.DAILY,
   });
 
-  const { data: purchaseHistory } = usePost("/purchases/history", {});
+  const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
 
   const handleDeleteNotification = async (notificationId) => {
@@ -29,7 +29,7 @@ function Home() {
       setData(removeItem);
     }
   };
-
+  1;
   return (
     <section className={classes.container}>
       {/* Container for Budget */}
