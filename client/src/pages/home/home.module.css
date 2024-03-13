@@ -55,3 +55,8 @@ hr {
 .dailyNotifications::-webkit-scrollbar {
     display: none;
 }
+
+.purchases {
+    max-height: 30vh;
+    overflow-y: auto;
+}

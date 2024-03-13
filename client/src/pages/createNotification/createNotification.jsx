@@ -41,6 +41,7 @@ function CreateNotification() {
       { userId, title, message, notificationType: workingNotificationType },
       context
     );
+
     if (!response.error) {
       // Update user profile with the new balance
       setErrorMessage(null);

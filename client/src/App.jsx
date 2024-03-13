@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import "./App.css";
 import AppContext from "./componets/app_context";
 import Navbar from "./componets/navbar/navbar";
 import Notification from "./componets/notification/notification";

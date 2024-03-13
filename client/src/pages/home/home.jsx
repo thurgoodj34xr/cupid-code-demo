@@ -14,7 +14,6 @@ function Home() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
     notficationType: NotificationType.DAILY,
   });
-
   const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
 
@@ -29,7 +28,7 @@ function Home() {
       setData(removeItem);
     }
   };
-  1;
+
   return (
     <section className={classes.container}>
       {/* Container for Budget */}
@@ -73,15 +72,17 @@ function Home() {
           View All
         </p>
       </div>
-      {purchaseHistory &&
-        purchaseHistory.map((purchase, idx) => (
-          <PurchaseTile
-            key={idx}
-            title={purchase.details}
-            amount={purchase.total}
-            icon={<FaMoneyBill size="2rem" />}
-          />
-        ))}
+      <section className={`flex col g-20 ${classes.purchases} scrollbar-hide`}>
+        {purchaseHistory &&
+          purchaseHistory.map((purchase, idx) => (
+            <PurchaseTile
+              key={idx}
+              title={purchase.details}
+              amount={purchase.total}
+              icon={<FaMoneyBill size="2rem" />}
+            />
+          ))}
+      </section>
     </section>
   );
 }
