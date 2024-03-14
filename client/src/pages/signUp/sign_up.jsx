@@ -1,16 +1,15 @@
 import { faAngleLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import AppContext from "../../componets/app_context";
 import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import TextArea from "../../componets/text_area/text_area";
-import * as Api from "../../hook/api";
+import Api from "../../hooks/api";
 import classes from "./sign_up.module.css";
-
+import useContext from "../../hooks/context";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +26,7 @@ function SignUp() {
   const [profileImage, setProfileImage] = useState("");
   const [file, setFile] = useState();
 
-  const context = useContext(AppContext);
+  const context = useContext();
   const userType = context.getAccountType();
   let navigate = useNavigate();
 
@@ -119,7 +118,6 @@ function SignUp() {
       bio,
       profileImage,
     });
-
     if (res.error) {
       setError(res.error);
       setButtonText("Sign Up");

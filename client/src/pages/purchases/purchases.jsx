@@ -1,18 +1,19 @@
-import classes from "./purchases.module.css";
-import * as Api from "../../hook/api";
-import { useEffect, useState, useContext } from "react";
-import AppContext from "../../componets/app_context";
-import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import { useState } from "react";
 import { FaMoneyBill } from "react-icons/fa";
-import Input from "../../componets/inputs/input";
 import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
+import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import PurchaseHistory from "../../hook/purchases";
-import { useNavigate } from "react-router-dom";
+import Api from "../../hooks/api";
+import useInit from "../../hooks/useInit";
+import usePostWithAuth from "../../hooks/usePost";
+import classes from "./purchases.module.css";
+import useContext from "../../hooks/context";
 function Purchases() {
-  const context = useContext(AppContext);
-  const user = context.getUser();
-  const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const { user, setUser, navigate } = useInit();
+  const context = useContext();
+  const { data: purchaseHistory, setData } =
+    usePostWithAuth("/purchases/history");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
@@ -27,11 +28,15 @@ function Purchases() {
     var jobCost = parseFloat(formData.jobCost);
     var details = formData.details;
     var cupidId = 1;
-    const userId = user.id;
 
     const response = await Api.PostWithAuth(
       "/purchases/record",
-      { userId, cupidId, total, jobCost, details },
+      {
+        cupidId,
+        total,
+        jobCost,
+        details,
+      },
       context
     );
     if (!response.error) {
@@ -40,18 +45,13 @@ function Purchases() {
       context.updateUser(user);
       setErrorMessage(null);
       setSuccessMessage(response.message);
-      setPurchaseHistory((prevHistory) => [...prevHistory, response.purchase]);
+      setData((prevHistory) => [...prevHistory, response.purchase]);
     } else {
       setSuccessMessage(null);
       setErrorMessage(response.error);
     }
   };
 
-  useEffect(() => {
-    PurchaseHistory(user.Id, context, setPurchaseHistory);
-  }, []);
-
-  let navigate = useNavigate();
   return (
     <section className={classes.main}>
       {errorMessage && <ResponseMessage type="error" message={errorMessage} />}
@@ -91,18 +91,21 @@ function Purchases() {
       </form>
       <p className="label left">Recent Purchases</p>
       <div className={classes.purchases}>
-        {purchaseHistory.map((purchase, idx) => (
-          <PurchaseTile
-            key={idx}
-            title={purchase.details}
-            amount={purchase.total}
-            icon={<FaMoneyBill size="2rem" />}
-          />
-        ))}
+        {purchaseHistory &&
+          purchaseHistory.map((purchase, idx) => (
+            <PurchaseTile
+              key={idx}
+              title={purchase.details}
+              amount={purchase.total}
+              icon={<FaMoneyBill size="2rem" />}
+            />
+          ))}
       </div>
       <div className="flex row between">
         <p className="label">Need more CupidCash?</p>
-        <p className="link pointer" onClick={() => navigate("/CupidCash")}>Buy now!</p>
+        <p className="link pointer" onClick={() => navigate("/CupidCash")}>
+          Buy now!
+        </p>
       </div>
     </section>
   );

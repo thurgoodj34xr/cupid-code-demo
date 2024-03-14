@@ -1,19 +1,18 @@
-import { Request, Response } from "express";
-import { Router } from "express";
-import * as User from "../../services/user";
-import * as Jwt from "../../utils/jwt";
-import * as Auth from "../../services/auth";
+import { NotificationType, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { Request, Response, Router } from "express";
 import multer from "multer";
-import { isStrongPassword } from "../../utils/isStrongPassword";
-import * as Cupid from "../../services/cupid"
-import * as Notifications from "../../services/notifications";
-import { NotificationType } from "@prisma/client";
-import * as Purchases from "../../services/purchases";
+import AuthMiddleware from "../middleware/authentication";
+import AuthRepository from "../repositories/auth_repository";
+import CupidRepository from "../repositories/cupid_repository";
+import NotificationRepository from "../repositories/notification_repository";
+import UserRepository from "../repositories/user_repository";
+import { isStrongPassword } from "../utils/strong_password";
+import Jwt from "../utils/jwt";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        return cb(null, "./Images")
+        return cb(null, "./server/images")
     },
     filename: function (req, file, cb) {
         return cb(null, `${Date.now()}_${file.originalname}`)
@@ -22,58 +21,46 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-const UserController = () => {
+const UserController = (db: PrismaClient) => {
     const router = Router();
-    // ************** Adding CupidCash in Account ***************
-    router.post("/cash", async (req, res) => {
-        const { changeAmount, userId } = req.body
-        try {
-            const user = await User.findUserById(userId);
-            const currentBalance = user!!.profile!!.balance.toNumber();
-            var workingChangeAmount = Math.abs(changeAmount)
-            const newBalance = currentBalance + workingChangeAmount;
-            if (newBalance < 0) {
-                res.send({ error: "Cannot Spend more money then you have!" })
-                return;
-            }
-            await User.updateUserBalance(userId, newBalance)
-            await Purchases.recordPurchase(userId, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
-            res.send({ newBalance });
-            return;
-        } catch (error) {
-            console.log({ error })
-            res.send({ error: "Access Denied" })
-            return;
-        }
-    });
+    const _repository = new UserRepository(db);
+    const _cupidRepository = new CupidRepository(db);
+    const _notificationsRepository = new NotificationRepository(db);
+    const _authRepository = new AuthRepository(db);
+
+
 
     router.post("/create", upload.single('file'), async (req, res) => {
         const { userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;
-        const existingUser = await User.findUserByEmail(email);
+        const existingUser = await _repository.findByEmail(email)
 
         if (existingUser) {
+            logError("user_controller.ts", "Email already in use")
             res.send({ error: "Email already in use" });
             return;
         }
         const passwordIsStrong = isStrongPassword(password);
         if (!passwordIsStrong.success) {
             res.send({ error: passwordIsStrong.message })
+            logError("user_controller.ts", "Password isnt strong enough")
             return;
         }
 
         switch (userType) {
             case 'Standard':
-                const user = await User.create({ firstName, lastName, email, password, age, budget, goals })
+                const user = await _repository.create({ firstName, lastName, email, password, age: parseInt(age), dailyBudget: parseInt(budget), relationshipGoals: goals })
                 if (user) {
                     res.send({ userId: user.id });
-                    await Notifications.recordNotification(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
+                    logInfo(`user_controller.ts`, `${user.email} New Standard Account Created`)
+                    await _notificationsRepository.record(user.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
                 }
                 break;
             case 'Cupid':
-                const cupid = await Cupid.create({ firstName, lastName, email, password, bio })
+                const cupid = await _cupidRepository.create({ firstName, lastName, email, password, bio })
                 if (cupid) {
                     res.send({ userId: cupid.id });
-                    await Notifications.recordNotification(cupid.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
+                    logInfo(`user_controller.ts`, `${cupid.email} New Cupid Account Created `)
+                    await _notificationsRepository.record(cupid.id, "Welcome to CupidCode!", "You have found the path to smoother dating", NotificationType.DAILY)
                 }
                 break;
             default:
@@ -82,9 +69,9 @@ const UserController = () => {
     })
 
     // ************** Update User Password ***************
-    router.post("/password", async (req, res) => {
-        const { userId, currentPassword, newPassword, repeatNew } = req.body
-        const user = await User.findUserById(userId);
+    router.post("/password", AuthMiddleware(db), async (req, res) => {
+        const { currentPassword, newPassword } = req.body
+        const user = await _repository.findById(req.user!!.id);
 
         const resultOfStrongCheck = isStrongPassword(newPassword)
         if (!resultOfStrongCheck.success) {
@@ -93,8 +80,9 @@ const UserController = () => {
         }
 
         if (user && bcrypt.compareSync(currentPassword, user.password)) {
-            const profile = await User.updateUserPassword(userId, newPassword)
+            const profile = await _repository.updatePassword(req.user!!.id, newPassword)
             res.send({ message: "Your account was successfully updated", profile })
+            logInfo(`user_controller.ts`, "changed their password", req.user!!)
             return;
         } else {
             res.send({ error: "Incorrect Current Password." });
@@ -102,24 +90,26 @@ const UserController = () => {
         }
     });
 
-    // ************** Get User Profile Picture ***************
+    // ************** Update User Profile Picture ***************
     router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
-            const user = await User.updateUserPicture(parseInt(req.body.userId), req!!.file!!.path)
+            await _repository.updatePicture(parseInt(req.body.userId), req!!.file!!.path)
+            logInfo(`user_controller.ts`, `Sucessfully added a profile picture`)
         } catch (error) {
+            logError("user_controller", error)
             res.send({ error })
-            console.log({ error })
         }
     })
 
-    // ************** Session Check ***************
+    // ************** Session Login ***************
     router.post("/session", async (req: Request, res: Response) => {
         const { email, password } = req.body;
-        const user = await User.findUserByEmail(email);
+        const user = await _repository.findByEmail(email);
 
         if (user && bcrypt.compareSync(password, user.password)) {
             const { accessToken, refreshToken } = Jwt.generateTokens(user);
-            await Auth.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
             res.send({ error: "Invalid login credentials." });
@@ -127,10 +117,11 @@ const UserController = () => {
     })
 
     // ************** Update User Account ***************
-    router.post("/update", async (req, res) => {
-        const { userId, firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
+    router.post("/update", AuthMiddleware(db), async (req, res) => {
+        const { firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
         var workingAge = parseInt(age)
         var workingBudget = parseFloat(dailyBudget)
+
 
         // Validate Numbers
         if (isNaN(workingAge)) {
@@ -159,8 +150,10 @@ const UserController = () => {
             res.send({ error: "To use this service you must be at least 18" })
             return;
         }
-        const updatedAccount = await User.updateUserAccount(userId, firstName, lastName, email, workingAge, workingBudget, relationshipGoals)
+        const userId = req.user!!.id;
+        const updatedAccount = await _repository.update({ userId, firstName, lastName, email, age: workingAge, dailyBudget: workingBudget, relationshipGoals })
         res.send({ message: "Your account was successfully updated", updatedAccount })
+        logInfo("user_controller.ts", "Sucessfully updated their account", req.user!!)
         return;
     });
 

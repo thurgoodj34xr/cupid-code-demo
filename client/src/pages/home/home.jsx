@@ -1,51 +1,33 @@
-import Navbar from "../../componets/navbar/navbar";
-import classes from "./home.module.css";
-import DailyNotification from "../../componets/daily_notification/daily_notification";
-import { useEffect, useState, useContext } from "react";
-import AppContext from "../../componets/app_context";
 import { NotificationType } from "@prisma/client";
-import PurchaseHistory from "../../hook/purchases";
-import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import { useContext } from "react";
 import { FaMoneyBill } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import GetNotificationHistory from "../../hook/notificationHistory";
-import HandleDeleteNotification from "../../hook/deleteNotification";
+import AppContext from "../../componets/app_context";
+import DailyNotification from "../../componets/daily_notification/daily_notification";
+import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
+import HandleDeleteNotification from "../../hooks/deleteNotification";
+import useInit from "../../hooks/useInit";
+import usePost from "../../hooks/usePost";
+import classes from "./home.module.css";
 
 function Home() {
+  const { user, navigate } = useInit();
+  const { data: notificationHistory, setData } = usePost("/notifications/all", {
+    notficationType: NotificationType.DAILY,
+  });
+  const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
-  const [notificationHistory, setNotificationHistory] = useState([]);
-  const [purchaseHistory, setPurchaseHistory] = useState();
-  const navigate = useNavigate();
-
-  const user = context.getUser();
-
-  const getNotificationHistory = async () => {
-    const notifications = await GetNotificationHistory(
-      user.id,
-      NotificationType.DAILY,
-      context
-    );
-    setNotificationHistory(notifications);
-  };
-  useEffect(() => {
-    getNotificationHistory();
-    return () => {};
-  }, []);
 
   const handleDeleteNotification = async (notificationId) => {
+    console.log(notificationId);
     const response = await HandleDeleteNotification(notificationId, context);
     if (!response.error) {
       // Filter out the notification with the specified ID
-      const updatedNotificationHistory = notificationHistory.filter(
-        (notification) => notification.id !== notificationId
-      );
-      setNotificationHistory(updatedNotificationHistory);
+      const removeItem = notificationHistory.filter((n, idx) => {
+        return n.id !== notificationId;
+      });
+      setData(removeItem);
     }
   };
-
-  useEffect(() => {
-    PurchaseHistory(user.id, context, setPurchaseHistory);
-  }, []);
 
   return (
     <section className={classes.container}>
@@ -68,35 +50,39 @@ function Home() {
 
       {/* Container for Daily Notifications */}
       <p className="label">Daily Notifications</p>
-      {notificationHistory.length > 0 ? (
-        notificationHistory.map((notification) => (
-          <DailyNotification
-            key={notification.id} // Use unique identifier as the key
-            notificationId={notification.id}
-            title={notification.title}
-            body={notification.message}
-            time={notification.timeStamp}
-            onDelete={handleDeleteNotification}
-          />
-        ))
-      ) : (
-        <p className="center label"> You currently have 0 notifications</p>
-      )}
+      <section className={classes.dailyNotifications}>
+        {!notificationHistory || notificationHistory.length == 0 ? (
+          <p className="label center">You currently have 0 notifications</p>
+        ) : (
+          notificationHistory.map((notification) => (
+            <DailyNotification
+              key={notification.id} // Use unique identifier as the key
+              notificationId={notification.id}
+              title={notification.title}
+              body={notification.message}
+              time={notification.timeStamp}
+              onDelete={() => handleDeleteNotification(notification.id)}
+            />
+          ))
+        )}
+      </section>
       <div className="flex row between">
-        <p className="label">Purchase History</p>
+        <p className="label">Recent Purchases</p>
         <p className="pointer" onClick={() => navigate("/Purchases")}>
           View All
         </p>
       </div>
-      {purchaseHistory &&
-        purchaseHistory.map((purchase, idx) => (
-          <PurchaseTile
-            key={idx}
-            title={purchase.details}
-            amount={purchase.total}
-            icon={<FaMoneyBill size="2rem" />}
-          />
-        ))}
+      <section className={`flex col g-20 ${classes.purchases} scrollbar-hide`}>
+        {purchaseHistory &&
+          purchaseHistory.map((purchase, idx) => (
+            <PurchaseTile
+              key={idx}
+              title={purchase.details}
+              amount={purchase.total}
+              icon={<FaMoneyBill size="2rem" />}
+            />
+          ))}
+      </section>
     </section>
   );
 }

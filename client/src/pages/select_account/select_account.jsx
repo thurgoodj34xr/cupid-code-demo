@@ -1,14 +1,14 @@
-import classes from "./select_account.module.css";
-import { useEffect, useState, useContext } from "react";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
-import AppContext from "../../componets/app_context";
+import classes from "./select_account.module.css";
+import useContext from "../../hooks/context";
 
 function SelectAccount() {
-  let navigate = useNavigate();
-  const context = useContext(AppContext);
+  const context = useContext();
+  const navigate = useNavigate();
   const [selectUser, setSelectUser] = useState(true);
 
   useEffect(() => {

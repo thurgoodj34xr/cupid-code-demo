@@ -1,28 +1,34 @@
-import classes from "./navbar.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AppContext from "../app_context";
 import {
-  faHouse,
-  faRightFromBracket,
+  faBars,
   faHandshake,
+  faHouse,
   faMessage,
   faMoneyBill,
+  faPeopleLine,
+  faRightFromBracket,
   faShoppingCart,
   faUser,
-  faPeopleLine,
 } from "@fortawesome/free-solid-svg-icons";
-import { FaKey, FaSearch } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import {
+  FaBook,
+  FaHistory,
+  FaKey,
+  FaSearch,
+  FaSubscript,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
-import JobHistory from "../../pages/job_history/job_history";
+import classes from "./navbar.module.css";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
   const [init, setInit] = useState(true);
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
+
   let navigate = useNavigate();
 
   const showNavBar = () => {
@@ -37,6 +43,11 @@ function Navbar({ title }) {
   const signout = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("token");
+    context.Socket().emit("signOut", {
+      file: "navbar.jsx",
+      message: "signed out",
+      user,
+    });
     navigate("/");
     context.updateUser(null);
     context.updateTokens(null);
@@ -92,6 +103,16 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const viewUsers = () => {
+    navigate("/ViewUsers");
+    hideNavBar();
+  };
+
+  const viewLogs = () => {
+    navigate("/Logs");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -109,8 +130,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.wrapper} ${classes.fadein}`
-              : `${classes.wrapper} ${classes.fadeout}`
+            ? `${classes.wrapper} ${classes.fadein}`
+            : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -118,8 +139,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.modal} ${classes.slideRight}`
-              : `${classes.modal} ${classes.slideLeft}`
+            ? `${classes.modal} ${classes.slideRight}`
+            : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
@@ -174,22 +195,9 @@ function Navbar({ title }) {
                 </div>
                 <h3>Select Cupid</h3>
               </section>
-              {/* Add Cupid Cash */}
-              <section className={classes.tile} onClick={cupidCash}>
-                <div>
-                  <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
-                </div>
-                <h3>Add Cupid Cash</h3>
-              </section>
-              {/* Purchases */}
-              <section className={classes.tile} onClick={purchases}>
-                <div>
-                  <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
-                </div>
-                <h3>Purchases</h3>
-              </section>
             </>
           )}
+          {/* ***************** END OF STANDARD ROLE ***************** */}
 
           {/* ********************** CUPID ROLE *********************** */}
           {user.cupid && (
@@ -200,19 +208,38 @@ function Navbar({ title }) {
                 </div>
                 <h3>Avaliable Jobs</h3>
               </section>
-            </>
-          )}
-
-          {user.cupid && (
-            <>
               <section className={classes.tile} onClick={jobHistory}>
                 <div>
-                  <FaSearch size="2rem" />
+                  <FaHistory size="2rem" />
                 </div>
                 <h3>Job History</h3>
               </section>
             </>
           )}
+          {/* *************** END OF CUPID ROLE ************* */}
+
+          {/* ****************** ADMIN ROLE ************************* */}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewUsers}>
+                <div>
+                  <FaSearch size="2rem" />
+                </div>
+                <h3>View Users</h3>
+              </section>
+            </>
+          )}
+          {user.admin && (
+            <>
+              <section className={classes.tile} onClick={viewLogs}>
+                <div>
+                  <FaBook size="2rem" />
+                </div>
+                <h3>Logs</h3>
+              </section>
+            </>
+          )}
+          {/* ****************** END OF ADMIN ROLE *************** */}
 
           <hr />
           {/* My Account */}
@@ -229,7 +256,26 @@ function Navbar({ title }) {
             <h3>Change Password</h3>
           </section>
 
-
+          {/* **************** STANDARD ROLE*************** */}
+          {user.profile && (
+            <>
+              {/* Add Cupid Cash */}
+              <section className={classes.tile} onClick={cupidCash}>
+                <div>
+                  <FontAwesomeIcon icon={faMoneyBill} size="2xl" />
+                </div>
+                <h3>Add Cupid Cash</h3>
+              </section>
+              {/* Purchases */}
+              <section className={classes.tile} onClick={purchases}>
+                <div>
+                  <FontAwesomeIcon icon={faShoppingCart} size="2xl" />
+                </div>
+                <h3>Purchases</h3>
+              </section>
+            </>
+          )}
+          {/* **************** END OF STANDARD ROLE*************** */}
         </section>
         {/* Sign */}
         <hr />

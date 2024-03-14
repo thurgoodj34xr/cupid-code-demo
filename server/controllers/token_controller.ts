@@ -1,25 +1,26 @@
-import { Router } from "express"
-import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
+import { Router } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import * as User from "../../services/user";
-import * as Jwt from "../..//utils/jwt";
+import UserRepository from "../repositories/user_repository";
+import Jwt from "../utils/jwt";
 
-const TokenController = () => {
+const TokenController = (db: PrismaClient) => {
+    const _repository = new UserRepository(db);
     const router = Router();
 
     router.post("/verify", async (req, res) => {
         const { token } = req.body;
         try {
             const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!!) as JwtPayload;
-            const user = await User.findUserById(parseInt(payload.userId))
+            const user = await _repository.findById(payload.userId)
             const accessToken = Jwt.generateAccessToken(user);
             res.send({ user, tokens: { refreshToken: token, accessToken } })
-        } catch (err) {
+            //logInfo("token_controller", "created a access token", user?.email)
+        } catch (error) {
+            logError("token_controller", error)
             res.send({ error: "Expired" })
-            console.log(err)
         }
     })
-
     return router;
 }
 

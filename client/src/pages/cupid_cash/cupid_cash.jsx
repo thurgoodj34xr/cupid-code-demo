@@ -1,13 +1,13 @@
-import classes from "./cupid_cash.module.css";
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
-import Input from "../../componets/inputs/input";
+import { useState } from "react";
 import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import classes from "./cupid_cash.module.css";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 
 function CupidCash() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [amountToAdd, setAmountToAdd] = useState(0);
   const [creditCard, setCreditCard] = useState("");
@@ -130,7 +130,7 @@ function CupidCash() {
     const userId = user.id;
 
     const response = await Api.PostWithAuth(
-      "/users/cash",
+      "/profile/cash",
       { changeAmount: amountToAdd, userId },
       context
     );

@@ -1,56 +1,40 @@
-import classes from "./my_account.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import Button from "../../componets/button/button";
 import Input from "../../componets/inputs/input";
 import TextArea from "../../componets/text_area/text_area";
-import Button from "../../componets/button/button";
+import Api from "../../hooks/api";
+import useInit from "../../hooks/useInit";
+import classes from "./my_account.module.css";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import useContext from "../../hooks/context";
 
 function MyAccount() {
-  const context = useContext(AppContext);
-  const user = context.getUser();
-  const [email, setEmail] = useState(user.email);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [age, setAge] = useState(user.profile.age);
-  const [dailyBudget, setBudget] = useState(user.profile.dailyBudget);
-  const [relationshipGoals, setGoals] = useState(
-    user.profile.relationshipGoals
-  );
+  const { user, setUser, navigate } = useInit();
   const [userType, setUserType] = useState("Standard");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [submitButtonText, setSubmitButtonText] = useState("Update");
+  const context = useContext();
 
   const updateProfile = async () => {
-    const userId = user.id;
     setSubmitButtonText(
       <FontAwesomeIcon className="rotate" icon={faSpinner} size="xl" />
     );
     const response = await Api.PostWithAuth(
       "/users/update",
       {
-        userId,
-        firstName,
-        lastName,
-        email,
-        age,
-        dailyBudget,
-        relationshipGoals,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        age: user.profile.age,
+        dailyBudget: user.profile.dailyBudget,
+        relationshipGoals: user.profile.relationshipGoals,
       },
       context
     );
     if (!response.error) {
-      user.email = email;
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.profile.age = age;
-      user.profile.dailyBudget = dailyBudget;
-      user.profile.relationshipGoals = relationshipGoals;
       setErrorMessage(null);
       setSuccessMessage(response.message);
     } else {
@@ -71,21 +55,23 @@ function MyAccount() {
         <Input
           inputType="text"
           placeholder="Enter First Name"
-          state={firstName}
-          setState={setFirstName}
+          state={user.firstName}
+          setState={(firstName) =>
+            setUser((old) => ({ ...old, firstName: firstName }))
+          }
           require
         />
         <Input
           inputType="text"
           placeholder="Enter Last Name"
-          state={lastName}
-          setState={setLastName}
+          state={user.lastName}
+          setState={(lastName) => setUser((old) => ({ ...old, lastName }))}
         />
         <Input
-          inputType="email"
-          placeholder="Enter Email"
-          state={email}
-          setState={setEmail}
+          inputType="user.email"
+          placeholder="Enter user.email"
+          state={user.email}
+          setState={(email) => setUser((old) => ({ ...old, email }))}
         />
         {userType != "Standard" ? (
           ""
@@ -93,20 +79,37 @@ function MyAccount() {
           <>
             <Input
               inputType="number"
-              placeholder="Enter Age"
-              state={age == 0 ? "" : age}
-              setState={setAge}
+              placeholder="Enter age"
+              state={user.profile.age == 0 ? "" : user.profile.age}
+              setState={(age) =>
+                setUser((old) => ({
+                  ...old,
+                  profile: { ...old.profile, age: parseInt(age) },
+                }))
+              }
             />
             <Input
               inputType="number"
               placeholder="Enter Budget Per Date"
-              state={dailyBudget == 0 ? "" : dailyBudget}
-              setState={setBudget}
+              state={
+                user.profile.dailyBudget == 0 ? "" : user.profile.dailyBudget
+              }
+              setState={(dailyBudget) =>
+                setUser((old) => ({
+                  ...old,
+                  profile: { ...old.profile, dailyBudget: Number(dailyBudget) },
+                }))
+              }
             />
             <TextArea
               placeholder="Enter Relationship Goals"
-              state={relationshipGoals}
-              setState={setGoals}
+              state={user.profile.relationshipGoals}
+              setState={(relationshipGoals) =>
+                setUser((old) => ({
+                  ...old,
+                  profile: { ...old.profile, relationshipGoals },
+                }))
+              }
             />
           </>
         )}

@@ -1,13 +1,13 @@
-import classes from "../my_account/my_account.module.css";
-import { useState, useContext } from "react";
-import AppContext from "../../componets/app_context";
-import * as Api from "../../hook/api";
-import Input from "../../componets/inputs/input";
+import { useState } from "react";
 import Button from "../../componets/button/button";
+import Input from "../../componets/inputs/input";
 import ResponseMessage from "../../componets/responseMessage/responseMessage";
+import classes from "../my_account/my_account.module.css";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 
 function UpdatePassword() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [repeatNew, setRepeatNew] = useState("");
   const [current, setCurrent] = useState("");
@@ -15,7 +15,6 @@ function UpdatePassword() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const updatePassword = async () => {
-    const userId = user.id;
     if (newPass !== repeatNew) {
       setSuccessMessage(null);
       setErrorMessage("New Password fields don't match");
@@ -24,10 +23,8 @@ function UpdatePassword() {
     const response = await Api.PostWithAuth(
       "/users/password",
       {
-        userId,
         currentPassword: current,
         newPassword: newPass,
-        repeatNew: repeatNew,
       },
       context
     );

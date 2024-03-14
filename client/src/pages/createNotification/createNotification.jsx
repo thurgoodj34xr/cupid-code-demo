@@ -1,11 +1,10 @@
-import classes from "./createNotification.module.css";
-import { useEffect, useState, useContext } from "react";
-import * as Api from "../../hook/api";
-import AppContext from "../../componets/app_context";
 import { NotificationType } from "@prisma/client";
+import { useEffect, useState } from "react";
+import Api from "../../hooks/api";
+import useContext from "../../hooks/context";
 
 function CreateNotification() {
-  const context = useContext(AppContext);
+  const context = useContext();
   const user = context.getUser();
   const [notificationHistory, setNotificationHistory] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -42,6 +41,7 @@ function CreateNotification() {
       { userId, title, message, notificationType: workingNotificationType },
       context
     );
+
     if (!response.error) {
       // Update user profile with the new balance
       setErrorMessage(null);
@@ -73,7 +73,7 @@ function CreateNotification() {
   useEffect(() => {
     getNotificationHistory();
 
-    return () => { };
+    return () => {};
   }, []);
   return (
     <section>

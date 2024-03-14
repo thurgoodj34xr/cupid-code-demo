@@ -1,36 +1,82 @@
+import { PrismaClient, User } from "@prisma/client";
 import bodyParser from "body-parser";
 import * as dotenv from "dotenv";
 import express from "express";
 import { engine } from 'express-handlebars';
 import fs from "fs";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import path from "path";
-import UserController from "./src/controllers/user_controller";
-import TokenController from "./src/controllers/token_controller";
-import CupidController from "./src/controllers/cupid_controller";
-import NotificationController from "./src/controllers/notification_controller";
-import PurchasesController from "./src/controllers/purchases_controller";
+import AdminController from "./server/controllers/admin_controller";
+import CupidController from "./server/controllers/cupid_controller";
+import NotificationController from "./server/controllers/notification_controller";
+import ProfileController from "./server/controllers/profile_controller";
+import PurchasesController from "./server/controllers/purchases_controller";
+import TokenController from "./server/controllers/token_controller";
+import UserController from "./server/controllers/user_controller";
+import { createServer } from "node:http";
+import { Server } from "socket.io"
+import "./global";
 dotenv.config();
-
 
 const DEBUG = process.env.NODE_ENV !== "production";
 const MANIFEST: Record<string, any> = DEBUG ? {} : JSON.parse(fs.readFileSync("static/.vite/manifest.json").toString())
+const db = new PrismaClient();
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
+export default io;
+
+let users: User[] = []
+io.on('connection', (socket) => {
+  let user: User;
+
+  socket.on("user", (data: User) => {
+    if (!user) {
+      user = data;
+      users = [...users, data]
+      io.emit("count", users)
+    } else {
+      const newUsers = users.filter((u) => u.id !== user.id)
+      users = [...newUsers, data]
+      user = data;
+    }
+  })
+
+  socket.on("log", (data) => {
+    logInfo(data.file, data.message, data.user);
+  })
+
+  socket.on("getCount", () => {
+    io.emit("count", users)
+  })
+
+  socket.on("signOut", (data) => {
+    logInfo(data.file, data.message, data.user);
+    const newUsers = users.filter((u) => u.id !== user.id)
+    users = newUsers;
+    io.emit("count", users)
+  })
+
+  socket.on("disconnect", () => {
+    if (user) {
+      const newUsers = users.filter((u) => u.id !== user.id)
+      users = newUsers;
+      io.emit("count", users)
+    }
+  })
+})
+
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
-app.set('views', './views');
-
-
+app.set('views', './server/views');
 
 app.use(bodyParser.json());
-
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`)
-  if (req.url.includes("/Images")) {
+  // logInfo(`index.ts`, `${req.method} ${req.url}`);
+  if (req.url.includes("/images")) {
     res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
   } else {
-    next()
+    next();
   }
 });
 
@@ -49,9 +95,6 @@ if (!DEBUG) {
   });
 }
 
-// ***************** Un-Protected Routes *******************
-
-
 app.get(['/'], (req, res) => {
   res.render('index', {
     debug: DEBUG,
@@ -62,37 +105,17 @@ app.get(['/'], (req, res) => {
   });
 });
 
-// ***************** Signin Endpoint ******************
+app.use("/users", UserController(db))
+app.use("/profile", ProfileController(db))
+app.use("/cupids", CupidController(db))
+app.use("/token", TokenController(db))
+app.use("/notifications", NotificationController(db))
+app.use("/purchases", PurchasesController(db))
+app.use("/admin", AdminController(db))
 
-app.use("/users", UserController())
 
-// ******************* Sign up Endpoint *************************
-
-// ***************** Endpoint to verify a token ***********************
-
-app.use("/token", TokenController())
-
-// ********** Middleware to validate the access token ***************
-
-app.use((req, res, next) => {
-  const { authorization } = req.headers;
-  try {
-    jwt.verify(authorization!!, process.env.JWT_ACCESS_SECRET!!);
-    console.log("Access Granted")
-    next();
-  } catch (err) {
-    console.log("Token expired")
-    res.send({ error: err })
-  }
-})
-
-// ************** Protected Endpoints ***************
-app.use("/cupids", CupidController())
-app.use("/notifications", NotificationController())
-app.use("/purchases", PurchasesController())
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Listening on port ${process.env.PORT || 3000}...`);
+server.listen(process.env.PORT || 3000, () => {
+  logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
 });
 
 

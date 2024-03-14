@@ -1,48 +1,39 @@
-import classes from "./ai_assistance.module.css";
-import { useEffect, useState, useContext } from "react";
-import Navbar from "../../componets/navbar/navbar";
-import AppContext from "../../componets/app_context";
+import { NotificationType } from "@prisma/client";
+import { FaTicketAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Button from "../../componets/button/button";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
 import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
-import { FaGoodreads, FaTicketAlt } from "react-icons/fa";
-import Button from "../../componets/button/button";
-import { useNavigate } from "react-router-dom";
-import GetNotificationHistory from "../../hook/notificationHistory";
-import HandleDeleteNotification from "../../hook/deleteNotification"
-import { NotificationType } from "@prisma/client";
-
+import useContext from "../../hooks/context";
+import HandleDeleteNotification from "../../hooks/deleteNotification";
+import usePost from "../../hooks/usePost";
+import classes from "./ai_assistance.module.css";
+import useInit from "../../hooks/useInit";
 
 function AiAssistance() {
+  const { user, setUser, navigate } = useInit();
+  const context = useContext();
+  const { data: notificationHistory, setData } = usePost("/notifications/all", {
+    notficationType: NotificationType.AIGEN,
+  });
 
-  const context = useContext(AppContext);
-  const user = context.getUser();
-  const [notificationHistory, setNotificationHistory] = useState([]);
-  const getNotificationHistory = async () => {
-    const notifications = await GetNotificationHistory(user.id, NotificationType.AIGEN, context);
-    setNotificationHistory(notifications)
-  }
-  useEffect(() => {
-    getNotificationHistory();
-
-    return () => { };
-  }, []);
   const handleDeleteNotification = async (notificationId) => {
-    const response = await HandleDeleteNotification(notificationId, context)
+    const response = await HandleDeleteNotification(notificationId, context);
     if (!response.error) {
       // Filter out the notification with the specified ID
       const updatedNotificationHistory = notificationHistory.filter(
         (notification) => notification.id !== notificationId
       );
-      setNotificationHistory(updatedNotificationHistory);
+      setData(updatedNotificationHistory);
     }
-  }
-
-  let navigate = useNavigate();
+  };
 
   const purchases = () => {
     navigate("/Purchases");
+    1;
   };
+  1;
 
   return (
     <section className={classes.main}>
@@ -54,16 +45,18 @@ function AiAssistance() {
       </div>
       <CupidTile name="Jake" distance="0.5 mi" />
       <p className="label">Notifications</p>
-      {notificationHistory.map((notification) => (
-        <DailyNotification
-          key={notification.id} // Use unique identifier as the key
-          notificationId={notification.id}
-          title={notification.title}
-          body={notification.message}
-          time={notification.timeStamp}
-          onDelete={handleDeleteNotification}
-        />
-      ))}
+      {!notificationHistory
+        ? null
+        : notificationHistory.map((notification) => (
+            <DailyNotification
+              key={notification.id} // Use unique identifier as the key
+              notificationId={notification.id}
+              title={notification.title}
+              body={notification.message}
+              time={notification.timeStamp}
+              onDelete={handleDeleteNotification}
+            />
+          ))}
       <div className={classes.row}>
         <p className="label">Recent Purchases</p>
         <p className="pointer" onClick={purchases}>
