@@ -44,4 +44,18 @@ export default class ProfileRepository {
             },
         })
     }
+    updateCupid(userId: number, cupidId: number) {
+        return this.db.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                profile: {
+                    update: {
+                        selectedCupid: cupidId,
+                    },
+                },
+            },
+        })
+    }
 }
