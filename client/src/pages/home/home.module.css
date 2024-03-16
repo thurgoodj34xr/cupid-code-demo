@@ -46,7 +46,6 @@ hr {
 
 .dailyNotifications {
     max-height: 30vh;
-    min-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -55,4 +54,9 @@ hr {
 
 .dailyNotifications::-webkit-scrollbar {
     display: none;
+}
+
+.purchases {
+    max-height: 30vh;
+    overflow-y: auto;
 }

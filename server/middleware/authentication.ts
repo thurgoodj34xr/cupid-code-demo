@@ -10,13 +10,13 @@ const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) 
         const user = await new UserRepository(db).findById(payload.userId)
         req.user = user;
         if (roles && !roles.includes(user!!.role)) {
-            logError("authentication.ts", "User does not have correct role")
+            logError("authentication.ts", `User does not have the correct role to access ${req.url}`, user!!)
         } else {
             //logInfo("authentication.ts", `${user?.email} ${req.url}`)
             next();
         }
     } catch (error) {
-        Logger.error("Token is expired or invalid")
+        logError("authentications.ts", error)
         res.send({ error })
     }
 }

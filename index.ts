@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import bodyParser from "body-parser";
 import * as dotenv from "dotenv";
 import express from "express";
@@ -25,9 +25,44 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 export default io;
+
+let users: User[] = []
 io.on('connection', (socket) => {
+  let user: User;
+
+  socket.on("user", (data: User) => {
+    if (!user) {
+      user = data;
+      users = [...users, data]
+      io.emit("count", users)
+    } else {
+      const newUsers = users.filter((u) => u.id !== user.id)
+      users = [...newUsers, data]
+      user = data;
+    }
+  })
+
   socket.on("log", (data) => {
     logInfo(data.file, data.message, data.user);
+  })
+
+  socket.on("getCount", () => {
+    io.emit("count", users)
+  })
+
+  socket.on("signOut", (data) => {
+    logInfo(data.file, data.message, data.user);
+    const newUsers = users.filter((u) => u.id !== user.id)
+    users = newUsers;
+    io.emit("count", users)
+  })
+
+  socket.on("disconnect", () => {
+    if (user) {
+      const newUsers = users.filter((u) => u.id !== user.id)
+      users = newUsers;
+      io.emit("count", users)
+    }
   })
 })
 
