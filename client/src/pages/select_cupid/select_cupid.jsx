@@ -5,28 +5,34 @@ import classes from "./select_cupid.module.css";
 import { useState } from "react";
 import useInit from "../../hooks/useInit";
 import useContext from "../../hooks/context";
+import useGetCupid from "../../hooks/useGetCupid";
 
 function SelectCupid() {
   const { user, setUser, navigate } = useInit();
   const context = useContext();
   const { data: cupids, error } = useGet("/cupids/all");
-  const [currentCupid, setCurrentCupid] = useState(user.profile.pickedCupid); // Correct destructuring
-
-  console.log(user.profile.pickedCupid)
+  const { cupid: currentCupid } = useGetCupid(
+    user.profile.selectedCupid,
+    context
+  );
 
   const handleHireCupid = async (cupid) => {
-    console.log(cupid);
     const response = await HireCupid(cupid, context);
     if (!response.error) {
       // Filter out the notification with the specified ID
-      setCurrentCupid(cupid)
-      user.profile.selectedCupid = cupid.id
-      user.profile.pickedCupid = cupid
+      user.profile.selectedCupid = cupid.id;
+      user.profile.pickedCupid = cupid;
+      console.log(cupid);
+      setUser((old) => ({
+        ...old,
+        profile: {
+          ...old.profile,
+          selectedCupid: cupid.cupid.id,
+        },
+      }));
       context.updateUser(user);
-      console.log("Here")
     }
   };
-
 
   return (
     <section className={classes.main}>
@@ -35,7 +41,7 @@ function SelectCupid() {
         <CupidTile
           key={currentCupid.id}
           cupid={currentCupid}
-          onFire={() => { }}
+          onFire={() => {}}
           link="Fire"
         />
       )}

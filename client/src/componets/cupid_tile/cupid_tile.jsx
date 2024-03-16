@@ -13,7 +13,9 @@ function CupidTile({ cupid, onFire, link = "Fire" }) {
       <div className="flex row ycenter g-20 left">
         {<PhotoCircle url={cupid.photoUrl} size="100px" />}
         <div className="flex col">
-          <h2>{cupid.firstName} {cupid.lastName}</h2>
+          <h2>
+            {cupid.firstName} {cupid.lastName}
+          </h2>
           <p className="label">5 Mile</p>
         </div>
       </div>

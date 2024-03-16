@@ -38,17 +38,15 @@ const ProfileController = (db: PrismaClient) => {
     router.post("/hireCupid", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
         const { cupid } = req.body
         try {
-            const user = await _repository.findById(req.user!!.id)
-            const hireCupid = await _repository.updateCupid(req.user!!.id, cupid.id)
-            logInfo("profile_controller", `hired cupid ${cupid.id}`, req.user!!)
-            res.send({ message: "Hired Cupid" })
+            const hireCupid = await _repository.updateCupid(req.user!!.id, cupid.cupid.id)
+            logInfo("profile_controller", `hired cupid ${cupid.cupid.id}`, req.user!!)
+            res.send(hireCupid)
             return;
         } catch (error) {
             logError("profile_controller", error, req.user!!)
             res.send({ error: "Access Denied" })
             return;
         }
-
     })
 
     return router;

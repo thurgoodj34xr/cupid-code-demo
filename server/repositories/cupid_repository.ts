@@ -40,4 +40,12 @@ export default class CupidRepository {
             },
         });
     }
+
+    findById(id: number) {
+        return this.db.cupid.findMany({
+            where: {
+                id,
+            },
+        });
+    }
 }

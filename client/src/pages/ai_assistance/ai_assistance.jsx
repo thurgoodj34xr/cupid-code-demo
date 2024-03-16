@@ -43,7 +43,7 @@ function AiAssistance() {
           Select
         </p>
       </div>
-      <CupidTile name="Jake" distance="0.5 mi" />
+      <CupidTile cupid={user} />
       <p className="label">Notifications</p>
       {!notificationHistory
         ? null
