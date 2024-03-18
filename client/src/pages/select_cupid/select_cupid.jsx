@@ -34,7 +34,7 @@ function SelectCupid() {
   };
 
   return (
-    <section className={classes.main}>
+    <section className="flex flex-col w-full overflow-y-auto">
       <p className="label left">Current Cupid</p>
       {currentCupid && (
         <CupidTile
