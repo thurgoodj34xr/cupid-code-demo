@@ -29,12 +29,12 @@ function ViewUsers() {
     <>
       <div>
         <Accordion items={[
-          { title: 'Standard Users', content: standardUsers.map(user => <UserCard key={user.id} user={user} />) },
+          { title: 'Standard Users', content: standardUsers.map(user => <UserCard key={user.id} user={user}  />) },
           { title: 'Cupids', content: cupidUsers.map(user => <UserCard key={user.id} user={user} />) },
           { title: 'Admins', content: adminUsers.map(user => <UserCard key={user.id} user={user} />) }
         ]} />
       </div>
-      <p className="label">Current Users: {users.length}</p>
+      {/* <p className="label">Current Users: {users.length}</p> */}
     </>
   );
 }
@@ -49,7 +49,6 @@ const UserCard = ({ user }) => (
           {user.firstName} {user.lastName}
         </p>
         <p className="label">Email: {user.email}</p>
-        <p className="label">Role: {user.role}</p>
       </div>
     </div>
     <p className="pointer">Delete</p>

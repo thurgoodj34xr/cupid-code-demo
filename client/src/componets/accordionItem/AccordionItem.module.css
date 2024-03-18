@@ -1,43 +1,44 @@
 .accordion-item {
-  padding: 15px;
-  width: 90vw;
-  max-width: 700px;
-  margin: 10px auto;
-  border: 2px solid #007AFF;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
-  background-color: white;
-  border-radius: 10px;
-  animation: fadein 2s forwards;
+    padding: 15px;
+    width: 90vw;
+    max-width: 700px;
+    margin: 10px auto; /* Centers the box and adds spacing between items */
+    border: 2px solid #007AFF; /* Example border color */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+    animation: fadein 2s forwards;
+    overflow-y: auto; /* Allows scrolling within the item if content is long */
 }
-
-.accordion-title {
-  padding: 15px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.accordion-title .arrow {
-  border: solid #000;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(45deg);
-  transition: transform 0.3s ease;
-}
-
-.accordion-title .arrow.open {
-  transform: rotate(225deg);
-}
-
-.accordion-content {
-  padding: 15px;
-  border-top: 1px solid #ddd;
-  overflow-y: auto; /* Add overflow-y to enable scrolling */
-}
+  
+  .accordion-title {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .accordion-title .arrow {
+    border: solid #000;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion-title .arrow.open {
+    transform: rotate(225deg);
+  }
+  
+  .accordion-content {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+  }
+  
