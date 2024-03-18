@@ -7,6 +7,7 @@ import PurchasesRepository from "../repositories/purchases_repository";
 const ProfileController = (db: PrismaClient) => {
     const router = Router();
     const _repository = new ProfileRepository(db);
+
     const _purchasesRepository = new PurchasesRepository(db);
     // ************** Adding CupidCash in Account ***************
     router.post("/cash", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
@@ -23,10 +24,10 @@ const ProfileController = (db: PrismaClient) => {
             await _repository.updateBalance(req.user!!.id, newBalance)
             await _purchasesRepository.record(req.user!!.id, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
             res.send({ newBalance });
-            logInfo("profile_controller", `purchased ${changeAmount} cupid cash`, req.user?.email)
+            logInfo("profile_controller", `purchased ${changeAmount} cupid cash`, req.user!!)
             return;
         } catch (error) {
-            logError("profile_controller", error, req.user?.email)
+            logError("profile_controller", error, req.user!!)
             res.send({ error: "Access Denied" })
             return;
         }

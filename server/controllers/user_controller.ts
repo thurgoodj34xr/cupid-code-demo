@@ -82,7 +82,7 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(currentPassword, user.password)) {
             const profile = await _repository.updatePassword(req.user!!.id, newPassword)
             res.send({ message: "Your account was successfully updated", profile })
-            logInfo(`user_controller.ts`, "changed their password", req.user?.email)
+            logInfo(`user_controller.ts`, "changed their password", req.user!!)
             return;
         } else {
             res.send({ error: "Incorrect Current Password." });
@@ -109,7 +109,7 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             const { accessToken, refreshToken } = Jwt.generateTokens(user);
             await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-            logInfo("user_controller", "signed in", user.email)
+            logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
             res.send({ error: "Invalid login credentials." });
@@ -121,6 +121,7 @@ const UserController = (db: PrismaClient) => {
         const { firstName, lastName, email, age, dailyBudget, relationshipGoals } = req.body
         var workingAge = parseInt(age)
         var workingBudget = parseFloat(dailyBudget)
+
 
         // Validate Numbers
         if (isNaN(workingAge)) {
@@ -152,6 +153,7 @@ const UserController = (db: PrismaClient) => {
         const userId = req.user!!.id;
         const updatedAccount = await _repository.update({ userId, firstName, lastName, email, age: workingAge, dailyBudget: workingBudget, relationshipGoals })
         res.send({ message: "Your account was successfully updated", updatedAccount })
+        logInfo("user_controller.ts", "Sucessfully updated their account", req.user!!)
         return;
     });
 

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import "./App.css";
 import AppContext from "./componets/app_context";
 import Navbar from "./componets/navbar/navbar";
 import Notification from "./componets/notification/notification";
@@ -30,6 +29,12 @@ function App() {
       s.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      socket.emit("user", user);
+    }
+  }, [user]);
 
   function updateUser(user) {
     setUser(user);
@@ -134,7 +139,6 @@ function App() {
       <div className={user ? "background" : "background gradient"}>
         <div className="main">
           {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
-
           <Outlet />
         </div>
       </div>

@@ -43,10 +43,10 @@ function Navbar({ title }) {
   const signout = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("token");
-    context.Socket().emit("log", {
+    context.Socket().emit("signOut", {
       file: "navbar.jsx",
       message: "signed out",
-      user: `${user.email}`,
+      user,
     });
     navigate("/");
     context.updateUser(null);

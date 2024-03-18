@@ -9,7 +9,7 @@ const CupidController = (db: PrismaClient) => {
 
     router.get("/all", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
         const cupids = await _repository.getAll();
-        res.send({ cupids })
+        res.send(cupids)
     })
 
     return router;
