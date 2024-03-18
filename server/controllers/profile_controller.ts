@@ -39,7 +39,7 @@ const ProfileController = (db: PrismaClient) => {
         const { cupid } = req.body
         try {
             const hireCupid = await _repository.updateCupid(req.user!!.id, cupid.cupid.id)
-            logInfo("profile_controller", `hired cupid ${cupid.cupid.id}`, req.user!!)
+            logInfo("profile_controller", `hired cupid ${cupid.cupid.id}: ${cupid.email}`, req.user!!)
             res.send(hireCupid)
             return;
         } catch (error) {

@@ -1,35 +1,34 @@
+import { useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
+import useContext from "../../hooks/context";
 import HireCupid from "../../hooks/hireCupid";
 import useGet from "../../hooks/useGet";
-import classes from "./select_cupid.module.css";
-import { useState } from "react";
-import useInit from "../../hooks/useInit";
-import useContext from "../../hooks/context";
 import useGetCupid from "../../hooks/useGetCupid";
+import useInit from "../../hooks/useInit";
+import classes from "./select_cupid.module.css";
 
 function SelectCupid() {
   const { user, setUser, navigate } = useInit();
   const context = useContext();
   const { data: cupids, error } = useGet("/cupids/all");
+  const [runHook, setRunHook] = useState({});
   const { cupid: currentCupid } = useGetCupid(
-    user.profile.selectedCupid,
-    context
+    user.profile.cupidId,
+    context,
+    runHook
   );
 
   const handleHireCupid = async (cupid) => {
-    const response = await HireCupid(cupid, context);
-    if (!response.error) {
-      // Filter out the notification with the specified ID
-      user.profile.selectedCupid = cupid.id;
-      user.profile.pickedCupid = cupid;
-      console.log(cupid);
+    const newCupid = await HireCupid(cupid, context);
+    if (!cupid.error) {
       setUser((old) => ({
         ...old,
         profile: {
           ...old.profile,
-          selectedCupid: cupid.cupid.id,
+          cupidId: newCupid.id,
         },
       }));
+      setRunHook({});
       context.updateUser(user);
     }
   };
@@ -40,7 +39,7 @@ function SelectCupid() {
       {currentCupid && (
         <CupidTile
           key={currentCupid.id}
-          cupid={currentCupid}
+          cupid={currentCupid.user}
           onFire={() => {}}
           link="Fire"
         />

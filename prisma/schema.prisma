@@ -47,8 +47,8 @@ model Profile {
   createdAt         DateTime @default(now())
   dailyBudget       Decimal  @default(0)
   relationshipGoals String?
-  selectedCupid     Int?
-  pickedCupid       Cupid?   @relation(fields: [selectedCupid], references: [id])
+  cupidId           Int?
+  cupid             Cupid?   @relation(fields: [cupidId], references: [id])
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id])
   userId            Int      @unique

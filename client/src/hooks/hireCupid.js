@@ -5,6 +5,7 @@ async function HireCupid(cupid, context,) {
         { cupid: cupid },
         context
     );
+    console.log(response)
     return response;
 }
 export default HireCupid

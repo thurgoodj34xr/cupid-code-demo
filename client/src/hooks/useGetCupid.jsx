@@ -3,7 +3,7 @@ import usePost from "./usePost";
 import { useEffect } from "react";
 import Api from "./api";
 
-function useGetCupid(cupidId, context) {
+function useGetCupid(cupidId, context, runHook) {
   const [cupid, setCupid] = useState(null);
 
   useEffect(() => {
@@ -12,8 +12,10 @@ function useGetCupid(cupidId, context) {
       setCupid(cupid);
     };
 
-    fetchData();
-  }, [cupidId]);
+    if (cupidId) {
+      fetchData();
+    }
+  }, [cupidId, runHook]);
 
   return { cupid, setCupid };
 }

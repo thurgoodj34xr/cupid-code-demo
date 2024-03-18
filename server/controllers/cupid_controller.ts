@@ -18,8 +18,7 @@ const CupidController = (db: PrismaClient) => {
         const { cupidId } = req.body;
         try {
             const cupid = await _repository.findById(cupidId);
-            const user = await _userRepsitory.findById(cupid[0].userId);
-            res.send(user);
+            res.send(cupid);
         } catch (error) {
             res.send({ error: "Cupid not found" })
         }
