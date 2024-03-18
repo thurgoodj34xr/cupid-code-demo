@@ -4,6 +4,7 @@ import AuthMiddleware from "../middleware/authentication";
 import ProfileRepository from "../repositories/profile_repository";
 import PurchasesRepository from "../repositories/purchases_repository";
 
+
 const ProfileController = (db: PrismaClient) => {
     const router = Router();
     const _repository = new ProfileRepository(db);
@@ -32,6 +33,22 @@ const ProfileController = (db: PrismaClient) => {
             return;
         }
     });
+
+    // ************** Hiring Cupid ***************
+    router.post("/hireCupid", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
+        const { cupid } = req.body
+        try {
+            const hireCupid = await _repository.updateCupid(req.user!!.id, cupid.cupid.id)
+            logInfo("profile_controller", `hired cupid ${cupid.cupid.id}: ${cupid.email}`, req.user!!)
+            res.send(hireCupid)
+            return;
+        } catch (error) {
+            logError("profile_controller", error, req.user!!)
+            res.send({ error: "Access Denied" })
+            return;
+        }
+    })
+
     return router;
 }
 

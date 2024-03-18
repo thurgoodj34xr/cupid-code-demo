@@ -40,4 +40,15 @@ export default class CupidRepository {
             },
         });
     }
+
+    findById(id: number) {
+        return this.db.cupid.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                user: true,
+            }
+        });
+    }
 }
