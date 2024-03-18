@@ -10,6 +10,7 @@ import HandleDeleteNotification from "../../hooks/deleteNotification";
 import usePost from "../../hooks/usePost";
 import classes from "./ai_assistance.module.css";
 import useInit from "../../hooks/useInit";
+import useGetCupid from "../../hooks/useGetCupid";
 
 function AiAssistance() {
   const { user, setUser, navigate } = useInit();
@@ -17,6 +18,7 @@ function AiAssistance() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
     notficationType: NotificationType.AIGEN,
   });
+  const { cupid } = useGetCupid(user.profile.id, context);
 
   const handleDeleteNotification = async (notificationId) => {
     const response = await HandleDeleteNotification(notificationId, context);
@@ -43,20 +45,22 @@ function AiAssistance() {
           Select
         </p>
       </div>
-      <CupidTile cupid={user} />
+      {cupid && <CupidTile cupid={cupid} link="" />}
       <p className="label">Notifications</p>
-      {!notificationHistory
-        ? null
-        : notificationHistory.map((notification) => (
-            <DailyNotification
-              key={notification.id} // Use unique identifier as the key
-              notificationId={notification.id}
-              title={notification.title}
-              body={notification.message}
-              time={notification.timeStamp}
-              onDelete={handleDeleteNotification}
-            />
-          ))}
+      <div className="flex flex-col gap-5 max-h-96 overflow-y-auto">
+        {!notificationHistory
+          ? null
+          : notificationHistory.map((notification) => (
+              <DailyNotification
+                key={notification.id} // Use unique identifier as the key
+                notificationId={notification.id}
+                title={notification.title}
+                body={notification.message}
+                time={notification.timeStamp}
+                onDelete={handleDeleteNotification}
+              />
+            ))}
+      </div>
       <div className={classes.row}>
         <p className="label">Recent Purchases</p>
         <p className="pointer" onClick={purchases}>

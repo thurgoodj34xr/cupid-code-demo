@@ -3,19 +3,25 @@ import usePost from "./usePost";
 import { useEffect } from "react";
 import Api from "./api";
 
-function useGetCupid(cupidId, context, runHook) {
+function useGetCupid(profileId, context, runHook) {
   const [cupid, setCupid] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const cupid = await Api.PostWithAuth("/cupids/get", { cupidId }, context);
+      const { cupid } = await Api.PostWithAuth(
+        "/hireCupid/cupid",
+        { profileId },
+        context
+      );
       setCupid(cupid);
     };
 
-    if (cupidId) {
+    if (profileId) {
       fetchData();
+    } else {
+      setCupid(null);
     }
-  }, [cupidId, runHook]);
+  }, [profileId, runHook]);
 
   return { cupid, setCupid };
 }

@@ -23,7 +23,6 @@ const CupidController = (db: PrismaClient) => {
             res.send({ error: "Cupid not found" })
         }
     })
-
     return router;
 }
 
