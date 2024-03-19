@@ -2,12 +2,7 @@ import PhotoCircle from "../photo_circle/photo_circle";
 import classes from "./cupid_tile.module.css";
 import { useEffect, useState } from "react";
 
-function CupidTile({ cupid, onFire, link = "Fire" }) {
-  const handleCupidHire = () => {
-    setTimeout(() => {
-      onFire(cupid);
-    }, 1000);
-  };
+function CupidTile({ cupid, link = "Fire", onClick }) {
   return (
     <section className="flex row space between bg-white p-20 br ycenter">
       <div className="flex row ycenter g-20 left">
@@ -20,7 +15,7 @@ function CupidTile({ cupid, onFire, link = "Fire" }) {
         </div>
       </div>
       <div>
-        <p className="pointer" onClick={handleCupidHire}>
+        <p className="pointer" onClick={onClick}>
           {link}
         </p>
       </div>

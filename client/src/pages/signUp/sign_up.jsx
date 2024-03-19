@@ -159,7 +159,6 @@ function SignUp() {
           }
           width="120px"
           height="120px"
-          accept="image/*"
         />
         <div className={classes.cameraContainer}>
           <label className={classes.label} htmlFor="file-input">
@@ -169,6 +168,7 @@ function SignUp() {
             className={classes.fileInput}
             id="file-input"
             type="file"
+            accept="image/*,image/gif"
             onChange={(e) => setFile(e.target.files[0])}
           />
         </div>

@@ -1,8 +1,8 @@
 import Api from "./api"
-async function HireCupid(cupid, context,) {
+async function HireCupid(profileId, cupidId, context) {
     var response = await Api.PostWithAuth(
-        "/profile/hireCupid",
-        { cupid: cupid },
+        "/hireCupid/hire",
+        { profileId, cupidId },
         context
     );
     return response;

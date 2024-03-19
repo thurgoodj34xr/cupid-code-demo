@@ -5,7 +5,7 @@ import HireCupid from "../../hooks/hireCupid";
 import useGet from "../../hooks/useGet";
 import useGetCupid from "../../hooks/useGetCupid";
 import useInit from "../../hooks/useInit";
-import classes from "./select_cupid.module.css";
+import FireCupid from "../../hooks/fireCupid";
 
 function SelectCupid() {
   const { user, setUser, navigate } = useInit();
@@ -13,13 +13,13 @@ function SelectCupid() {
   const { data: cupids, error } = useGet("/cupids/all");
   const [runHook, setRunHook] = useState({});
   const { cupid: currentCupid } = useGetCupid(
-    user.profile.cupidId,
+    user.profile.id,
     context,
     runHook
   );
 
   const handleHireCupid = async (cupid) => {
-    const newCupid = await HireCupid(cupid, context);
+    const newCupid = await HireCupid(user.profile.id, cupid.id, context);
     if (!cupid.error) {
       setUser((old) => ({
         ...old,
@@ -33,15 +33,31 @@ function SelectCupid() {
     }
   };
 
+  const handleFireCupid = async () => {
+    const resp = await FireCupid(user.profile.id, context);
+    if (!resp.error) {
+      setUser((old) => ({
+        ...old,
+        profile: {
+          ...old.profile,
+          cupidId: null,
+          cupid: null,
+        },
+      }));
+      setRunHook({});
+      context.updateUser(user);
+    }
+  };
+
   return (
-    <section className="flex flex-col w-full overflow-y-auto">
+    <section className="flex flex-col w-full overflow-y-auto gap-5">
       <p className="label left">Current Cupid</p>
       {currentCupid && (
         <CupidTile
           key={currentCupid.id}
-          cupid={currentCupid.user}
-          onFire={() => {}}
+          cupid={currentCupid}
           link="Fire"
+          onClick={handleFireCupid}
         />
       )}
       <p className="label left">Available cupids</p>
@@ -51,8 +67,10 @@ function SelectCupid() {
             <CupidTile
               key={idx}
               cupid={cupid}
-              onFire={() => handleHireCupid(cupid)}
-              link="Hire"
+              onClick={() => {
+                handleHireCupid(cupid);
+              }}
+              link={currentCupid ? "" : "Hire"}
             />
           );
         })}
