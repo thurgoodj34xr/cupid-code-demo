@@ -26,7 +26,7 @@
 }
 
 body {
-  background-color: #eef2f3;
+  background-color: #eef2f3 !important;
   max-height: 100vh;
   overflow-y: hidden;
 }
@@ -318,4 +318,8 @@ h1 {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+.bg-blue {
+  background-color: #007aff !important;
 }

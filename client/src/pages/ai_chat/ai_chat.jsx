@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { TextInput, rem, useMantineTheme } from "@mantine/core";
+import { IconArrowRight, IconMessage } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import styles from "./ai_chat.module.css";
-import { Button } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 
 function AiChat() {
+  const theme = useMantineTheme();
   const context = useContext();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const sendMessage = () => {
+    if (inputMessage.trim() !== "") {
+      setMessages([...messages, { text: inputMessage, sender: "user" }]);
+      setInputMessage("");
+    }
+  };
+
+  useHotkeys([["enter", () => sendMessage()]]);
 
   //  messages for testing purposes
   const fakeMessages = [
@@ -30,15 +41,9 @@ function AiChat() {
   }, []);
 
   // handle sending user messages
-  const sendMessage = () => {
-    if (inputMessage.trim() !== "") {
-      setMessages([...messages, { text: inputMessage, sender: "user" }]);
-      setInputMessage("");
-    }
-  };
 
   return (
-    <div className="w-screen flex flex-col items-center">
+    <div className="w-screen flex flex-col items-center gap-4">
       <div className={styles.chatContainer}>
         {messages.map((message, index) => (
           <div
@@ -53,7 +58,34 @@ function AiChat() {
       </div>
 
       <div className={styles.inputWrapper}>
-        <input
+        <TextInput
+          className="w-full"
+          radius="xl"
+          size="lg"
+          placeholder="Send a message..."
+          rightSectionWidth={42}
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          leftSection={
+            <IconMessage
+              style={{ width: rem(18), height: rem(22) }}
+              stroke={1.5}
+            />
+          }
+          rightSection={
+            <div
+              className="bg-blue p-2 rounded-full cursor-pointer"
+              onClick={sendMessage}
+            >
+              <IconArrowRight
+                style={{ width: rem(18), height: rem(18) }}
+                stroke={1.5}
+                color="white"
+              />
+            </div>
+          }
+        />
+        {/* <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
@@ -62,8 +94,7 @@ function AiChat() {
         />
         <button onClick={sendMessage} className={styles.sendButton}>
           Send
-        </button>
-        <Button>test</Button>
+        </button> */}
       </div>
     </div>
   );

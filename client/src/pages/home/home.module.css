@@ -1,62 +1,63 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: left;
-    animation: fade-in 1s forwards;
-    width: 100%;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  animation: fade-in 1s forwards;
+  width: 100%;
+  overflow-y: auto;
 }
 
 .container::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 @keyframes fade-in {
-    0% {
-        opacity: .2;
-        transform: translateY(50%);
-    }
+  0% {
+    opacity: 0.2;
+    transform: translateY(50%);
+  }
 
-    100% {}
+  100% {
+  }
 }
 
 .budget {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: white;
-    border-radius: 8px;
-    text-align: left;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white;
+  border-radius: 8px;
+  text-align: left;
+  padding: 10px;
 }
 
 hr {
-    border: 1px solid grey;
-    width: 100%;
+  border: 1px solid grey;
+  width: 100%;
 }
 
 .balance {
-    display: flex;
+  display: flex;
 }
 
 .balance section {
-    width: 50%;
+  width: 50%;
 }
 
 .dailyNotifications {
-    max-height: 30vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px
+  max-height: 30vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .dailyNotifications::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .purchases {
-    max-height: 30vh;
-    overflow-y: auto;
+  max-height: 30vh;
+  overflow-y: auto;
 }

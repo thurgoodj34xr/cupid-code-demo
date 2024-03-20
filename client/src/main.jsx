@@ -2,6 +2,7 @@ import { React, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import "@mantine/core/styles.css";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import SignIn from "./pages/signIn/sign_in.jsx";
 import SignUp from "./pages/signUp/sign_up.jsx";
