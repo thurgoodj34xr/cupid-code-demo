@@ -144,7 +144,8 @@ function App() {
             <Outlet />
           </div>
         </div>
-      </AppContext.Provider>
+                
+    </AppContext.Provider>
     </MantineProvider>
   );
 }
