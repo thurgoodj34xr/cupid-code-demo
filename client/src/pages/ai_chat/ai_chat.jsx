@@ -4,40 +4,38 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import styles from "./ai_chat.module.css";
-import { useHotkeys } from "@mantine/hooks";
+import useAI from "../../hooks/useAI";
 
 function AiChat() {
+  const send = useAI();
   const theme = useMantineTheme();
   const context = useContext();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputMessage.trim() !== "") {
       setMessages([...messages, { text: inputMessage, sender: "user" }]);
       setInputMessage("");
     }
+    AiMessage(inputMessage);
   };
 
-  useHotkeys([["enter", () => sendMessage()]]);
+  const AiMessage = async (message) => {
+    const aiResp = await send(message);
+    setMessages((old) => [...old, { text: aiResp, sender: "ai" }]);
+  };
 
   //  messages for testing purposes
   const fakeMessages = [
     { text: "Hello! How can I help you today?", sender: "ai" },
-    {
-      text: "Hi there! I'm just testing out this chat feature.",
-      sender: "user",
-    },
-    {
-      text: "I'm glad you're testing it out! Let me know if you have any questions.",
-      sender: "ai",
-    },
-    { text: "Sure thing! Thanks for your help.", sender: "user" },
   ];
 
   // useEffect to populate initial fake messages
   useEffect(() => {
-    setMessages(fakeMessages);
+    setTimeout(() => {
+      setMessages(fakeMessages);
+    }, 500);
   }, []);
 
   // handle sending user messages
