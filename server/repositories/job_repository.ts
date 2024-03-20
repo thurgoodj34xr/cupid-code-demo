@@ -6,16 +6,15 @@ export default class JobRepository {
         this.db = db;
     }
 
-    async createJob(id: number, cupidId: number | null, userId: number, longitude: number, latitude: number, cupidPayout: number, complete: boolean): Promise<Jobs> {
+    async createJob(cupidId: number | null, userId: number, longitude: number, latitude: number, cupidPayout: number): Promise<Jobs> {
         return this.db.jobs.create({
             data: {
-                id,
                 cupidId,
                 userId,
                 longitude,
                 latitude,
                 cupidPayout,
-                complete,
+                complete: false
             },
         });
     }
@@ -26,10 +25,17 @@ export default class JobRepository {
         });
     }
 
-    updateJob(jobId: number, jobData: Partial<Jobs>) {
+    updateJob(jobId: number, cupidId: number | null, userId: number, longitude: number, latitude: number, cupidPayout: number, complete: boolean) {
         return this.db.jobs.update({
             where: { id: jobId },
-            data: jobData,
+            data: {
+                cupidId,
+                userId,
+                longitude,
+                latitude,
+                cupidPayout,
+                complete
+            }
         });
     }
 
