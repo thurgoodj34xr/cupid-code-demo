@@ -9,6 +9,9 @@ import useInit from "../../hooks/useInit";
 import usePost from "../../hooks/usePost";
 import useGet from "../../hooks/useGet";
 import classes from "./home.module.css";
+import { useState } from 'react';
+import { Switch, useMantineTheme, rem } from '@mantine/core';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 function Home() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
@@ -17,6 +20,8 @@ function Home() {
   const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
   const user = context.getUser();
+  const theme = useMantineTheme();
+  const [checked, setChecked] = useState(false);
 
   const handleDeleteNotification = async (notificationId) => {
     console.log(notificationId);
@@ -31,7 +36,9 @@ function Home() {
   };
 
   return (
+
     <>
+      {/*USER Home Page*/}
       {user.profile && (
         <section className={classes.container} >
           {/* Container for Budget */}
@@ -88,7 +95,29 @@ function Home() {
           </section>
         </section >
       )}
-
+      {/* CUPID Home Page */}
+      <Switch
+        checked={checked}
+        onChange={(event) => setChecked(event.currentTarget.checked)}
+        color="teal"
+        size="md"
+        label="LIVE"
+        thumbIcon={
+          checked ? (
+            <IconCheck
+              style={{ width: rem(12), height: rem(12) }}
+              color={theme.colors.teal[6]}
+              stroke={3}
+            />
+          ) : (
+            <IconX
+              style={{ width: rem(12), height: rem(12) }}
+              color={theme.colors.red[6]}
+              stroke={3}
+            />
+          )
+        }
+      />
     </>
   );
 }
