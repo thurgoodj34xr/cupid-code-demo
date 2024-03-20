@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import styles from "./ai_chat.module.css";
+import { Button } from "@mantine/core";
 
 function AiChat() {
   const context = useContext();
@@ -62,6 +63,7 @@ function AiChat() {
         <button onClick={sendMessage} className={styles.sendButton}>
           Send
         </button>
+        <Button>test</Button>
       </div>
     </div>
   );
