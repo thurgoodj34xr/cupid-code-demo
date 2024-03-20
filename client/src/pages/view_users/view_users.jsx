@@ -27,7 +27,7 @@ function ViewUsers() {
 
   return loading ? null : (
     <>
-      <div>
+      <div className="w-full">
         <Accordion items={[
           { title: 'Standard Users', content: standardUsers.map(user => <UserCard key={user.id} user={user}  />) },
           { title: 'Cupids', content: cupidUsers.map(user => <UserCard key={user.id} user={user} />) },
