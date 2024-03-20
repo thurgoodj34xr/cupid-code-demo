@@ -4,6 +4,7 @@ import {
   faHouse,
   faMessage,
   faMoneyBill,
+  faPaperPlane,
   faPeopleLine,
   faRightFromBracket,
   faShoppingCart,
@@ -113,6 +114,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const viewJobs = () => {
+    navigate("/Jobs");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -168,6 +174,13 @@ function Navbar({ title }) {
               <FontAwesomeIcon icon={faHouse} size="2xl" />
             </div>
             <h3>Home</h3>
+          </section>
+          {/* Jobs Icon */}
+          <section className={classes.tile} onClick={viewJobs}>
+            <div>
+              <FontAwesomeIcon icon={faPaperPlane} size="2xl" />
+            </div>
+            <h3>Jobs</h3>
           </section>
 
           {/* ************* STANDARD ROLE ********************** */}
