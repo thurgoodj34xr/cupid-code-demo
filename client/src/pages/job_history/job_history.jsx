@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import classes from "./job_history.module.css";
 import Button from "../../componets/button/button";
+import useContext from "../../hooks/context";
+import Api from "../../hooks/api";
 
 function JobHistory() {
-    const context = useContext(AppContext);
+    const context = useContext();
     const user = context.getUser();
-    const [employmentStatus, setEmploymentStatus] = useState(user.Cupid.fired);
+    const [employmentStatus, setEmploymentStatus] = useState(user.cupid.fired);
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const changeEmployment = async () => {
+        console.log(user)
         var userId = user.id
         const response = await Api.PostWithAuth(
             "/cupids/changeEmployment",
