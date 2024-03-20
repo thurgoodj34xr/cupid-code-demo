@@ -1,66 +1,71 @@
 .chatContainer {
-    width: 100vh;
-    height: 80vh;
-    overflow-y: auto;
-    background-color: white;
-    border-radius: 8px;
-    padding: 8px;
-  }
-  
-  .messageContainer {
-    margin-bottom: 10px;
-  }
-  
-  .messageBubble {
-    display: inline-block;
-    border-radius: 10px;
-    padding: 4px 6px;
-    max-width: fit-content;
-  }
-  
-  .userMessage, .aiMessage {
-    width: fit-content;
-    max-width: 50%;
-    border-radius: 10px;
-    padding: 6px 8px;
-    margin-bottom: 10px;
-    align-self: flex-end;
-  }
-  
-  .userMessage {
-    background-color: #007AFF;
-    color: white;
-    margin-left: auto;
-  }
-  
-  .aiMessage {
-    background-color: #e5e5ea;
-    color: black;
-    margin-right: auto;
-  }
-  
-  .inputContainer {
-    margin-top: 20px;
-    border-radius: 8px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border: 1px solid transparent;
-    padding: 8px;
-  }
-  
-  button {
-    margin-top: 20px;
-    border-radius: 8px;
-    padding: 8px;
-    background-color: #007AFF;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.25s;
-  }
-  
+  max-width: 800px;
+  width: 90%;
+  height: 80vh;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.messageContainer {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.messageBubble {
+  display: inline-block;
+  border-radius: 10px;
+  padding: 4px 6px;
+  max-width: fit-content;
+}
+
+.userMessage,
+.aiMessage {
+  width: fit-content;
+  max-width: 50%;
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 10px;
+  align-self: flex-end;
+}
+
+.userMessage {
+  background-color: #007aff;
+  color: white;
+  margin-left: auto;
+}
+
+.aiMessage {
+  background-color: #e5e5ea;
+  color: black;
+  margin-right: auto;
+}
+
+.inputContainer {
+  margin-top: 20px;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid transparent;
+  padding: 8px;
+}
+
+button {
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #007aff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
 .inputWrapper {
-    display: flex;
-    align-items: center;
-  }
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+}

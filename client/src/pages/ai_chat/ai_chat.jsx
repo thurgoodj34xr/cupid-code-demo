@@ -12,8 +12,14 @@ function AiChat() {
   //  messages for testing purposes
   const fakeMessages = [
     { text: "Hello! How can I help you today?", sender: "ai" },
-    { text: "Hi there! I'm just testing out this chat feature.", sender: "user" },
-    { text: "I'm glad you're testing it out! Let me know if you have any questions.", sender: "ai" },
+    {
+      text: "Hi there! I'm just testing out this chat feature.",
+      sender: "user",
+    },
+    {
+      text: "I'm glad you're testing it out! Let me know if you have any questions.",
+      sender: "ai",
+    },
     { text: "Sure thing! Thanks for your help.", sender: "user" },
   ];
 
@@ -22,7 +28,7 @@ function AiChat() {
     setMessages(fakeMessages);
   }, []);
 
-    // handle sending user messages
+  // handle sending user messages
   const sendMessage = () => {
     if (inputMessage.trim() !== "") {
       setMessages([...messages, { text: inputMessage, sender: "user" }]);
@@ -30,9 +36,8 @@ function AiChat() {
     }
   };
 
-
   return (
-    <div>
+    <div className="w-screen flex flex-col items-center">
       <div className={styles.chatContainer}>
         {messages.map((message, index) => (
           <div
@@ -45,18 +50,19 @@ function AiChat() {
           </div>
         ))}
       </div>
-      
-        <div className={styles.inputWrapper}>
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            className={styles.inputContainer}
-            placeholder="Message AI..."
-          />
-          <button onClick={sendMessage} className={styles.sendButton}>Send</button>
-        </div>
-      
+
+      <div className={styles.inputWrapper}>
+        <input
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          className={styles.inputContainer}
+          placeholder="Message AI..."
+        />
+        <button onClick={sendMessage} className={styles.sendButton}>
+          Send
+        </button>
+      </div>
     </div>
   );
 }
