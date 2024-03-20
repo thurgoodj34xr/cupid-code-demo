@@ -18,7 +18,7 @@ const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) 
     } catch (error) {
         logError("authentications.ts", error)
         res.send({ error })
-    }
+}
 }
 
 export default AuthMiddleware;

@@ -1,23 +1,76 @@
+import { useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
-import PhotoCircle from "../../componets/photo_circle/photo_circle";
+import useContext from "../../hooks/context";
+import HireCupid from "../../hooks/hireCupid";
 import useGet from "../../hooks/useGet";
-import classes from "./select_cupid.module.css";
+import useGetCupid from "../../hooks/useGetCupid";
+import useInit from "../../hooks/useInit";
+import FireCupid from "../../hooks/fireCupid";
 
 function SelectCupid() {
+  const { user, setUser, navigate } = useInit();
+  const context = useContext();
   const { data: cupids, error } = useGet("/cupids/all");
+  const [runHook, setRunHook] = useState({});
+  const { cupid: currentCupid } = useGetCupid(
+    user.profile.id,
+    context,
+    runHook
+  );
+
+  const handleHireCupid = async (cupid) => {
+    const newCupid = await HireCupid(user.profile.id, cupid.id, context);
+    if (!cupid.error) {
+      setUser((old) => ({
+        ...old,
+        profile: {
+          ...old.profile,
+          cupidId: newCupid.id,
+        },
+      }));
+      setRunHook({});
+      context.updateUser(user);
+    }
+  };
+
+  const handleFireCupid = async () => {
+    const resp = await FireCupid(user.profile.id, context);
+    if (!resp.error) {
+      setUser((old) => ({
+        ...old,
+        profile: {
+          ...old.profile,
+          cupidId: null,
+          cupid: null,
+        },
+      }));
+      setRunHook({});
+      context.updateUser(user);
+    }
+  };
 
   return (
-    <section className={classes.main}>
-      <p className="label left">Avaliable cupids</p>
+    <section className="flex flex-col w-full overflow-y-auto gap-5">
+      <p className="label left">Current Cupid</p>
+      {currentCupid && (
+        <CupidTile
+          key={currentCupid.id}
+          cupid={currentCupid}
+          link="Fire"
+          onClick={handleFireCupid}
+        />
+      )}
+      <p className="label left">Available cupids</p>
       {cupids &&
         cupids.map((cupid, idx) => {
           return (
             <CupidTile
               key={idx}
-              photoCircle={<PhotoCircle url={cupid.photoUrl} size="100px" />}
-              name={`${cupid.firstName} ${cupid.lastName}`}
-              distance="5 mi"
-              link="Hire"
+              cupid={cupid}
+              onClick={() => {
+                handleHireCupid(cupid);
+              }}
+              link={currentCupid ? "" : "Hire"}
             />
           );
         })}

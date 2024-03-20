@@ -15,6 +15,7 @@ import UserController from "./server/controllers/user_controller";
 import { createServer } from "node:http";
 import { Server } from "socket.io"
 import "./global";
+import HireCupidController from "./server/controllers/hire_cupid_controller";
 dotenv.config();
 
 const DEBUG = process.env.NODE_ENV !== "production";
@@ -112,6 +113,7 @@ app.use("/token", TokenController(db))
 app.use("/notifications", NotificationController(db))
 app.use("/purchases", PurchasesController(db))
 app.use("/admin", AdminController(db))
+app.use("/hireCupid", HireCupidController(db))
 
 
 server.listen(process.env.PORT || 3000, () => {

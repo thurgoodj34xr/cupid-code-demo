@@ -40,4 +40,34 @@ export default class CupidRepository {
             },
         });
     }
+
+    findById(id: number) {
+        return this.db.cupid.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                user: true,
+            }
+        });
+    }
+
+    setWorking(id: number, working: boolean) {
+        return this.db.cupid.update({
+            where: {
+                id,
+            },
+            data: {
+                working,
+            }
+        });
+    }
+
+    getWorking(id: number) {
+        return this.db.cupid.findUnique({
+            where: {
+                id,
+            },
+        });
+    }
 }

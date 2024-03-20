@@ -4,6 +4,7 @@ import AuthMiddleware from "../middleware/authentication";
 import ProfileRepository from "../repositories/profile_repository";
 import PurchasesRepository from "../repositories/purchases_repository";
 
+
 const ProfileController = (db: PrismaClient) => {
     const router = Router();
     const _repository = new ProfileRepository(db);
@@ -32,6 +33,7 @@ const ProfileController = (db: PrismaClient) => {
             return;
         }
     });
+
     return router;
 }
 
