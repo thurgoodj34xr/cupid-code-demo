@@ -51,4 +51,23 @@ export default class CupidRepository {
             }
         });
     }
+
+    setWorking(id: number, working: boolean) {
+        return this.db.cupid.update({
+            where: {
+                id,
+            },
+            data: {
+                working,
+            }
+        });
+    }
+
+    getWorking(id: number) {
+        return this.db.cupid.findUnique({
+            where: {
+                id,
+            },
+        });
+    }
 }

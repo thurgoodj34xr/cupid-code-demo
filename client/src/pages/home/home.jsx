@@ -7,6 +7,7 @@ import PurchaseTile from "../../componets/purchase_tile/purchase_tile";
 import HandleDeleteNotification from "../../hooks/deleteNotification";
 import useInit from "../../hooks/useInit";
 import usePost from "../../hooks/usePost";
+import useGet from "../../hooks/useGet";
 import classes from "./home.module.css";
 
 function Home() {
@@ -14,6 +15,7 @@ function Home() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
     notficationType: NotificationType.DAILY,
   });
+
   const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
 
