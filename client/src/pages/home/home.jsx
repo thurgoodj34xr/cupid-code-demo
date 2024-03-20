@@ -96,28 +96,31 @@ function Home() {
         </section >
       )}
       {/* CUPID Home Page */}
-      <Switch
-        checked={checked}
-        onChange={(event) => setChecked(event.currentTarget.checked)}
-        color="teal"
-        size="md"
-        label="LIVE"
-        thumbIcon={
-          checked ? (
-            <IconCheck
-              style={{ width: rem(12), height: rem(12) }}
-              color={theme.colors.teal[6]}
-              stroke={3}
-            />
-          ) : (
-            <IconX
-              style={{ width: rem(12), height: rem(12) }}
-              color={theme.colors.red[6]}
-              stroke={3}
-            />
-          )
-        }
-      />
+      {user.cupid && (
+        <Switch
+          checked={checked}
+          onChange={(event) => setChecked(event.currentTarget.checked)}
+          color="teal"
+          size="md"
+          label="LIVE"
+          thumbIcon={
+            checked ? (
+              <IconCheck
+                style={{ width: rem(12), height: rem(12) }}
+                color={theme.colors.teal[6]}
+                stroke={3}
+              />
+            ) : (
+              <IconX
+                style={{ width: rem(12), height: rem(12) }}
+                color={theme.colors.red[6]}
+                stroke={3}
+              />
+            )
+          }
+        />
+      )}
+
     </>
   );
 }
