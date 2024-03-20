@@ -11,7 +11,8 @@
     "migrate-deploy": "prisma migrate deploy",
     "migrate-reset": "prisma migrate reset",
     "seed": "prisma db seed",
-    "console": "prisma-repl"
+    "console": "prisma-repl",
+    "studio": "prisma studio"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
@@ -27,13 +28,13 @@
     "@types/multer": "^1.4.11",
     "@types/uuid": "^9.0.8",
     "nodemon": "^3.0.3",
-    "prisma": "^5.9.1",
+    "prisma": "^5.11.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.1",
+    "@prisma/client": "^5.11.0",
     "@types/socket.io": "^3.0.2",
     "@types/winston": "^2.4.4",
     "bcryptjs": "^2.4.3",
