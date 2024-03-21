@@ -74,7 +74,7 @@ app.set('views', './server/views');
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  logInfo(`index.ts`, `${req.method} ${req.url}`);
+  // logInfo(`index.ts`, `${req.method} ${req.url}`);
   if (req.url.includes("/images")) {
     res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
   } else {
