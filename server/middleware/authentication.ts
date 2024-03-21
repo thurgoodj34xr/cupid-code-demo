@@ -6,6 +6,7 @@ import { MiddlewareBuilder } from "./middleware";
 const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) => {
     const { authorization } = req.headers;
     try {
+
         const payload = Jwt.verify(authorization!!);
         const user = await new UserRepository(db).findById(payload.userId)
         req.user = user;
@@ -18,7 +19,7 @@ const AuthMiddleware: MiddlewareBuilder = (db, roles) => async (req, res, next) 
     } catch (error) {
         logError("authentications.ts", error)
         res.send({ error })
-}
+    }
 }
 
 export default AuthMiddleware;

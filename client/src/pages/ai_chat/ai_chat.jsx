@@ -83,16 +83,6 @@ function AiChat() {
             </div>
           }
         />
-        {/* <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          className={styles.inputContainer}
-          placeholder="Message AI..."
-        />
-        <button onClick={sendMessage} className={styles.sendButton}>
-          Send
-        </button> */}
       </div>
     </div>
   );

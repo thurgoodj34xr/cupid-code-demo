@@ -6,6 +6,8 @@ declare global {
     export var getLog: (error: unknown) => string;
     export var logError: (fileName: string, error: unknown, user?: User) => void;
     export var logInfo: (fileName: string, msg: string, user?: User) => void;
+    export var cupidStatus: () => void;
+    export var jobStatus: () => void;
 }
 
 export { };
@@ -46,4 +48,12 @@ global.logInfo = (fileName, msg, user) => {
     }
     io.emit("log", { user, message: msg, file: fileName, type: "info" });
     Logger.info(log)
+}
+
+global.cupidStatus = () => {
+    io.emit("cupidStatus");
+}
+
+global.jobStatus = () => {
+    io.emit("jobStatus")
 }

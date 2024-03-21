@@ -36,7 +36,6 @@ const Jobs = () => {
   });
   const handleSubmit = async (values) => {
     const resp = await Api.PostWithAuth("/jobs/create", { ...values }, context);
-    console.log(resp);
   };
 
   useEffect(() => {

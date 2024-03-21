@@ -147,7 +147,7 @@ function Navbar({ title }) {
   };
 
   const viewAiJob = () => {
-    navigate("/AiJob");
+    navigate("/dateSimulator");
     hideNavBar();
   };
 
@@ -255,7 +255,7 @@ function Navbar({ title }) {
                 <div>
                   <FontAwesomeIcon icon={faRobot} size="2xl" />
                 </div>
-                <h3>Ai Job</h3>
+                <h3>Date Simulator</h3>
               </section>
               {/* Ai Assistance */}
               <section className={classes.tile} onClick={aiAssistance}>

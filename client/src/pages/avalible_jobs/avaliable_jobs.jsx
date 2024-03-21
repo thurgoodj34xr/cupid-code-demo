@@ -1,61 +1,100 @@
-import { useContext, useEffect, useState } from "react";
-import { Avatar, Button, Card, Group, Stack, Text } from "@mantine/core";
-import useGet from "../../hooks/useGet";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import AppContext from "../../componets/app_context";
+import JobTile from "../../componets/job_tile";
 import Api from "../../hooks/api";
+import useContext from "../../hooks/context";
+import AvaliableJobTile from "../../componets/avaliable_job_tile";
+import { useSelector } from "react-redux";
+import { getAuth as auth } from "../../store/auth_slice";
+import { useApi } from "../../hooks/useApi";
 
 function AvaliableJobs() {
-  const context = useContext(AppContext);
-  const user = context.getUser();
-  const { data: jobs } = useGet(`/jobs/cupidJobs/${user.cupid?.id}`, context);
-  const [updatedJobs, setUpdatedJobs] = useState();
-  useEffect(() => {
-    const get = async () => {
-      const updatedUsers = await Promise.all(
-        jobs.map(async (job) => {
-          const { user } = await Api.GetWithAuth(
-            `/users/${job.userId}`,
-            context
-          );
-          return {
-            ...job,
-            user,
-          };
-        })
-      );
-      setUpdatedJobs(updatedUsers);
-    };
+  const queryClient = useQueryClient();
+  const socket = useContext().Socket();
+  const { user } = useSelector(auth);
+  const api = useApi();
 
-    if (jobs) {
-      get();
-    }
-  }, [jobs]);
+  const { data: currentJob } = useQuery({
+    queryFn: async () => {
+      try {
+        return await api.get(`/jobs/current/${user.cupid.id}`);
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(resp);
+    },
+    queryKey: ["currentJob"],
+  });
+
+  const { mutateAsync: completeJob } = useMutation({
+    mutationFn: async (jobId) => {
+      await api.post("/jobs/finish", { id: jobId.id });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["currentJob"]);
+    },
+  });
+  const { mutateAsync: render } = useMutation({
+    mutationFn: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries(["currentJob"]);
+    },
+  });
+
+  useEffect(() => {
+    const callback = () => {
+      render();
+    };
+    socket.on("jobStatus", callback);
+    socket.emit("jobStatus");
+    return () => {
+      socket.off("jobStatus", callback);
+    };
+  }, []);
+
+  const { data: avaliableJobs } = useQuery({
+    queryFn: async () => {
+      try {
+        return await api.get(`/jobs/avaliable/${user.cupid.id}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    queryKey: ["avaliableJobs"],
+  });
+
+  const { mutateAsync: startJob } = useMutation({
+    mutationFn: async (jobId) => {
+      await api.post("/jobs/start", { id: jobId.id });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["currentJob"]);
+    },
+  });
 
   return (
-    <section className="w-full">
-      {updatedJobs?.map((job) => (
-        <Card shadow="xs" padding="md" className="mb-4" key={job.id}>
-          <Group justify="space-between" align="center">
-            <Group>
-              <Avatar src={job.user.photoUrl} size="xl" />
-              <Stack className="text-left" gap={0}>
-                <Text size="lg" weight={700} className="mb-2">
-                  {job.user.firstName} {job.user.lastName}
-                </Text>
-                <Text size="lg" weight={700} className="mb-2">
-                  {job.name}
-                </Text>
-                <Text size="sm" className="mb-2">
-                  {job.details}
-                </Text>
-              </Stack>
-            </Group>
-            <Button size="sm" color="blue">
-              Take Job
-            </Button>
-          </Group>
-        </Card>
+    <section className="w-full overflow-y-auto">
+      <p className="label text-left">Current jobs</p>
+      {currentJob?.map((job) => (
+        <JobTile
+          key={job.id}
+          takeJob={completeJob}
+          text="Complete"
+          job={job}
+        ></JobTile>
       ))}
+      <p className="label text-left">Avaliable job</p>
+      <div className="flex flex-col gap-6 overflow-y-auto">
+        {avaliableJobs?.map((job) => (
+          <JobTile
+            key={job.id}
+            takeJob={startJob}
+            text="Start"
+            job={job}
+          ></JobTile>
+        ))}
+      </div>
     </section>
   );
 }

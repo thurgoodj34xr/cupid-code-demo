@@ -41,6 +41,7 @@ export default class JobRepository {
         });
     }
 
+
     updateJob(jobId: number, data: Partial<JobPayload>) {
         return this.db.jobs.update({
             where: { id: jobId },
@@ -64,6 +65,40 @@ export default class JobRepository {
     getAllByCupidId(cupidId: number) {
         return this.db.jobs.findMany({
             where: { cupidId },
+        });
+    }
+
+    getAvaliableByCupidId(cupidId: number) {
+        return this.db.jobs.findMany({
+            where: { cupidId, complete: false, started: false },
+            include: { cupid: true, user: true },
+        });
+    }
+
+    getCurrentByCupidId(cupidId: number) {
+        console.log(cupidId)
+        return this.db.jobs.findMany({
+            where: { cupidId, complete: false, started: true },
+            include: { cupid: true, user: true },
+    });
+    }
+
+    startJob(id: number) {
+        return this.db.jobs.update({
+            where: { id },
+            data: {
+                started: true,
+            }
+        });
+    }
+
+    finishJob(id: number) {
+        return this.db.jobs.update({
+            where: { id },
+            data: {
+                started: false,
+                complete: true,
+            }
         });
     }
 }
