@@ -1,39 +1,34 @@
 import React, { useState } from 'react';
-import styles from './Accordion.module.css';
 
 const Accordion = ({ items }) => {
-  const AccordionItem = ({ title, content }) => {
+  const AccordionItem = ({ title, content}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <div className="py-2 bg-white rounded p-4 shadow">
+      <div>
         <h2>
           <button
-            className="flex items-center justify-between w-full text-left text-lg py-2"
+            className="flex items-center bg-white text-black justify-between w-full text-left text-xl h-full p-6"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-controls={`accordion-text-${title}`}
           >
             <span>{title}</span>
             <svg
-              className={`fill-black-500 shrink-0 ml-8 transform origin-center transition duration-200 ease-out ${
-                isOpen ? 'rotate-180' : ''
-              }`}
-              width="16"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect y="7" width="16" height="2" rx="1" />
-              <rect
-                y="7"
-                width="16"
-                height="2"
-                rx="1"
-                className={`transform origin-center rotate-90 transition duration-200 ease-out ${
-                  isOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </svg>
+  className="fill-current shrink-0 ml-2 h-5 w-5 transform origin-center transition duration-200 ease-out"
+  viewBox="0 0 16 16"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect y="7" width="16" height="2" rx="1" />
+  {!isOpen && (
+    <rect
+      x="7"
+      width="2"
+      height="16"
+      rx="1"
+    />
+  )}
+</svg>
           </button>
         </h2>
         <div
@@ -57,7 +52,6 @@ const Accordion = ({ items }) => {
       {items.map((item, index) => (
         <React.Fragment key={index}>
           <AccordionItem title={item.title} content={item.content} />
-          {index !== items.length - 1 && <div className="py-2" />}
         </React.Fragment>
       ))}
     </div>
@@ -65,3 +59,4 @@ const Accordion = ({ items }) => {
 };
 
 export default Accordion;
+

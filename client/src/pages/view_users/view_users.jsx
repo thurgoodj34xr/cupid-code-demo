@@ -24,15 +24,44 @@ function ViewUsers() {
   const standardUsers = users.filter(user => user.role === 'STANDARD');
   const cupidUsers = users.filter(user => user.role === 'CUPID');
   const adminUsers = users.filter(user => user.role === 'ADMIN');
+  const standardUsersCount = users.filter(user => user.role === 'STANDARD').length;
+  const cupidUsersCount = users.filter(user => user.role === 'CUPID').length;
+  const adminUsersCount = users.filter(user => user.role === 'ADMIN').length;
+
 
   return loading ? null : (
     <>
       <div className="w-full">
         <Accordion items={[
-          { title: 'Standard Users', content: standardUsers.map(user => <UserCard key={user.id} user={user}  />) },
-          { title: 'Cupids', content: cupidUsers.map(user => <UserCard key={user.id} user={user} />) },
-          { title: 'Admins', content: adminUsers.map(user => <UserCard key={user.id} user={user} />) }
-        ]} />
+  { 
+    title: 'Standard Users', 
+    content: (
+      <>
+        <p className="bg-white pb-8">Total Count: {standardUsersCount}</p>
+        {standardUsers.map(user => <UserCard key={user.id} user={user} />)}
+      </>
+    )
+  },
+  { 
+    title: 'Cupids', 
+    content: (
+      <>
+        <p className="bg-white">Total Count: {cupidUsersCount}</p>
+        {cupidUsers.map(user => <UserCard key={user.id} user={user} />)}
+      </>
+    )
+  },
+  { 
+    title: 'Admins', 
+    content: (
+      <>
+        <p className="bg-white">Total Count: {adminUsersCount}</p>
+        {adminUsers.map(user => <UserCard key={user.id} user={user} />)}
+      </>
+    )
+  }
+]} />
+
       </div>
       {/* <p className="label">Current Users: {users.length}</p> */}
     </>
