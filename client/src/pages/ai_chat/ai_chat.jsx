@@ -7,7 +7,7 @@ import styles from "./ai_chat.module.css";
 import useAI from "../../hooks/useAI";
 
 function AiChat() {
-  const send = useAI();
+  const { send } = useAI();
   const theme = useMantineTheme();
   const context = useContext();
   const navigate = useNavigate();

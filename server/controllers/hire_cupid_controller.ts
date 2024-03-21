@@ -57,7 +57,6 @@ const HireCupidController = (db: PrismaClient) => {
     router.post("/fire", AuthMiddleware(db, [Role.STANDARD]), async (req, res, next) => {
         try {
             const { profileId } = req.body;
-            console.log(profileId)
 
             // Check if the profile has hired a cupid
             const existingHire = await _repository.getByProfileId(profileId);
