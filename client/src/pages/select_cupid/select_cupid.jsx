@@ -1,79 +1,93 @@
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import useContext from "../../hooks/context";
+import FireCupid from "../../hooks/fireCupid";
 import HireCupid from "../../hooks/hireCupid";
-import useGet from "../../hooks/useGet";
+import { useApi } from "../../hooks/useApi";
 import useGetCupid from "../../hooks/useGetCupid";
 import useInit from "../../hooks/useInit";
-import FireCupid from "../../hooks/fireCupid";
+import { useSelector } from "react-redux";
+import { useForceUpdate } from "@mantine/hooks";
 
 function SelectCupid() {
-  const { user, setUser, navigate } = useInit();
+  const queryClient = useQueryClient();
+  const api = useApi();
+  const socket = useContext().Socket();
+  const { setUser, navigate } = useInit();
   const context = useContext();
-  const { data: cupids, error } = useGet("/cupids/all");
-  const [runHook, setRunHook] = useState({});
-  const { cupid: currentCupid } = useGetCupid(
-    user.profile.id,
-    context,
-    runHook
-  );
+  const { user } = useSelector((state) => state.auth);
 
-  const handleHireCupid = async (cupid) => {
-    const newCupid = await HireCupid(user.profile.id, cupid.id, context);
-    if (!cupid.error) {
-      setUser((old) => ({
-        ...old,
-        profile: {
-          ...old.profile,
-          cupidId: newCupid.id,
-        },
-      }));
-      setRunHook({});
-      context.updateUser(user);
-    }
-  };
+  const { data: myCupid } = useQuery({
+    queryFn: async () => {
+      const resp = await api.get(`/cupids/me/${user.profile.id}`);
+      if (resp.error) {
+        return null;
+      } else {
+        return resp;
+      }
+    },
+    queryKey: ["myCupid"],
+  });
 
-  const handleFireCupid = async () => {
-    const resp = await FireCupid(user.profile.id, context);
-    if (!resp.error) {
-      setUser((old) => ({
-        ...old,
-        profile: {
-          ...old.profile,
-          cupidId: null,
-          cupid: null,
-        },
-      }));
-      setRunHook({});
-      context.updateUser(user);
-    }
-  };
+  const { mutateAsync: fireCupid } = useMutation({
+    mutationFn: async (cupidId) => await api.post("/cupids/fire", { cupidId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myCupid", "cupids"]);
+    },
+  });
+
+  const { mutateAsync: render } = useMutation({
+    mutationFn: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myCupid", "cupids"]);
+    },
+  });
+
+  const { data: cupids } = useQuery({
+    queryFn: async () => await api.get(`/cupids/avaliable`),
+    queryKey: ["cupids"],
+  });
+
+  const { mutateAsync: hireCupid } = useMutation({
+    mutationFn: async (cupidId) =>
+      await api.post("/cupids/hire", { profileId: user.profile.id, cupidId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cupids", "myCupid"]);
+    },
+  });
+
+  useEffect(() => {
+    const callback = () => {
+      render();
+    };
+    socket.on("cupidStatus", callback);
+    socket.emit("cupidStatus");
+    return () => {
+      socket.off("cupidStatus", callback);
+    };
+  }, []);
 
   return (
     <section className="flex flex-col w-full overflow-y-auto gap-5">
       <p className="label left">Current Cupid</p>
-      {currentCupid && (
-        <CupidTile
-          key={currentCupid.id}
-          cupid={currentCupid}
-          link="Fire"
-          onClick={handleFireCupid}
-        />
+      {myCupid && (
+        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} />
       )}
       <p className="label left">Available cupids</p>
       {cupids &&
-        cupids.map((cupid, idx) => {
+        cupids?.map((cupid, idx) => {
+          if (cupid.id == myCupid?.id) return;
           return (
             <CupidTile
-              key={idx}
+              key={cupid.id}
               cupid={cupid}
-              onClick={() => {
-                handleHireCupid(cupid);
-              }}
-              link={currentCupid ? "" : "Hire"}
+              onClick={() => hireCupid(cupid.id)}
+              link="Hire"
             />
           );
         })}
+      {cupids?.length == 0 && <p>No cupids available</p>}
     </section>
   );
 }

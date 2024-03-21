@@ -23,6 +23,8 @@ import ViewUsers from "./pages/view_users/view_users.jsx";
 import Logs from "./pages/log/logs.jsx";
 import Jobs from "./pages/jobs.jsx";
 import AiJob from "./pages/ai_job.jsx";
+import { Provider } from "react-redux";
+import store from "./store/store.js";
 const router = createHashRouter([
   {
     path: "",
@@ -193,7 +195,7 @@ const router = createHashRouter([
       },
 
       {
-        path: "/AiJob",
+        path: "/DateSimulator",
         element: (
           <ConditionalRoute
             key={15}
@@ -208,5 +210,7 @@ const router = createHashRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

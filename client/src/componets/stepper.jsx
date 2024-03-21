@@ -8,8 +8,8 @@ import { useDisclosure } from "@mantine/hooks";
 
 function ProgressBar({ loading }) {
   const { data: cupids } = useGet("/cupids/all");
-  const cupidData = cupids?.map(
-    (cupid) => cupid.id + " " + cupid.firstName + " " + cupid.lastName
+  let cupidData = cupids?.map(
+    (cupid) => cupid.cupid.id + " " + cupid.firstName + " " + cupid.lastName
   );
   const [searchValue, setSearchValue] = useState(null);
   const context = useContext(AppContext);
@@ -37,6 +37,7 @@ function ProgressBar({ loading }) {
 
   const AiCreateJob = async () => {
     setLoad({});
+
     const resp = await createJob(transcript);
     setJob(resp);
     nextStep();

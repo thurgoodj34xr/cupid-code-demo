@@ -9,6 +9,8 @@ import SignOn from "../../componets/sign_on/sign_on";
 import Api from "../../hooks/api";
 import classes from "./sign_in.module.css";
 import useContext from "../../hooks/context";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/auth_slice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -16,6 +18,7 @@ export default function SignIn() {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Sign in");
+  const dispatch = useDispatch();
 
   const context = useContext();
 
@@ -77,6 +80,7 @@ export default function SignIn() {
       setError(res.error);
       setButtonText("Sign in");
     } else {
+      dispatch(login(res.user, res.tokens.accessToken));
       context.updateUser(res.user);
       context.updateTokens(res.tokens);
       localStorage.setItem("token", res.tokens.refreshToken);

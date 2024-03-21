@@ -6,6 +6,19 @@ export default class HireCupidRepository {
         this.db = db;
     }
 
+    getById(profileId: number) {
+        return this.db.hireCupid.findUnique({
+            where: {
+                profileId
+            },
+            include: {
+                profile: true,
+                cupid: true,
+            }
+        });
+
+    }
+
     getByProfileId(profileId: number) {
         return this.db.hireCupid.findUnique({
             where: {

@@ -15,6 +15,21 @@ const JobsController = (db: PrismaClient) => {
         res.send(jobs);
     });
 
+    // Jobs by Cupid
+    router.get('/avaliable/:id', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
+        const cupidId = req.params.id;
+        const jobs = await _repository.getAvaliableByCupidId(parseInt(cupidId));
+        res.send(jobs);
+    });
+
+    // Jobs by Cupid
+    router.get('/current/:id', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
+        const cupidId = req.params.id;
+        const jobs = await _repository.getCurrentByCupidId(parseInt(cupidId));
+        res.send(jobs);
+    });
+
+
     // Jobs by ID
     router.get('/:id', AuthMiddleware(db), async (req, res, next) => {
         const jobId = req.params.id;
@@ -30,8 +45,9 @@ const JobsController = (db: PrismaClient) => {
     // Create new Job
     router.post('/create', AuthMiddleware(db), async (req, res, next) => {
         const { cupidId, userId, name, details, longitude, latitude, cupidPayout, total } = req.body;
-        const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(cupidId), name, details, longitude, latitude, total, cupidPayout });
+        const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(userId), name, details, longitude, latitude, total, cupidPayout });
         logInfo(`jobs_controller.ts`, `Created a new Job`, req.user!!)
+        jobStatus();
         res.send(createdJob);
     });
 
@@ -61,6 +77,22 @@ const JobsController = (db: PrismaClient) => {
         } else {
             res.status(404).send('Job not found');
         }
+    });
+
+    // Jobs by Cupid
+    router.post('/start', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
+        const { id } = req.body
+        const job = await _repository.startJob(id);
+        logInfo(`jobs_controller.ts`, `Started Job ${job.name}`, req.user!!)
+        res.status(200).send({ sucess: true });
+    });
+
+    router.post('/finish', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
+        const { id } = req.body
+        console.log(id)
+        const job = await _repository.finishJob(id);
+        logInfo(`jobs_controller.ts`, `Finished Job ${job.name}`, req.user!!)
+        res.status(200).send({ status: true });
     });
 
     return router;

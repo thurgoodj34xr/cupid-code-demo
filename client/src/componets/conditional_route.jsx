@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Api from "./../hooks/api";
 import AppContext from "./app_context";
+import { useDispatch } from "react-redux";
+import { login } from "../store/auth_slice";
 
 {
   /* 
@@ -17,6 +19,7 @@ export function ConditionalRoute({ componetToRender, role, route }) {
   let navigate = useNavigate(); // move this into the function
   const context = useContext(AppContext);
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const Validate = async () => {
     // Validate that the user has a vaid token
@@ -30,7 +33,7 @@ export function ConditionalRoute({ componetToRender, role, route }) {
       navigate("/");
       return "";
     }
-
+    dispatch(login({ user: resp.user, token: resp.tokens.accessToken }));
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
 

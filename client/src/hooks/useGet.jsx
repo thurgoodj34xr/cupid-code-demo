@@ -5,6 +5,7 @@ import useContext from "./context";
 const useGet = (route, auth = true) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [run, setRun] = useState();
   const context = useContext();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const useGet = (route, auth = true) => {
     };
     cupids();
   }, [route]);
-  return { data, setData, error, reGet: useGet };
+  return { data, setData, error, reGet: setRun };
 };
 
 export default useGet;
