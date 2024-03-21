@@ -29,6 +29,7 @@ body {
   background-color: #eef2f3 !important;
   max-height: 100vh;
   overflow-y: hidden;
+  display: flex;
 }
 
 .logo {

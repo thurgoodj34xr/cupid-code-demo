@@ -1,19 +1,35 @@
 import { Jobs, PrismaClient } from "@prisma/client";
 
+type JobPayload = {
+    cupidId: number;
+    userId: number;
+    name: string;
+    details: string
+    longitude: number;
+    latitude: number;
+    cupidPayout: number;
+    total: number;
+};
+
+// Rest of the code...
+
 export default class JobRepository {
     private db: PrismaClient;
     constructor(db: PrismaClient) {
         this.db = db;
     }
 
-    async createJob(cupidId: number | null, userId: number, longitude: number, latitude: number, cupidPayout: number): Promise<Jobs> {
+    async createJob({ cupidId, userId, name, details, longitude, latitude, cupidPayout, total }: JobPayload) {
         return this.db.jobs.create({
             data: {
                 cupidId,
                 userId,
+                name,
+                details,
                 longitude,
                 latitude,
                 cupidPayout,
+                total,
                 complete: false
             },
         });
@@ -25,16 +41,11 @@ export default class JobRepository {
         });
     }
 
-    updateJob(jobId: number, cupidId: number | null, userId: number, longitude: number, latitude: number, cupidPayout: number, complete: boolean) {
+    updateJob(jobId: number, data: Partial<JobPayload>) {
         return this.db.jobs.update({
             where: { id: jobId },
             data: {
-                cupidId,
-                userId,
-                longitude,
-                latitude,
-                cupidPayout,
-                complete
+                ...data,
             }
         });
     }

@@ -7,6 +7,7 @@ import {
   faPaperPlane,
   faPeopleLine,
   faRightFromBracket,
+  faRobot,
   faShoppingCart,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -119,6 +120,11 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const viewAiJob = () => {
+    navigate("/AiJob");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -180,7 +186,15 @@ function Navbar({ title }) {
             <div>
               <FontAwesomeIcon icon={faPaperPlane} size="2xl" />
             </div>
-            <h3>Jobs</h3>
+            <h3>Create Job</h3>
+          </section>
+
+          {/* AI Icon */}
+          <section className={classes.tile} onClick={viewAiJob}>
+            <div>
+              <FontAwesomeIcon icon={faRobot} size="2xl" />
+            </div>
+            <h3>Ai Job</h3>
           </section>
 
           {/* ************* STANDARD ROLE ********************** */}
