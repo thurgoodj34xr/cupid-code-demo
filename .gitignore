@@ -2,3 +2,4 @@ dist
 node_modules
 .env
 prisma/migrations
+client/src/utils/apiKey.js

@@ -11,12 +11,12 @@ import ResponseMessage from "../../componets/responseMessage/responseMessage";
 import useContext from "../../hooks/context";
 
 function MyAccount() {
-  const { user, setUser, navigate } = useInit();
   const [userType, setUserType] = useState("Standard");
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [submitButtonText, setSubmitButtonText] = useState("Update");
   const context = useContext();
+  const user = context.getUser();
 
   const updateProfile = async () => {
     setSubmitButtonText(
@@ -73,9 +73,7 @@ function MyAccount() {
           state={user.email}
           setState={(email) => setUser((old) => ({ ...old, email }))}
         />
-        {userType != "Standard" ? (
-          ""
-        ) : (
+        {user.profile && (
           <>
             <Input
               inputType="number"

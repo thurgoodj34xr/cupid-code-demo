@@ -2,6 +2,7 @@ import { React, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import "@mantine/core/styles.css";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import SignIn from "./pages/signIn/sign_in.jsx";
 import SignUp from "./pages/signUp/sign_up.jsx";
@@ -20,6 +21,8 @@ import AvaliableJobs from "./pages/avalible_jobs/avaliable_jobs.jsx";
 import JobHistory from "./pages/job_history/job_history.jsx";
 import ViewUsers from "./pages/view_users/view_users.jsx";
 import Logs from "./pages/log/logs.jsx";
+import Jobs from "./pages/jobs.jsx";
+import AiJob from "./pages/ai_job.jsx";
 const router = createHashRouter([
   {
     path: "",
@@ -69,6 +72,7 @@ const router = createHashRouter([
           />
         ),
       },
+
       {
         path: "/SelectCupid",
         element: (
@@ -172,6 +176,29 @@ const router = createHashRouter([
             key={13}
             role="ADMIN"
             componetToRender={<Logs />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+      {
+        path: "/jobs",
+        element: (
+          <ConditionalRoute
+            key={14}
+            role="STANDARD"
+            componetToRender={<Jobs />}
+            route={"/" /* Redirects to login if there is no auth user */}
+          />
+        ),
+      },
+
+      {
+        path: "/AiJob",
+        element: (
+          <ConditionalRoute
+            key={15}
+            role="STANDARD"
+            componetToRender={<AiJob />}
             route={"/" /* Redirects to login if there is no auth user */}
           />
         ),

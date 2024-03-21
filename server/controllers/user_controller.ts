@@ -29,6 +29,17 @@ const UserController = (db: PrismaClient) => {
     const _authRepository = new AuthRepository(db);
 
 
+    router.get("/:id", AuthMiddleware(db), async (req, res) => {
+        const { id } = req.params;
+        const user = await _repository.findById(parseInt(id));
+
+        if (user) {
+            res.send({ user });
+        } else {
+            res.send({ error: "User not found" });
+        }
+    });
+
 
     router.post("/create", upload.single('file'), async (req, res) => {
         const { userType, firstName, lastName, email, password, age, budget, goals, bio } = req.body;

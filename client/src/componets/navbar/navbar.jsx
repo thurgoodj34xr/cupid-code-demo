@@ -4,13 +4,15 @@ import {
   faHouse,
   faMessage,
   faMoneyBill,
+  faPaperPlane,
   faPeopleLine,
   faRightFromBracket,
+  faRobot,
   faShoppingCart,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaBook,
   FaHistory,
@@ -22,12 +24,17 @@ import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
 import classes from "./navbar.module.css";
+import { Switch, useMantineTheme, rem } from "@mantine/core";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import Api from "../../hooks/api";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
   const [init, setInit] = useState(true);
   const context = useContext();
   const user = context.getUser();
+  const theme = useMantineTheme();
+  const [checked, setChecked] = useState(null);
 
   let navigate = useNavigate();
 
@@ -113,6 +120,37 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const handleStatusChange = (status) => {
+    setChecked(status);
+    Api.PostWithAuth("cupids/working", { working: status }, context);
+  };
+
+  useEffect(() => {
+    const get = async () => {
+      const { status } = await Api.PostWithAuth(
+        "cupids/status",
+        { cupidId: user.cupid.id },
+        context
+      );
+      if (status != null) {
+        setChecked(status);
+      }
+    };
+    if (user.cupid) {
+      get();
+    }
+  }, []);
+
+  const viewJobs = () => {
+    navigate("/Jobs");
+    hideNavBar();
+  };
+
+  const viewAiJob = () => {
+    navigate("/AiJob");
+    hideNavBar();
+  };
+
   return (
     <>
       <div className={classes.main}>
@@ -161,6 +199,36 @@ function Navbar({ title }) {
               {user.profile && <p className="label">${user.profile.balance}</p>}
             </div>
           </section>
+          {user.cupid && (
+            <section className={classes.container}>
+              {checked != null && (
+                <Switch
+                  checked={checked}
+                  onChange={(event) =>
+                    handleStatusChange(event.currentTarget.checked)
+                  }
+                  color="teal"
+                  size="md"
+                  label="Working"
+                  thumbIcon={
+                    checked ? (
+                      <IconCheck
+                        style={{ width: rem(12), height: rem(12) }}
+                        color={theme.colors.teal[6]}
+                        stroke={3}
+                      />
+                    ) : (
+                      <IconX
+                        style={{ width: rem(12), height: rem(12) }}
+                        color={theme.colors.red[6]}
+                        stroke={3}
+                      />
+                    )
+                  }
+                />
+              )}
+            </section>
+          )}
           <hr />
           {/* Home Icon */}
           <section className={classes.tile} onClick={home}>
@@ -174,6 +242,21 @@ function Navbar({ title }) {
 
           {user.profile && (
             <>
+              {/* Jobs Icon */}
+              <section className={classes.tile} onClick={viewJobs}>
+                <div>
+                  <FontAwesomeIcon icon={faPaperPlane} size="2xl" />
+                </div>
+                <h3>Create Job</h3>
+              </section>
+
+              {/* AI Icon */}
+              <section className={classes.tile} onClick={viewAiJob}>
+                <div>
+                  <FontAwesomeIcon icon={faRobot} size="2xl" />
+                </div>
+                <h3>Ai Job</h3>
+              </section>
               {/* Ai Assistance */}
               <section className={classes.tile} onClick={aiAssistance}>
                 <div>

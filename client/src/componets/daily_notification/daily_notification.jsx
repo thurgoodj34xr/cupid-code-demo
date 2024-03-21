@@ -29,7 +29,7 @@ function DailyNotification({ notificationId, title, body, time, onDelete }) {
             onClick={handleDeleteClick}
           />
         </div>
-        <p className="label">{printTime}</p>
+        <p className="label">{printTime} ago</p>
       </div>
     </div>
   );

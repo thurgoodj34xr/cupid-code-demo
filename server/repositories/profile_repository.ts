@@ -44,31 +44,4 @@ export default class ProfileRepository {
             },
         })
     }
-    async updateCupid(userId: number, cupidId: number) {
-        await this.db.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                profile: {
-                    update: {
-                        cupidId,
-                    },
-                },
-            },
-            include: {
-                profile: true,
-            }
-        })
-
-        return this.db.cupid.findUnique({
-            where: {
-                id: cupidId,
-            },
-            include: {
-                user: true,
-            }
-        })
-
-    }
 }

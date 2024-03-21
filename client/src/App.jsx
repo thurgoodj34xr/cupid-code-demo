@@ -4,6 +4,7 @@ import AppContext from "./componets/app_context";
 import Navbar from "./componets/navbar/navbar";
 import Notification from "./componets/notification/notification";
 import { io } from "socket.io-client";
+import { MantineProvider } from "@mantine/core";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -19,7 +20,7 @@ function App() {
   useEffect(() => {
     if (tokens?.accessToken) {
       localStorage.setItem("token", tokens.refreshToken);
-    }
+  }
   }, [tokens]);
 
   useEffect(() => {
@@ -134,16 +135,18 @@ function App() {
     */
 
   return (
-    <AppContext.Provider value={userSettings}>
-      {notification ? <Notification text={notification} /> : ""}
-      <div className={user ? "background" : "background gradient"}>
-        <div className="main">
-          {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
-          <Outlet />
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <AppContext.Provider value={userSettings}>
+        {notification ? <Notification text={notification} /> : ""}
+        <div className={user ? "background" : "background gradient"}>
+          <div className="main">
+            {!user ? "" : <Navbar title={location.join(" ")}></Navbar>}
+            <Outlet />
+          </div>
         </div>
-      </div>
-              
+                
     </AppContext.Provider>
+    </MantineProvider>
   );
 }
 

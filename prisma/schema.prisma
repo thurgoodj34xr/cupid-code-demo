@@ -36,38 +36,39 @@ model User {
   purchase      Purchases[]
   role          Role            @default(STANDARD)
   updatedAt     DateTime        @updatedAt
+  Jobs          Jobs[]
 }
 
 // This is the Standard user schema.
 // Will need to create schemas for cupids and managers
 model Profile {
-  id                Int      @id @default(autoincrement())
+  id                Int        @id @default(autoincrement())
   age               Int?
-  balance           Decimal  @default(25)
-  createdAt         DateTime @default(now())
-  dailyBudget       Decimal  @default(0)
+  balance           Decimal    @default(25)
+  createdAt         DateTime   @default(now())
+  dailyBudget       Decimal    @default(0)
   relationshipGoals String?
-  cupidId           Int?
-  cupid             Cupid?   @relation(fields: [cupidId], references: [id])
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id])
-  userId            Int      @unique
+  updatedAt         DateTime   @updatedAt
+  user              User       @relation(fields: [userId], references: [id])
+  userId            Int        @unique
+  HireCupid         HireCupid?
 }
 
 model Cupid {
-  id        Int       @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   bio       String
-  createdAt DateTime  @default(now())
-  earnings  Decimal   @default(0)
-  hiredBy   Profile[]
-  fired     Boolean   @default(false)
-  longitude Decimal   @default(0)
-  latitude  Decimal   @default(0)
-  rating    Decimal   @default(0)
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int       @unique
-  working   Boolean   @default(false)
+  createdAt DateTime    @default(now())
+  earnings  Decimal     @default(0)
+  fired     Boolean     @default(false)
+  jobs      Jobs[]
+  longitude Decimal     @default(0)
+  latitude  Decimal     @default(0)
+  rating    Decimal     @default(0)
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int         @unique
+  working   Boolean     @default(false)
+  HireCupid HireCupid[]
 }
 
 model Admin {
@@ -79,6 +80,21 @@ model Admin {
   updatedAt DateTime @updatedAt
 }
 
+model Jobs {
+  id          Int     @id @default(autoincrement())
+  name        String
+  details     String
+  cupidId     Int
+  userId      Int
+  longitude   Decimal @default(0)
+  latitude    Decimal @default(0)
+  total       Decimal
+  cupidPayout Decimal
+  cupid       Cupid?  @relation(fields: [cupidId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
+  complete    Boolean @default(false)
+}
+
 model RefreshToken {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
@@ -87,6 +103,31 @@ model RefreshToken {
   updatedAt   DateTime @updatedAt
   User        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
+}
+
+model Notifications {
+  id        Int              @id @default(autoincrement())
+  message   String
+  title     String
+  timeStamp DateTime         @default(now())
+  type      NotificationType @default(DAILY)
+  User      User             @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model HireCupid {
+  profileId Int     @unique
+  cupidId   Int
+  profile   Profile @relation(fields: [profileId], references: [id])
+  cupid     Cupid   @relation(fields: [cupidId], references: [id])
+
+  @@id([profileId, cupidId])
+}
+
+enum NotificationType {
+  AIGEN
+  ALL
+  DAILY
 }
 
 model Purchases {
@@ -100,20 +141,4 @@ model Purchases {
   total       Decimal
   User        User     @relation(fields: [userId], references: [id])
   userId      Int
-}
-
-model Notifications {
-  id        Int              @id @default(autoincrement())
-  message   String
-  title     String
-  timeStamp DateTime         @default(now())
-  type      NotificationType @default(DAILY)
-  User      User             @relation(fields: [userId], references: [id])
-  userId    Int
-}
-
-enum NotificationType {
-  AIGEN
-  ALL
-  DAILY
 }
