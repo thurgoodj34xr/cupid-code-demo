@@ -54,24 +54,7 @@ const HireCupidController = (db: PrismaClient) => {
         }
     });
 
-    router.post("/fire", AuthMiddleware(db, [Role.STANDARD]), async (req, res, next) => {
-        try {
-            const { profileId } = req.body;
-
-            // Check if the profile has hired a cupid
-            const existingHire = await _repository.getByProfileId(profileId);
-            if (!existingHire) {
-                throw new Error("has not hired a cupid");
-            }
-
-            // Fire the cupid
-            await _repository.delete(profileId);
-            logInfo("hire_cupid_controller", `fired cupid for profile ${profileId}`, req.user!!);
-            res.send({ message: "Cupid fired successfully" });
-        } catch (error) {
-            logError("hire_cupid_controller", error, req.user!!);
-        }
-    });
+    
 
     return router;
 }

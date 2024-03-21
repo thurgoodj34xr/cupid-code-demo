@@ -22,7 +22,6 @@ function Home() {
 
 
   const handleDeleteNotification = async (notificationId) => {
-    console.log(notificationId);
     const response = await HandleDeleteNotification(notificationId, context);
     if (!response.error) {
       // Filter out the notification with the specified ID

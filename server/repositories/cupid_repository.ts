@@ -70,4 +70,28 @@ export default class CupidRepository {
             },
         });
     }
+
+    getAvailable() {
+        return this.db.cupid.findMany({
+            where: {
+                working: true,
+            },
+            include: {
+                user: true,
+            },
+        });
+    }
+
+    delete(profileId: number, cupidId: number) {
+        console.log(profileId)
+        console.log(cupidId)
+        return this.db.hireCupid.delete({
+            where: {
+                profileId_cupidId: {
+                    profileId,
+                    cupidId,
+                }
+            }
+        })
+    }
 }
