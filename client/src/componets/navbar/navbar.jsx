@@ -24,8 +24,8 @@ import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
 import classes from "./navbar.module.css";
-import { Switch, useMantineTheme, rem } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { Switch, useMantineTheme, rem } from "@mantine/core";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import Api from "../../hooks/api";
 
 function Navbar({ title }) {
@@ -121,19 +121,25 @@ function Navbar({ title }) {
   };
 
   const handleStatusChange = (status) => {
-    setChecked(status)
-    Api.PostWithAuth("cupids/working", { working: status }, context)
-  }
+    setChecked(status);
+    Api.PostWithAuth("cupids/working", { working: status }, context);
+  };
 
   useEffect(() => {
     const get = async () => {
-      const { status } = await Api.PostWithAuth("cupids/status", { cupidId: user.cupid.id }, context)
+      const { status } = await Api.PostWithAuth(
+        "cupids/status",
+        { cupidId: user.cupid.id },
+        context
+      );
       if (status != null) {
-        setChecked(status)
+        setChecked(status);
       }
+    };
+    if (user.cupid) {
+      get();
     }
-    get();
-  }, [])
+  }, []);
 
   const viewJobs = () => {
     navigate("/Jobs");
@@ -162,8 +168,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.wrapper} ${classes.fadein}`
-              : `${classes.wrapper} ${classes.fadeout}`
+            ? `${classes.wrapper} ${classes.fadein}`
+            : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -171,8 +177,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-              ? `${classes.modal} ${classes.slideRight}`
-              : `${classes.modal} ${classes.slideLeft}`
+            ? `${classes.modal} ${classes.slideRight}`
+            : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
@@ -191,35 +197,38 @@ function Navbar({ title }) {
             <div className="flex row between">
               <p className="label">{user.email}</p>
               {user.profile && <p className="label">${user.profile.balance}</p>}
-
             </div>
           </section>
-          <section className={classes.container}>{checked != null && (
-            <Switch
-              checked={checked}
-              onChange={(event) => handleStatusChange(event.currentTarget.checked)}
-              color="teal"
-              size="md"
-              label="LIVE"
-              thumbIcon={
-                checked ? (
-                  <IconCheck
-                    style={{ width: rem(12), height: rem(12) }}
-                    color={theme.colors.teal[6]}
-                    stroke={3}
-                  />
-                ) : (
-                  <IconX
-                    style={{ width: rem(12), height: rem(12) }}
-                    color={theme.colors.red[6]}
-                    stroke={3}
-                  />
-                )
-              }
-            />
-
+          {user.cupid && (
+            <section className={classes.container}>
+              {checked != null && (
+                <Switch
+                  checked={checked}
+                  onChange={(event) =>
+                    handleStatusChange(event.currentTarget.checked)
+                  }
+                  color="teal"
+                  size="md"
+                  label="LIVE"
+                  thumbIcon={
+                    checked ? (
+                      <IconCheck
+                        style={{ width: rem(12), height: rem(12) }}
+                        color={theme.colors.teal[6]}
+                        stroke={3}
+                      />
+                    ) : (
+                      <IconX
+                        style={{ width: rem(12), height: rem(12) }}
+                        color={theme.colors.red[6]}
+                        stroke={3}
+                      />
+                    )
+                  }
+                />
+              )}
+            </section>
           )}
-          </section>
           <hr />
           {/* Home Icon */}
           <section className={classes.tile} onClick={home}>
@@ -228,26 +237,26 @@ function Navbar({ title }) {
             </div>
             <h3>Home</h3>
           </section>
-          {/* Jobs Icon */}
-          <section className={classes.tile} onClick={viewJobs}>
-            <div>
-              <FontAwesomeIcon icon={faPaperPlane} size="2xl" />
-            </div>
-            <h3>Create Job</h3>
-          </section>
-
-          {/* AI Icon */}
-          <section className={classes.tile} onClick={viewAiJob}>
-            <div>
-              <FontAwesomeIcon icon={faRobot} size="2xl" />
-            </div>
-            <h3>Ai Job</h3>
-          </section>
 
           {/* ************* STANDARD ROLE ********************** */}
 
           {user.profile && (
             <>
+              {/* Jobs Icon */}
+              <section className={classes.tile} onClick={viewJobs}>
+                <div>
+                  <FontAwesomeIcon icon={faPaperPlane} size="2xl" />
+                </div>
+                <h3>Create Job</h3>
+              </section>
+
+              {/* AI Icon */}
+              <section className={classes.tile} onClick={viewAiJob}>
+                <div>
+                  <FontAwesomeIcon icon={faRobot} size="2xl" />
+                </div>
+                <h3>Ai Job</h3>
+              </section>
               {/* Ai Assistance */}
               <section className={classes.tile} onClick={aiAssistance}>
                 <div>
@@ -276,8 +285,6 @@ function Navbar({ title }) {
           {/* ********************** CUPID ROLE *********************** */}
           {user.cupid && (
             <>
-
-
               <section className={classes.tile} onClick={avaliableJobs}>
                 <div>
                   <FaSearch size="2rem" />
