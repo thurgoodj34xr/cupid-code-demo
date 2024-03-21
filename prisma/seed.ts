@@ -4,6 +4,7 @@ import CreateNotifications from './create_notifications';
 import CreatePurchases from './create_purchases';
 import CreateUsers from './create_users';
 import CreateAdmins from './create_admin';
+import CreateJobs from './create_jobs';
 const db = new PrismaClient();
 
 
@@ -13,6 +14,7 @@ async function main() {
   await CreateAdmins(db);
   await CreateNotifications(db);
   await CreatePurchases(db);
+  await CreateJobs(db);
 }
 
 main()

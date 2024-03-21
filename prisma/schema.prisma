@@ -82,10 +82,13 @@ model Admin {
 
 model Jobs {
   id          Int     @id @default(autoincrement())
-  cupidId     Int? // Remove @relation attribute here
-  userId      Int // Remove @relation attribute here
+  name        String
+  details     String
+  cupidId     Int
+  userId      Int
   longitude   Decimal @default(0)
   latitude    Decimal @default(0)
+  total       Decimal
   cupidPayout Decimal
   cupid       Cupid?  @relation(fields: [cupidId], references: [id])
   user        User    @relation(fields: [userId], references: [id])
