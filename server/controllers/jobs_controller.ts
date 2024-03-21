@@ -11,7 +11,6 @@ const JobsController = (db: PrismaClient) => {
     // Jobs by Cupid
     router.get('/cupidJobs/:id', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
         const cupidId = req.params.id;
-        console.log(cupidId)
         const jobs = await _repository.getAllByCupidId(parseInt(cupidId));
         res.send(jobs);
     });
@@ -30,7 +29,6 @@ const JobsController = (db: PrismaClient) => {
 
     // Create new Job
     router.post('/create', AuthMiddleware(db), async (req, res, next) => {
-        console.log(req.body)
         const { cupidId, userId, name, details, longitude, latitude, cupidPayout, total } = req.body;
         const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(cupidId), name, details, longitude, latitude, total, cupidPayout });
         logInfo(`jobs_controller.ts`, `Created a new Job`, req.user!!)
@@ -43,7 +41,6 @@ const JobsController = (db: PrismaClient) => {
         const jobId = req.params.id;
         var intJobId = parseInt(jobId)
         const data = req.body;
-        console.log(data)
         const result = await _repository.updateJob(intJobId, data);
         logInfo(`jobs_controller.ts`, `Updated Job ${intJobId}`, req.user!!)
         if (result) {
