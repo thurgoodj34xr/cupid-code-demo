@@ -11,7 +11,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaBook,
   FaHistory,
@@ -23,12 +23,17 @@ import { useNavigate } from "react-router-dom";
 import useContext from "../../hooks/context";
 import PhotoCircle from "../photo_circle/photo_circle";
 import classes from "./navbar.module.css";
+import { Switch, useMantineTheme, rem } from '@mantine/core';
+import { IconCheck, IconX } from '@tabler/icons-react';
+import Api from "../../hooks/api";
 
 function Navbar({ title }) {
   const [on, setOn] = useState(false);
   const [init, setInit] = useState(true);
   const context = useContext();
   const user = context.getUser();
+  const theme = useMantineTheme();
+  const [checked, setChecked] = useState(null);
 
   let navigate = useNavigate();
 
@@ -114,6 +119,21 @@ function Navbar({ title }) {
     hideNavBar();
   };
 
+  const handleStatusChange = (status) => {
+    setChecked(status)
+    Api.PostWithAuth("cupids/working", { working: status }, context)
+  }
+
+  useEffect(() => {
+    const get = async () => {
+      const { status } = await Api.PostWithAuth("cupids/status", { cupidId: user.cupid.id }, context)
+      if (status != null) {
+        setChecked(status)
+      }
+    }
+    get();
+  }, [])
+
   const viewJobs = () => {
     navigate("/Jobs");
     hideNavBar();
@@ -136,8 +156,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.wrapper} ${classes.fadein}`
-            : `${classes.wrapper} ${classes.fadeout}`
+              ? `${classes.wrapper} ${classes.fadein}`
+              : `${classes.wrapper} ${classes.fadeout}`
         }
       />
       <section
@@ -145,8 +165,8 @@ function Navbar({ title }) {
           init
             ? `${classes.hide}`
             : on
-            ? `${classes.modal} ${classes.slideRight}`
-            : `${classes.modal} ${classes.slideLeft}`
+              ? `${classes.modal} ${classes.slideRight}`
+              : `${classes.modal} ${classes.slideLeft}`
         }
       >
         {/* Exit Icon */}
@@ -165,7 +185,34 @@ function Navbar({ title }) {
             <div className="flex row between">
               <p className="label">{user.email}</p>
               {user.profile && <p className="label">${user.profile.balance}</p>}
+
             </div>
+          </section>
+          <section className={classes.container}>{checked != null && (
+            <Switch
+              checked={checked}
+              onChange={(event) => handleStatusChange(event.currentTarget.checked)}
+              color="teal"
+              size="md"
+              label="LIVE"
+              thumbIcon={
+                checked ? (
+                  <IconCheck
+                    style={{ width: rem(12), height: rem(12) }}
+                    color={theme.colors.teal[6]}
+                    stroke={3}
+                  />
+                ) : (
+                  <IconX
+                    style={{ width: rem(12), height: rem(12) }}
+                    color={theme.colors.red[6]}
+                    stroke={3}
+                  />
+                )
+              }
+            />
+
+          )}
           </section>
           <hr />
           {/* Home Icon */}
@@ -215,6 +262,8 @@ function Navbar({ title }) {
           {/* ********************** CUPID ROLE *********************** */}
           {user.cupid && (
             <>
+
+
               <section className={classes.tile} onClick={avaliableJobs}>
                 <div>
                   <FaSearch size="2rem" />

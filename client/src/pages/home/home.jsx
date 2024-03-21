@@ -1,5 +1,5 @@
 import { NotificationType } from "@prisma/client";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FaMoneyBill } from "react-icons/fa";
 import AppContext from "../../componets/app_context";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
@@ -10,8 +10,7 @@ import usePost from "../../hooks/usePost";
 import useGet from "../../hooks/useGet";
 import classes from "./home.module.css";
 import { useState } from 'react';
-import { Switch, useMantineTheme, rem } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import Api from "../../hooks/api";
 
 function Home() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
@@ -20,8 +19,7 @@ function Home() {
   const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
   const user = context.getUser();
-  const theme = useMantineTheme();
-  const [checked, setChecked] = useState(false);
+
 
   const handleDeleteNotification = async (notificationId) => {
     console.log(notificationId);
@@ -34,6 +32,8 @@ function Home() {
       setData(removeItem);
     }
   };
+
+
 
   return (
 
@@ -96,30 +96,8 @@ function Home() {
         </section >
       )}
       {/* CUPID Home Page */}
-      {user.cupid && (
-        <Switch
-          checked={checked}
-          onChange={(event) => setChecked(event.currentTarget.checked)}
-          color="teal"
-          size="md"
-          label="LIVE"
-          thumbIcon={
-            checked ? (
-              <IconCheck
-                style={{ width: rem(12), height: rem(12) }}
-                color={theme.colors.teal[6]}
-                stroke={3}
-              />
-            ) : (
-              <IconX
-                style={{ width: rem(12), height: rem(12) }}
-                color={theme.colors.red[6]}
-                stroke={3}
-              />
-            )
-          }
-        />
-      )}
+
+
 
     </>
   );
