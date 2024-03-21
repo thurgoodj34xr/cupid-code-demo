@@ -209,7 +209,7 @@ function Navbar({ title }) {
                   }
                   color="teal"
                   size="md"
-                  label="LIVE"
+                  label="Working"
                   thumbIcon={
                     checked ? (
                       <IconCheck
