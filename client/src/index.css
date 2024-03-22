@@ -222,19 +222,23 @@ textarea {
 }
 h1 {
   margin: 0px;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 h2 {
   margin: 0px;
   font-size: 26px;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 h3 {
   margin: 0px;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 p {
   margin: 0px;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 hr {
@@ -244,16 +248,20 @@ hr {
 .label {
   color: rgba(60, 60, 60, 0.6);
   font-size: 17px;
+  font-weight: lighter;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 p {
   font-size: 17px;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 a:hover {
@@ -266,6 +274,7 @@ body {
   place-items: center;
   min-height: 100vh;
   max-height: 100vh;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 .main {
@@ -283,9 +292,11 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 .error {
   color: red;
+  font-family: "Monaco", monospace, "Courier New", Courier, monospace;
 }
 
 .pointer {
