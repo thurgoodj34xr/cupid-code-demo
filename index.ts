@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
 
   socket.on("log", (data) => {
     logInfo(data.file, data.message, data.user);
+    socket.emit("count", users)
   })
 
   socket.on("getCount", () => {

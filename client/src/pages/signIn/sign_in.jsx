@@ -41,6 +41,7 @@ export default function SignIn() {
     }
     context.updateUser(resp.user);
     context.updateTokens(resp.tokens);
+    context.socket().emit("user", resp.user);
     navigate("/Home");
   };
 

@@ -20,6 +20,7 @@ export function ConditionalRoute({ componetToRender, role, route }) {
   const context = useContext(AppContext);
   const location = useLocation();
   const dispatch = useDispatch();
+  const socket = context.Socket();
 
   const Validate = async () => {
     // Validate that the user has a vaid token
