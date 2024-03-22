@@ -73,7 +73,6 @@ function Logs() {
           logs.map((log, idx) => {
             return (
               <div
-                ref={divRef}
                 key={idx}
                 className="flex row g-20 ycenter bg-white p-20 br between"
               >

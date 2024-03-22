@@ -86,6 +86,7 @@ const UserController = (db: PrismaClient) => {
 
         const resultOfStrongCheck = isStrongPassword(newPassword)
         if (!resultOfStrongCheck.success) {
+
             res.send({ error: resultOfStrongCheck.message })
             return;
         }
@@ -123,6 +124,7 @@ const UserController = (db: PrismaClient) => {
             logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
+            logError("user_controller", `${email} email/password combo was invalid`,)
             res.send({ error: "Invalid login credentials." });
         }
     })

@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
 
   socket.on("user", (data: User) => {
     if (!user) {
+      logInfo("index.ts", `User ${data.firstName} ${data.lastName} connected to the server`)
       user = data;
       users = [...users, data]
       io.emit("count", users)
@@ -64,6 +65,7 @@ io.on('connection', (socket) => {
     if (user) {
       const newUsers = users.filter((u) => u.id !== user.id)
       users = newUsers;
+      logInfo("index.ts", `User ${user.firstName} ${user.lastName} disconnected from the server`)
       io.emit("count", users)
     }
   })
@@ -75,7 +77,7 @@ app.set('views', './server/views');
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  // logInfo(`index.ts`, `${req.method} ${req.url}`);
+  logInfo(`index.ts`, `${req.method} ${req.url}`);
   if (req.url.includes("/images")) {
     res.sendFile(path.join(__dirname, req.url).replace("%20", " "));
   } else {
