@@ -100,7 +100,7 @@ function ProgressBar({ loading }) {
             </>
           )}
         </Stepper.Step>
-        <Stepper.Step label="Final step" description="Publish to DB">
+        <Stepper.Step label="Final step" description="Send to cupid">
           {job && (
             <Stack gap="md">
               {error && <p className="text-red-500">{error}</p>}
@@ -117,7 +117,7 @@ function ProgressBar({ loading }) {
                 value={job}
                 onChange={(event) => setJob(event.currentTarget.value)}
               />
-              <Button onClick={handleSubmit}>Publish to DB</Button>
+              <Button onClick={handleSubmit}>Send to cupid!</Button>
             </Stack>
           )}
         </Stepper.Step>
