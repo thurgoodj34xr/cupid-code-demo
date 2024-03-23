@@ -18,6 +18,9 @@ const CreateCupids = async (db: PrismaClient) => {
                 create: {
                     id: 1,
                     bio: "I am here to help you have the best date",
+                    latitude: 41.0246,
+                    longitude: -113.7919,
+                    working: true
                 }
             }
 
@@ -40,6 +43,9 @@ const CreateCupids = async (db: PrismaClient) => {
                 create: {
                     id: 2,
                     bio: "I have a cupid for 6 1onths now and love helping people find their true love!",
+                    latitude: 43.0246,
+                    longitude: -111.7919,
+                    working: true
                 }
             }
 
@@ -62,6 +68,8 @@ const CreateCupids = async (db: PrismaClient) => {
                 create: {
                     id: 3,
                     bio: "Let me help you have the best date of your life!",
+                    latitude: 40.5746,
+                    longitude: -112.7919
                 }
             }
 
@@ -84,6 +92,8 @@ const CreateCupids = async (db: PrismaClient) => {
                 create: {
                     id: 4,
                     bio: "Let me create magical moments for you and your partner!",
+                    latitude: 41.0246,
+                    longitude: -111.7919
                 }
             }
 
@@ -106,6 +116,8 @@ const CreateCupids = async (db: PrismaClient) => {
                 create: {
                     id: 5,
                     bio: "Bringing love and joy to every date!",
+                    latitude: 40.8246,
+                    longitude: -111.7419
                 }
             }
 

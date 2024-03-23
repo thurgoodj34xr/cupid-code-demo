@@ -10,6 +10,7 @@ import UserRepository from "../repositories/user_repository";
 import { isStrongPassword } from "../utils/strong_password";
 import Jwt from "../utils/jwt";
 import { useGeo } from "../utils/geoFunc";
+import ProfileRepository from "../repositories/profile_repository";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -28,6 +29,7 @@ const UserController = (db: PrismaClient) => {
     const _cupidRepository = new CupidRepository(db);
     const _notificationsRepository = new NotificationRepository(db);
     const _authRepository = new AuthRepository(db);
+    const _profileRepository = new ProfileRepository(db);
 
 
     router.get("/:id", AuthMiddleware(db), async (req, res) => {
@@ -125,8 +127,12 @@ const UserController = (db: PrismaClient) => {
             logInfo("usercontroller", `current user is is of type ${user.role}`)
             if (user.role == Role.CUPID) {
                 var location = await useGeo()
-                var response = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
-                logInfo("user_controller", `The determined location was ${response.latitude}`)
+                var responseCupid = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
+                logInfo("user_controller", `The determined location was ${responseCupid.latitude}`)
+            }
+            if (user.role == Role.STANDARD) {
+                var location = await useGeo()
+                var responseUser = await _profileRepository.setLocation(user.id, location.latitude, location.longitude)
             }
             logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });

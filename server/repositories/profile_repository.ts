@@ -44,4 +44,20 @@ export default class ProfileRepository {
             },
         })
     }
+
+    setLocation(userId: number, lat: number, long: number) {
+        return this.db.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                profile: {
+                    update: {
+                        latitude: lat,
+                        longitude: long,
+                    },
+                },
+            },
+        })
+    }
 }

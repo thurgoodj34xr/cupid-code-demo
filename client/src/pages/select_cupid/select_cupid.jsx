@@ -68,7 +68,7 @@ function SelectCupid() {
     <section className="flex flex-col w-full overflow-y-auto gap-5">
       <p className="label left">Current Cupid</p>
       {myCupid && (
-        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} />
+        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} user={user} />
       )}
       <p className="label left">Available cupids</p>
       {cupids &&
@@ -80,6 +80,7 @@ function SelectCupid() {
               cupid={cupid}
               onClick={() => hireCupid(cupid.id)}
               link="Hire"
+              user={user}
             />
           );
         })}
