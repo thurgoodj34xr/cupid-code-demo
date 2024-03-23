@@ -2,13 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import useContext from "../../hooks/context";
-import FireCupid from "../../hooks/fireCupid";
-import HireCupid from "../../hooks/hireCupid";
 import { useApi } from "../../hooks/useApi";
-import useGetCupid from "../../hooks/useGetCupid";
 import useInit from "../../hooks/useInit";
 import { useSelector } from "react-redux";
-import { useForceUpdate } from "@mantine/hooks";
 
 function SelectCupid() {
   const queryClient = useQueryClient();
@@ -38,7 +34,7 @@ function SelectCupid() {
   });
 
   const { mutateAsync: render } = useMutation({
-    mutationFn: () => {},
+    mutationFn: () => { },
     onSuccess: () => {
       queryClient.invalidateQueries(["myCupid", "cupids"]);
     },

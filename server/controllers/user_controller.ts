@@ -1,4 +1,4 @@
-import { NotificationType, PrismaClient } from "@prisma/client";
+import { Role, NotificationType, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { Request, Response, Router } from "express";
 import multer from "multer";
@@ -9,6 +9,7 @@ import NotificationRepository from "../repositories/notification_repository";
 import UserRepository from "../repositories/user_repository";
 import { isStrongPassword } from "../utils/strong_password";
 import Jwt from "../utils/jwt";
+import { useGeo } from "../utils/geoFunc";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -106,7 +107,7 @@ const UserController = (db: PrismaClient) => {
     router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
             await _repository.updatePicture(parseInt(req.body.userId), req!!.file!!.path)
-            logInfo(`user_controller.ts`, `Sucessfully added a profile picture`)
+            logInfo(`user_controller.ts`, `Successfully added a profile picture`)
         } catch (error) {
             logError("user_controller", error)
             res.send({ error })
@@ -121,6 +122,12 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             const { accessToken, refreshToken } = Jwt.generateTokens(user);
             await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            logInfo("usercontroller", `current user is is of type ${user.role}`)
+            if (user.role == Role.CUPID) {
+                var location = await useGeo()
+                var response = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
+                logInfo("user_controller", `The determined location was ${response.latitude}`)
+            }
             logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
