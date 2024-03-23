@@ -4,7 +4,7 @@ export async function calculateDistanceCupidStandard(oLat, oLong, dLat, dLong, s
     try {
         const distanceResp = await retrieveDistance(
             oLat,
-            oLong.longitude,
+            oLong,
             dLat,
             dLong
         );
