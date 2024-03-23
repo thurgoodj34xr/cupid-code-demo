@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PhotoCircle from "../photo_circle/photo_circle";
-import { retrieveDistance } from "../../utils/retrieveDistance";
+import { calculateDistanceCupidStandard } from '../../utils/calculateDistance';
 
 function CupidTile({ cupid, link = "Fire", onClick, user }) {
   const [distance, setDistance] = useState(null);
 
   useEffect(() => {
-    const fetchDistance = async () => {
-      try {
-        const distanceResp = await retrieveDistance(
-          cupid.latitude,
-          cupid.longitude,
-          user.profile.latitude,
-          user.profile.longitude
-        );
-        setDistance(distanceResp.data.routes.car.distance.text);
-      } catch (error) {
-        console.error('Error fetching distance:', error);
-        setDistance('Error');
-      }
-    };
-    fetchDistance();
+    calculateDistanceCupidStandard(cupid.latitude,
+      cupid.longitude,
+      user.profile.latitude,
+      user.profile.longitude,
+      setDistance)
   }, []);
 
   return (
