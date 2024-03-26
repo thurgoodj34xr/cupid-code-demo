@@ -95,7 +95,51 @@ function Home() {
         </section >
       )}
       {/* CUPID Home Page */}
+      <section className={classes.container} >
+        {/* Container for Budget */}
+        < section className={classes.budget}>
+          <h2>Good Morning,</h2>
+          <p className="label">Summary of your earnings and rating</p>
+          <hr />
+          <section className={classes.balance}>
+            <section>
+              <p>Total</p>
+              {user.cupid && <p>${user.cupid.total}</p>}
+            </section>
+            <section>
+              <p>Today</p>
+              {user.cupid && <p>${user.cupid.today}</p>}
+            </section>
+            <section>
+              <p>Rating</p>
+              {user.cupid && <p>${user.cupid.rating}</p>}
+            </section>
+          </section>
+        </section >
 
+        {/* Container for Current Jobs */}
+        <p className="label">Current Job</p>
+        <section className={classes.budget}>
+
+        </section>
+
+        {/*Container for Last Job */}
+        < p className="label">Last Job</p>
+        <section className={classes.budget}>
+          <p>Time</p>
+          {user.cupid && <p>${user.cupid.lastjob}</p>}
+          <section>
+            <p>Payout</p>
+
+          </section>
+          <p>Review</p>
+          <p>Location</p>
+        </section>
+        {/*Container for Available Jobs */}
+        < p className="label">Available Jobs</p>
+        <section className={classes.budget}>
+        </section>
+      </section >
 
 
     </>
