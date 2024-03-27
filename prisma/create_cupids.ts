@@ -4,10 +4,10 @@ import bcryptjs from "bcryptjs";
 const CreateCupids = async (db: PrismaClient) => {
     await db.user.upsert({
         where: {
-            id: 2,
+            id: 16,
         },
         create: {
-            id: 2,
+            id: 16,
             firstName: "Tim",
             lastName: "Spanler",
             email: "cupid@gmail.com",
@@ -26,10 +26,10 @@ const CreateCupids = async (db: PrismaClient) => {
     })
     await db.user.upsert({
         where: {
-            id: 3,
+            id: 17,
         },
         create: {
-            id: 3,
+            id: 17,
             firstName: "Jessica",
             lastName: "Dildine",
             email: "cupid2@gmail.com",
@@ -48,10 +48,10 @@ const CreateCupids = async (db: PrismaClient) => {
     })
     await db.user.upsert({
         where: {
-            id: 4,
+            id: 18,
         },
         create: {
-            id: 4,
+            id: 18,
             firstName: "Ben",
             lastName: "Carter",
             email: "cupid3@gmail.com",
@@ -70,10 +70,10 @@ const CreateCupids = async (db: PrismaClient) => {
     })
     await db.user.upsert({
         where: {
-            id: 5,
+            id: 19,
         },
         create: {
-            id: 5,
+            id: 19,
             firstName: "Emily",
             lastName: "Johnson",
             email: "cupid4@gmail.com",
@@ -92,10 +92,10 @@ const CreateCupids = async (db: PrismaClient) => {
     })
     await db.user.upsert({
         where: {
-            id: 6,
+            id: 20,
         },
         create: {
-            id: 6,
+            id: 20,
             firstName: "Jim",
             lastName: "Smith",
             email: "cupid5@gmail.com",
