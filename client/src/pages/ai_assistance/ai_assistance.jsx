@@ -1,6 +1,5 @@
 import { NotificationType } from "@prisma/client";
 import { FaTicketAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import Button from "../../componets/button/button";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import DailyNotification from "../../componets/daily_notification/daily_notification";
@@ -10,15 +9,48 @@ import HandleDeleteNotification from "../../hooks/deleteNotification";
 import usePost from "../../hooks/usePost";
 import classes from "./ai_assistance.module.css";
 import useInit from "../../hooks/useInit";
-import useGetCupid from "../../hooks/useGetCupid";
+import { useApi } from "../../hooks/useApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 function AiAssistance() {
+  const queryClient = useQueryClient();
+  const api = useApi();
   const { user, setUser, navigate } = useInit();
   const context = useContext();
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
     notficationType: NotificationType.AIGEN,
   });
-  const { cupid } = useGetCupid(user.profile.id, context);
+
+  const { data: myCupid } = useQuery({
+    queryFn: async () => {
+      const resp = await api.get(`/cupids/me/${user.profile.id}`);
+      if (resp.error) {
+        return null;
+      } else {
+        return resp;
+      }
+    },
+    queryKey: ["myCupid"],
+  });
+
+  const { mutateAsync: fireCupid } = useMutation({
+    mutationFn: async (cupidId) => await api.post("/cupids/fire", { cupidId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myCupid"]);
+    },
+  });
+
+  const { mutateAsync: render } = useMutation({
+    mutationFn: () => { },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myCupid"]);
+    },
+  });
+
+  useEffect(() => {
+    render();
+  }, []);
 
   const handleDeleteNotification = async (notificationId) => {
     const response = await HandleDeleteNotification(notificationId, context);
@@ -45,21 +77,23 @@ function AiAssistance() {
           Select
         </p>
       </div>
-      {cupid && <CupidTile cupid={cupid} link="" />}
+      {myCupid && (
+        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} user={user} />
+      )}
       <p className="label">Notifications</p>
       <div className="flex flex-col gap-5 max-h-96 overflow-y-auto">
         {!notificationHistory
           ? null
           : notificationHistory.map((notification) => (
-              <DailyNotification
-                key={notification.id} // Use unique identifier as the key
-                notificationId={notification.id}
-                title={notification.title}
-                body={notification.message}
-                time={notification.timeStamp}
-                onDelete={handleDeleteNotification}
-              />
-            ))}
+            <DailyNotification
+              key={notification.id} // Use unique identifier as the key
+              notificationId={notification.id}
+              title={notification.title}
+              body={notification.message}
+              time={notification.timeStamp}
+              onDelete={handleDeleteNotification}
+            />
+          ))}
       </div>
       <div className={classes.row}>
         <p className="label">Recent Purchases</p>

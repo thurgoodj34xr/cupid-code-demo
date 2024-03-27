@@ -52,6 +52,18 @@ export default class CupidRepository {
         });
     }
 
+    setLocation(id: number, lat: number, long: number) {
+        return this.db.cupid.update({
+            where: {
+                id,
+            },
+            data: {
+                latitude: lat,
+                longitude: long
+            }
+        });
+    }
+
     setWorking(id: number, working: boolean) {
         return this.db.cupid.update({
             where: {

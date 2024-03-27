@@ -25,8 +25,6 @@ const Jobs = () => {
       userId: user.id,
       name: "",
       details: "",
-      longitude: "",
-      latitude: "",
       cupidPayout: "",
       total: "",
     },
@@ -111,18 +109,6 @@ const Jobs = () => {
               placeholder="Job Details"
               required
               {...form.getInputProps("details")}
-            />
-            <Input
-              name="longitude"
-              placeholder="Longitude"
-              required
-              {...form.getInputProps("longitude")}
-            />
-            <Input
-              name="latitude"
-              placeholder="Latitude"
-              required
-              {...form.getInputProps("latitude")}
             />
             <Input
               name="cupidPayout"

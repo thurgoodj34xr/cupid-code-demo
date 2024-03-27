@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
 
   socket.on("user", (data: User) => {
     if (!user) {
+      logInfo("index.ts", `User ${data.firstName} ${data.lastName} connected to the server`)
       user = data;
       users = [...users, data]
       io.emit("count", users)
@@ -46,6 +47,7 @@ io.on('connection', (socket) => {
 
   socket.on("log", (data) => {
     logInfo(data.file, data.message, data.user);
+    socket.emit("count", users)
   })
 
   socket.on("getCount", () => {
@@ -63,6 +65,7 @@ io.on('connection', (socket) => {
     if (user) {
       const newUsers = users.filter((u) => u.id !== user.id)
       users = newUsers;
+      logInfo("index.ts", `User ${user.firstName} ${user.lastName} disconnected from the server`)
       io.emit("count", users)
     }
   })

@@ -2,13 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import CupidTile from "../../componets/cupid_tile/cupid_tile";
 import useContext from "../../hooks/context";
-import FireCupid from "../../hooks/fireCupid";
-import HireCupid from "../../hooks/hireCupid";
 import { useApi } from "../../hooks/useApi";
-import useGetCupid from "../../hooks/useGetCupid";
 import useInit from "../../hooks/useInit";
 import { useSelector } from "react-redux";
-import { useForceUpdate } from "@mantine/hooks";
 
 function SelectCupid() {
   const queryClient = useQueryClient();
@@ -38,7 +34,7 @@ function SelectCupid() {
   });
 
   const { mutateAsync: render } = useMutation({
-    mutationFn: () => {},
+    mutationFn: () => { },
     onSuccess: () => {
       queryClient.invalidateQueries(["myCupid", "cupids"]);
     },
@@ -72,7 +68,7 @@ function SelectCupid() {
     <section className="flex flex-col w-full overflow-y-auto gap-5">
       <p className="label left">Current Cupid</p>
       {myCupid && (
-        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} />
+        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} user={user} />
       )}
       <p className="label left">Available cupids</p>
       {cupids &&
@@ -84,6 +80,7 @@ function SelectCupid() {
               cupid={cupid}
               onClick={() => hireCupid(cupid.id)}
               link="Hire"
+              user={user}
             />
           );
         })}

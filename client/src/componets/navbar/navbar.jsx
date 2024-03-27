@@ -147,7 +147,7 @@ function Navbar({ title }) {
   };
 
   const viewAiJob = () => {
-    navigate("/dateSimulator");
+    navigate("/DateSimulator");
     hideNavBar();
   };
 

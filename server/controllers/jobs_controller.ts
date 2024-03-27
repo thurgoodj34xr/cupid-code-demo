@@ -2,11 +2,13 @@ import { Router } from 'express';
 import { PrismaClient, Role } from '@prisma/client';
 import JobRepository from '../repositories/job_repository';
 import AuthMiddleware from '../middleware/authentication';
+import UserRepository from '../repositories/user_repository';
 
 
 const JobsController = (db: PrismaClient) => {
     const router = Router();
     const _repository = new JobRepository(db);
+    const _userRepository = new UserRepository(db);
 
     // Jobs by Cupid
     router.get('/cupidJobs/:id', AuthMiddleware(db, [Role.CUPID, Role.ADMIN]), async (req, res, next) => {
@@ -44,8 +46,15 @@ const JobsController = (db: PrismaClient) => {
 
     // Create new Job
     router.post('/create', AuthMiddleware(db), async (req, res, next) => {
-        const { cupidId, userId, name, details, longitude, latitude, cupidPayout, total } = req.body;
-        const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(userId), name, details, longitude, latitude, total, cupidPayout });
+        const { cupidId, userId, name, details, cupidPayout, total } = req.body;
+        const user = await _userRepository.findById(userId);
+        if (!user || !user.profile || user.profile.latitude || user.profile.longitude) {
+            res.status(400).send('User Id not recognized by system');
+            return;
+        }
+        const userLat = parseFloat(user.profile.latitude);
+        const userLong = parseFloat(user.profile.longitude);
+        const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(userId), name, details, latitude: userLat, longitude: userLong, total, cupidPayout });
         logInfo(`jobs_controller.ts`, `Created a new Job`, req.user!!)
         jobStatus();
         res.send(createdJob);

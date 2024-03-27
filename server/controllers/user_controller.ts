@@ -1,4 +1,4 @@
-import { NotificationType, PrismaClient } from "@prisma/client";
+import { Role, NotificationType, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { Request, Response, Router } from "express";
 import multer from "multer";
@@ -9,6 +9,8 @@ import NotificationRepository from "../repositories/notification_repository";
 import UserRepository from "../repositories/user_repository";
 import { isStrongPassword } from "../utils/strong_password";
 import Jwt from "../utils/jwt";
+import { useGeo } from "../utils/geoFunc";
+import ProfileRepository from "../repositories/profile_repository";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -27,6 +29,7 @@ const UserController = (db: PrismaClient) => {
     const _cupidRepository = new CupidRepository(db);
     const _notificationsRepository = new NotificationRepository(db);
     const _authRepository = new AuthRepository(db);
+    const _profileRepository = new ProfileRepository(db);
 
 
     router.get("/:id", AuthMiddleware(db), async (req, res) => {
@@ -86,6 +89,7 @@ const UserController = (db: PrismaClient) => {
 
         const resultOfStrongCheck = isStrongPassword(newPassword)
         if (!resultOfStrongCheck.success) {
+
             res.send({ error: resultOfStrongCheck.message })
             return;
         }
@@ -105,7 +109,7 @@ const UserController = (db: PrismaClient) => {
     router.post('/profileUrl', upload.single('file'), async (req, res) => {
         try {
             await _repository.updatePicture(parseInt(req.body.userId), req!!.file!!.path)
-            logInfo(`user_controller.ts`, `Sucessfully added a profile picture`)
+            logInfo(`user_controller.ts`, `Successfully added a profile picture`)
         } catch (error) {
             logError("user_controller", error)
             res.send({ error })
@@ -120,9 +124,20 @@ const UserController = (db: PrismaClient) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             const { accessToken, refreshToken } = Jwt.generateTokens(user);
             await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+            logInfo("usercontroller", `current user is is of type ${user.role}`)
+            if (user.role == Role.CUPID) {
+                var location = await useGeo()
+                var responseCupid = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
+                logInfo("user_controller", `The determined location was ${responseCupid.latitude}`)
+            }
+            if (user.role == Role.STANDARD) {
+                var location = await useGeo()
+                var responseUser = await _profileRepository.setLocation(user.id, location.latitude, location.longitude)
+            }
             logInfo("user_controller", "signed in", user)
             res.send({ user: user, tokens: { accessToken, refreshToken } });
         } else {
+            logError("user_controller", `${email} email/password combo was invalid`,)
             res.send({ error: "Invalid login credentials." });
         }
     })
