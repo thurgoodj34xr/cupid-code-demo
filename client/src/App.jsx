@@ -6,6 +6,7 @@ import Notification from "./componets/notification/notification";
 import { io } from "socket.io-client";
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -149,6 +150,7 @@ function App() {
           </div>
         </AppContext.Provider>
       </MantineProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
