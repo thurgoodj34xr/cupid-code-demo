@@ -109,11 +109,11 @@ function Home() {
                 </section>
                 <section>
                   <p>Today</p>
-                  {user.cupid && <p>${user.cupid.today}</p>}
+                  {user.cupid && <p>{user.cupid.today}</p>}
                 </section>
                 <section>
                   <p>Rating</p>
-                  {user.cupid && <p>${user.cupid.rating}</p>}
+                  {user.cupid && <p>{user.cupid.rating}</p>}
                 </section>
               </section>
             </section >
@@ -127,14 +127,25 @@ function Home() {
             {/*Container for Last Job */}
             < p className="label">Last Job</p>
             <section className={classes.budget}>
-              <p>Time</p>
-              {user.cupid && <p>${user.cupid.lastjob}</p>}
+              <section>
+                <p>Time</p>
+                {user.cupid && <p>{user.cupid.lastjob}</p>}
+              </section>
+              <section>
+                <p>Time</p>
+                {user.cupid && <p>{user.cupid.lastjob}</p>}
+              </section>
               <section>
                 <p>Payout</p>
-
+                {user.cupid && <p>${user.cupid.rating}</p>}
               </section>
-              <p>Review</p>
-              <p>Location</p>
+              <section>
+                <p>Review</p>
+                {user.cupid && <p>{user.cupid.rating}</p>}
+              </section>
+              <section>
+                <p>Location</p>
+              </section>
             </section>
             {/*Container for Available Jobs */}
             < p className="label">Available Jobs</p>
@@ -143,7 +154,7 @@ function Home() {
           </section >
         </>
       )}
-
+      {/*End of Cupid Home Page*/}
 
     </>
   );
