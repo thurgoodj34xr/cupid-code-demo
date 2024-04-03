@@ -19,6 +19,17 @@ function Home() {
   const { data: purchaseHistory } = usePost("/purchases/history");
   const context = useContext(AppContext);
   const user = context.getUser();
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+  const getUsers = async () => {
+    const resp = await Api.GetWithAuth("admin/users", context);
+    setUsers(resp);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
 
   const handleDeleteNotification = async (notificationId) => {
@@ -31,6 +42,9 @@ function Home() {
       setData(removeItem);
     }
   };
+  const standardUsersCount = users.filter(user => user.role === 'STANDARD').length;
+  const cupidUsersCount = users.filter(user => user.role === 'CUPID').length;
+  const adminUsersCount = users.filter(user => user.role === 'ADMIN').length;
 
 
 
@@ -94,6 +108,47 @@ function Home() {
           </section>
         </section >
       )}
+            {/* Admin Home Page */}
+            {user.role === "ADMIN" && (
+              <section className={classes.container}>
+                <section className={classes.budget}>
+                <h2>Good Morning,</h2>
+      <p className="label">App Stats</p>
+  <section className="grid grid-cols-3 gap-4 place-items-center"> {/* Grid container with 3 columns and gap between tiles */}
+    <div className="bg-gray-200 p-4 rounded shadow-md w-32 h-16"> {/* Tile 1 */}
+
+      {/* Add admin-specific content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md w-32 h-16"> {/* Tile 2 */}
+      {<p>Hello</p>}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md w-32 h-16"> {/* Tile 3 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md w-32 h-16"> {/* Tile 4 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md"> {/* Tile 5 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md"> {/* Tile 6 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md"> {/* Tile 7 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md"> {/* Tile 8 */}
+      {/* Add your content here */}
+    </div>
+    <div className="bg-gray-200 p-4 rounded shadow-md"> {/* Tile 9 */}
+      {/* Add your content here */}
+    </div>
+  </section>
+  </section>
+  </section>
+)}
+
+      
       {/* CUPID Home Page */}
 
 
