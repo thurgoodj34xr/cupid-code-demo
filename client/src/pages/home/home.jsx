@@ -12,7 +12,6 @@ import useGet from "../../hooks/useGet";
 import classes from "./home.module.css";
 import { useState } from 'react';
 import Api from "../../hooks/api";
-import PhotoCircle from "../../componets/photo_circle/photo_circle";
 
 function Home() {
   const { data: notificationHistory, setData } = usePost("/notifications/all", {
