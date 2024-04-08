@@ -9,12 +9,12 @@ const db = new PrismaClient();
 
 
 async function main() {
-  // await CreateUsers(db);
-  // await CreateCupids(db);
+  await CreateUsers(db);
+  await CreateCupids(db);
   await CreateAdmins(db);
-  // await CreateNotifications(db);
-  // await CreatePurchases(db);
-  // await CreateJobs(db);
+  await CreateNotifications(db);
+  await CreatePurchases(db);
+  await CreateJobs(db);
 }
 
 main()

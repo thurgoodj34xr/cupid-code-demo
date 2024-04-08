@@ -52,6 +52,20 @@
   padding: 10px;
 }
 
+.adminContainers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    text-align: left;
+    padding: 10px;
+  }
+.adminContainers:hover{
+  background-color: rgb(216, 213, 213);
+  cursor: pointer;
+}
+
 hr {
   border: 1px solid grey;
   width: 100%;
