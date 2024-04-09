@@ -20,7 +20,7 @@ So, whether you're planning a cozy picnic under the stars or a daring adventure 
   - [Selecting a Cupid](#select-cupid)
 - [Cupids](#cupids) 
 - [Admin](#admin)
-- [Troubleshooting](#troubleshooting:)
+- [Troubleshooting](#troubleshooting)
 - [Frequently Asked Questions](#FAQ)
 - [Contact Information](#contact-information)
 
