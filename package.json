@@ -13,7 +13,8 @@
     "seed": "prisma db seed",
     "console": "prisma-repl",
     "studio": "prisma studio",
-    "tests" : "vitest"
+    "tests": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
@@ -27,7 +28,9 @@
     "@types/express-handlebars": "^6.0.0",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/multer": "^1.4.11",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
+    "@vitest/coverage-v8": "^1.4.0",
     "nodemon": "^3.0.3",
     "prisma": "^5.11.0",
     "rimraf": "^5.0.5",
@@ -55,6 +58,7 @@
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.1",
     "socket.io": "^4.7.4",
+    "supertest": "^6.3.4",
     "winston": "^3.12.0",
     "winston-timestamp-colorize": "^1.1.0"
   }

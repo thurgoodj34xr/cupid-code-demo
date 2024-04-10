@@ -26,7 +26,7 @@ const db = new PrismaClient();
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-export default { io, app };
+
 
 let users: User[] = []
 io.on('connection', (socket) => {
@@ -125,4 +125,5 @@ server.listen(process.env.PORT || 3000, () => {
   logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
 });
 
+export default { io, app };
 

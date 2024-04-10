@@ -1,12 +1,17 @@
-import { describe, it, expect } from "vitest";
-
-import app from "../../index"
-
-const server = app.app;
+import { describe, expect, it } from "vitest";
+import StandardUser from "./standard_user";
 
 describe("auth", () => {
-    it("should return a 200 status", async () => {
-        const res = await server.get("/auth");
-        expect(res.status).toBe(200);
+    it("Should login to the server", async () => {
+        const { agent, user, token } = await StandardUser();
+        expect(user).toBeDefined();
+        expect(token).toBeDefined();
+    })
+
+    it("should get the current user", async () => {
+        const { agent, user, token } = await StandardUser();
+        const res = await agent.post("/token/").send({ token });
+        const currentUser = await res.body;
+        expect(currentUser).toBeDefined();
     })
 })
