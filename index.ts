@@ -26,7 +26,7 @@ const db = new PrismaClient();
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-export default io;
+export default { io, app };
 
 let users: User[] = []
 io.on('connection', (socket) => {

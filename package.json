@@ -12,7 +12,8 @@
     "migrate-reset": "prisma migrate reset",
     "seed": "prisma db seed",
     "console": "prisma-repl",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "tests" : "vitest"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
@@ -31,7 +32,8 @@
     "prisma": "^5.11.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "dependencies": {
     "@prisma/client": "^5.11.0",

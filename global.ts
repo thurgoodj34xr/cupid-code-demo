@@ -1,5 +1,5 @@
 import Logger from "./server/utils/logger";
-import io from "./index";
+import io from "./index"
 import { User } from "@prisma/client";
 
 declare global {
@@ -35,7 +35,7 @@ global.logError = (fileName, error, user) => {
     } else {
         log = "log", `${fileName} -> ${msg}`
     }
-    io.emit("log", { user, message: msg, file: fileName, type: "error" })
+    io.io.emit("log", { user, message: msg, file: fileName, type: "error" })
     Logger.error(`${fileName} -> ${msg}`);
 }
 
@@ -46,14 +46,14 @@ global.logInfo = (fileName, msg, user) => {
     } else {
         log = `${fileName} -> ${msg}`;
     }
-    io.emit("log", { user, message: msg, file: fileName, type: "info" });
+    io.io.emit("log", { user, message: msg, file: fileName, type: "info" });
     Logger.info(log)
 }
 
 global.cupidStatus = () => {
-    io.emit("cupidStatus");
+    io.io.emit("cupidStatus");
 }
 
 global.jobStatus = () => {
-    io.emit("jobStatus")
+    io.io.emit("jobStatus")
 }
