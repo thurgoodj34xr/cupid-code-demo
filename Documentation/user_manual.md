@@ -16,9 +16,7 @@ So, whether you're planning a cozy picnic under the stars or a daring adventure 
   - [Editing Account Information](#editing-account-information)
   - [Adding Cupid Cash](#adding-cupid-cash)
   - [Date Simulator](#date-simulator)
-  - [AI Assistance](#ai-assistance)
   - [AI Chat](#ai-chat)
-  - [Selecting a Cupid](#selecting-a-cupid)
 - [Cupids](#cupids) 
 - [Admin](#admin)
 - [Troubleshooting](#troubleshooting)
@@ -104,12 +102,22 @@ Start by adding a picture of yourself by clicking the little camera icon. You wi
 
 Continue filling out all your information. Please provide an email that you actively monitor for news and updates about your account.  Remember to create strong password, see [Password Requirements](#password-requirements) for more information.
 
+### Toggle Availability
+At the top of the sidebar menu there is a toggle button to change availability status. The figure below shows the cupid active. To show your status as **off-line** tap the toggle button so that it is a gray color and red exit.
+
+<img src="toggleActive.png" alt="Toggle is set to on" width="500"/>
+
+### Accepting and Decline a Job
+### Training page
+
+
 ## Troubleshooting
 
 ## Admin
 
 ## FAQ
-#### Password Requirements
+
+### Password Requirements
 - Must be at least 10 characters long
 - Must contain at least one uppercase letter
 - Must contain at least one number
