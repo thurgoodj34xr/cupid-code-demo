@@ -27,7 +27,6 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-
 let users: User[] = []
 io.on('connection', (socket) => {
   let user: User;
@@ -120,10 +119,11 @@ app.use("/admin", AdminController(db))
 app.use("/hireCupid", HireCupidController(db))
 app.use("/jobs", JobsController(db))
 
-
-server.listen(process.env.PORT || 3000, () => {
-  logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
-});
+if (process.env.ENV !== 'test') {
+  server.listen(process.env.PORT || 3000, () => {
+    logInfo(`Index.ts`, `Listening on port ${process.env.PORT || 3000}...`)
+  });
+}
 
 export default { io, app };
 

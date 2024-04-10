@@ -14,6 +14,7 @@
     "console": "prisma-repl",
     "studio": "prisma studio",
     "tests": "vitest",
+    "tests-ui": "vitest --open --ui --coverage.enabled=true",
     "coverage": "vitest run --coverage"
   },
   "prisma": {
@@ -31,6 +32,7 @@
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
     "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/ui": "^1.4.0",
     "nodemon": "^3.0.3",
     "prisma": "^5.11.0",
     "rimraf": "^5.0.5",

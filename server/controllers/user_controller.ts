@@ -121,24 +121,29 @@ const UserController = (db: PrismaClient) => {
         const { email, password } = req.body;
         const user = await _repository.findByEmail(email);
 
-        if (user && bcrypt.compareSync(password, user.password)) {
-            const { accessToken, refreshToken } = Jwt.generateTokens(user);
-            await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
-            logInfo("usercontroller", `current user is is of type ${user.role}`)
-            if (user.role == Role.CUPID) {
-                var location = await useGeo()
-                var responseCupid = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
-                logInfo("user_controller", `The determined location was ${responseCupid.latitude}`)
+        try {
+            if (user && bcrypt.compareSync(password, user.password)) {
+                const { accessToken, refreshToken } = Jwt.generateTokens(user);
+                await _authRepository.addRefreshTokenToWhitelist({ refreshToken, userId: user.id });
+                logInfo("usercontroller", `current user is is of type ${user.role}`)
+                if (user.role == Role.CUPID) {
+                    var location = await useGeo()
+                    var responseCupid = await _cupidRepository.setLocation(user.cupid!!.id, location.latitude, location.longitude)
+                    logInfo("user_controller", `The determined location was ${responseCupid.latitude}`)
+                }
+                if (user.role == Role.STANDARD) {
+                    var location = await useGeo()
+                    var responseUser = await _profileRepository.setLocation(user.id, location.latitude, location.longitude)
+                }
+                logInfo("user_controller", "signed in", user)
+                res.send({ user: user, tokens: { accessToken, refreshToken } });
+            } else {
+                logError("user_controller", `${email} email/password combo was invalid`,)
+                res.send({ error: "Invalid login credentials." });
             }
-            if (user.role == Role.STANDARD) {
-                var location = await useGeo()
-                var responseUser = await _profileRepository.setLocation(user.id, location.latitude, location.longitude)
-            }
-            logInfo("user_controller", "signed in", user)
-            res.send({ user: user, tokens: { accessToken, refreshToken } });
-        } else {
-            logError("user_controller", `${email} email/password combo was invalid`,)
-            res.send({ error: "Invalid login credentials." });
+        } catch (error) {
+            logError("user_controller", error);
+            res.send({ error: "An error occurred during login." });
         }
     })
 

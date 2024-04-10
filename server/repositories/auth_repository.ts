@@ -11,7 +11,15 @@ export default class AuthRepository {
         refreshToken: string,
         userId: number
     }) {
-        await this.deleteRefreshTokenByUser(userId);
+        // await this.deleteRefreshTokenByUser(userId);
+
+        const tk = await this.db.refreshToken.findUnique({
+            where: {
+                userId
+            }
+        });
+        if (tk) return tk;
+
         return this.db.refreshToken.create({
             data: {
                 hashedToken: hashToken(refreshToken),
