@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 const CreateUsers = async (db: PrismaClient) => {
     await db.user.upsert({
         where: {
-            id: 1,
+            email: "user@gmail.com",
         },
         create: {
             firstName: "John",
