@@ -10,20 +10,29 @@ But wait, there's more! Ever wished for a trusty sidekick to guide you through t
 
 So, whether you're planning a cozy picnic under the stars or a daring adventure through the city streets, let Cupid Code be your digital wingman, transforming your nerdy fantasies into real-world romance.
 ## Table of Contents
-- [Installation](installation)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
 - [Standard Users](#standard-users)
   - [Create an Account](#creating-an-account)
   - [Editing Account Information](#editing-account-information)
   - [Adding Cupid Cash](#adding-cupid-cash)
   - [Date Simulator](#date-simulator)
   - [AI Chat](#ai-chat)
-- [Cupids](#cupids) 
+- [Cupids](#cupids)
+  - [Cupid Sign-up](#cupid-sign-up)
+  - [Toggle Availability](#toggle-availability)
+  - [Start a Job](#starting-a-job)
+    - [View Available Jobs](#view-available-jobs)
+    - [Accepting a Job](accepting-a-job)
+    - [Completing a Job](#completing-a-job)
 - [Admin](#admin)
 - [Troubleshooting](#troubleshooting)
 - [Frequently Asked Questions](#FAQ)
 - [Contact Information](#contact-information)
 
-## Installation
+## Getting Started
+### Installation
+
 ## Standard Users
 ### Creating an Account
 You need to create an account before you are able to use Cupid Code's features. From the sign-in page, navigate to the blue *Sign up* button located at the bottom of the sign-in page. Click it.
@@ -48,11 +57,18 @@ Ensure that you provide your relationship goals so that we can best serve you. P
 ### Editing Account Information
 
 ### Adding Cupid Cash
+From the sidebar menu select **Add Cupid Cash**, as seen below.
+
+<img src="add_cupid_cash.png" alt="add cash icon" width="250"/>
+
+You will then be directed to the form where you can enter your desired amount and your card information. Hit the **Add Cupid Cash** button at the top of the screen. Do not hit the **Add Cupid Cash** more than once even if there is an error message. Instead, reload the page and see if the payment went through.
+
+<img src="cupid_cash.png" alt="adding cupid cash icon" width="500"/>
 
 ### Date Simulator
 From the sidebar menu select **Date Simulator**, as seen below.
 
-<img src="dateSimIcon.png" alt="Date simulator icon with robot icon" width="500"/>
+<img src="dateSimIcon.png" alt="Date simulator icon with robot icon" width="250"/>
 
 #### First Step - Generating transcript
 You will be prompted to enter your date description. Make sure to be specific and give good details for a better outcome. After entering your description, hit the **Generate Transcript** button. 
@@ -76,7 +92,7 @@ Start be selecting a cupid from the drop-down menu under **Select Cupid**. After
 ### AI Chat
 From the sidebar menu select **AI Chat**, as seen below.
 
-<img src="AIChatSelection.png" alt="Side Bar AI chat selection" width="500"/>
+<img src="AIChatSelection.png" alt="Side Bar AI chat selection" width="250"/>
 
 Type in the text box and hit the blue arrow to send you message the AI. Depending on the connection, it might take a couple seconds to receive a response. 
 
@@ -107,11 +123,28 @@ At the top of the sidebar menu there is a toggle button to change availability s
 
 <img src="toggleActive.png" alt="Toggle is set to on" width="500"/>
 
-### Accepting and Decline a Job
-### Training page
+### Starting a Job
+#### View Available Jobs
+Start by making sure that your account is active. From the sidebar, navigate to the **Available Jobs** section, as seen below.
 
+<img src="availableJobs.png" alt="Available jobs section with a magnify glass" width="250"/>
 
-## Troubleshooting
+You will see a list of available jobs with the following information:
+* User's name
+* Job description
+* Cupid payout
+
+To view more information about a job hit the button **View** on the right side of the job box. This will display a bit more information that is important information like the location. 
+
+<img src="jobList.png" alt="list of available jobs" width="500"/>
+
+#### Accepting a Job
+To accept a job hit the **Start** button found below the **View** button. You will see the job will move to the **Current Jobs** section. 
+
+<img src="currentJob.png" alt="job is now under current jobs section" width="500"/>
+
+#### Completing a Job
+Once you have completed a job, hit the **Complete** button. The completed job will be removed from your **Current Jobs** section.
 
 ## Admin
 
@@ -124,4 +157,14 @@ At the top of the sidebar menu there is a toggle button to change availability s
 - Must contain at least one symbol 
   - ex. !@#$%?&*
 
+## Troubleshooting
+
 ## Contact Information
+Please contact admin@cupid.com for:
+* Reporting a cupid
+
+Please contact support@cupid.com for:
+* Customer service
+* Reporting a bug
+* Cupid cash refunds
+* All other needs
