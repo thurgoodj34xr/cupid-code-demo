@@ -17,6 +17,7 @@ describe("auth", () => {
     it("should login a user", async () => {
         expect(user).toBeDefined();
     })
+
     it("should get the current user", async () => {
         const res = await agent.post("/token/verify").send({ token });
         const currentUser = await res.body;
@@ -53,8 +54,8 @@ describe("auth", () => {
         expect(profile.balance).toBe('25');
         expect(profile.createdAt).toBeDefined();
         expect(profile.dailyBudget).toBe('15');
-        expect(profile.latitude).toBe('41.788');
-        expect(profile.longitude).toBe('-111.8113');
+        expect(profile.latitude).toBe('41.7468');
+        expect(profile.longitude).toBe('-111.8268');
         expect(profile.relationshipGoals).toBe('Go on a lot of dates');
         expect(profile.updatedAt).toBeDefined();
         expect(profile.userId).toBe(1);
