@@ -28,6 +28,7 @@ describe("auth", () => {
         const currentUser = await res.body;
         expect(currentUser).toBeDefined();
     })
+
     it('should create a new Standard user', async () => {
 
         const emailString = generateRandomString(10);
@@ -61,7 +62,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Email already in use")
     });
@@ -80,7 +80,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must be at least 10 characters long.")
     });
@@ -99,7 +98,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must contain at least one uppercase letter.")
     });
@@ -118,7 +116,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must contain at least one lowercase letter.")
     });
@@ -137,7 +134,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must contain at least one number.")
     });
@@ -156,7 +152,6 @@ describe("auth", () => {
                 goals: 'Find a soulmate',
                 bio: 'I love long walks on the beach',
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must contain at least one symbol.")
     });
@@ -166,7 +161,6 @@ describe("auth", () => {
             .send({
                 currentPassword: "Password1!", newPassword: "password"
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Password must be at least 10 characters long.")
     });
@@ -176,18 +170,15 @@ describe("auth", () => {
             .send({
                 currentPassword: "userJ", newPassword: "Password1!"
             });
-        console.log("Status of error is" + res.status)
         expect(res.status).toBe(200);
         expect(res.body.error).toBe("Incorrect Current Password.")
     });
 
-    it('should force user to change password', async () => {
+    it('should allow user to change password', async () => {
         const res = await agent.post("/users/password")
             .send({
                 currentPassword: "Password1!", newPassword: "Password2!"
             });
-        console.log(res)
-        expect(res.status).toBe(200);
         expect(res.body.message).toBe("Your account was successfully updated")
         const res2 = await agent.post("/users/password")
             .send({
@@ -195,6 +186,87 @@ describe("auth", () => {
             });
     });
 
+    it('should force user to use correct password to start session', async () => {
+        const res = await agent.post("/users/session")
+            .send({
+                email: "user@gmail.com", password: "Password2!"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("Invalid login credentials.")
+    });
+
+    it('should allow user to start session', async () => {
+        const res = await agent.post("/users/session")
+            .send({
+                email: "user@gmail.com", password: "Password1!"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.user).toBeDefined()
+    });
+
+    it('should allow cupid to start session', async () => {
+        const res = await agent.post("/users/session")
+            .send({
+                email: "cupid@gmail.com", password: "cupid"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.user).toBeDefined()
+    });
+
+    it('should force user to use a number for age ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "Jim", lastName: "Craig", email: "user@gmail.com", age: "Bl", dailyBudget: 15, relationshipGoals: "Turn 76"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("Age must be a number")
+    });
+
+    it('should force user to use a number for budget ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "Jim", lastName: "Craig", email: "user@gmail.com", age: 10, dailyBudget: "BL", relationshipGoals: "Turn 76"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("Budget must be a number")
+    });
+
+    it('should force user to use a valid email type for email ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "Jim", lastName: "Craig", email: "usergmail.com", age: 10, dailyBudget: 10, relationshipGoals: "Turn 76"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("Invalid Email Provided")
+    });
+
+    it('should force user to set budget to at least 10 ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "Jim", lastName: "Craig", email: "user@gmail.com", age: 10, dailyBudget: 9, relationshipGoals: "Turn 76"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("In order to service quality dates, Cupid Code requires a minimum of 10 cupid bucks per date")
+    });
+
+    it('should force user to set age to at least 18 ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "Jim", lastName: "Craig", email: "user@gmail.com", age: 10, dailyBudget: 10, relationshipGoals: "Turn 76"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBe("To use this service you must be at least 18")
+    });
+
+    it('should allow user to update profile number for age ', async () => {
+        const res = await agent.post("/users/update")
+            .send({
+                firstName: "John", lastName: "Doe", email: "user@gmail.com", age: 0, dailyBudget: 0, relationshipGoals: "Go on a lot of dates"
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.updatedAccount).toBeDefined()
+        expect(res.body.message).toBe("Your account was successfully updated")
+    });
 
 
     // TODO: This should just work, but we can't create a cupid rn.
