@@ -27,12 +27,11 @@ const CupidController = (db: PrismaClient) => {
             const cupid = await _repository.findById(hire!!.cupidId);
             res.status(200).send(cupid);
         } catch (error) {
-            console.log('return')
             res.status(200).send()
         }
     });
 
-    router.get("/avaliable", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
+    router.get("/available", AuthMiddleware(db, [Role.STANDARD]), async (req, res) => {
         const availableCupids = await _repository.getAvailable();
         res.send(availableCupids);
     });
@@ -86,7 +85,6 @@ const CupidController = (db: PrismaClient) => {
     router.post("/hire", AuthMiddleware(db, [Role.STANDARD]), async (req, res, next) => {
         try {
             const { profileId, cupidId } = req.body;
-            console.log(profileId, cupidId)
             // Hire the cupid   
             const cupid = await _hireRepository.create(profileId, cupidId);
             logInfo("hire_cupid_controller", `hired cupid ${cupidId}`, req.user!!);

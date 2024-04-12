@@ -41,7 +41,7 @@ function SelectCupid() {
   });
 
   const { data: cupids } = useQuery({
-    queryFn: async () => await api.get(`/cupids/avaliable`),
+    queryFn: async () => await api.get(`/cupids/available`),
     queryKey: ["cupids"],
   });
 

@@ -3,7 +3,6 @@ import { Router } from "express";
 import AuthMiddleware from "../middleware/authentication";
 import HireCupidRepository from "../repositories/hire_cupid_repository";
 import UserRepository from "../repositories/user_repository";
-import { error } from "winston";
 
 const HireCupidController = (db: PrismaClient) => {
     const router = Router();
@@ -54,7 +53,7 @@ const HireCupidController = (db: PrismaClient) => {
         }
     });
 
-    
+
 
     return router;
 }
