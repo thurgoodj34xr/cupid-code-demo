@@ -10,17 +10,13 @@ const generateRandomString = (length: number): string => {
 };
 
 let agent: any;
-let user: any; // Adjust the type of user as per your application
-let token: any;
 
 
-describe("auth", () => {
+describe("users", () => {
     beforeAll(async () => {
         // Create the StandardUser once before all tests
         const standardUser = await StandardUser();
         agent = standardUser.agent;
-        user = standardUser.user;
-        token = standardUser.token;
     });
 
     it("Get user field", async () => {
@@ -286,24 +282,4 @@ describe("auth", () => {
         expect(res.body.updatedAccount).toBeDefined()
         expect(res.body.message).toBe("Your account was successfully updated")
     });
-
-
-    // TODO: This should just work, but we can't create a cupid rn.
-    // it('should create a new Cupid user', async () => {
-    //     const emailString = generateRandomString(11);
-    //     const res = await agent.post("/users/create")
-    //         .send({
-    //             userType: 'Cupid',
-    //             firstName: 'John',
-    //             lastName: 'Doe',
-    //             email: emailString + '@example.com',
-    //             password: 'strongPassword123!',
-    //             age: 25,
-    //             budget: 100,
-    //             goals: 'Find a soulmate',
-    //             bio: 'I love long walks on the beach',
-    //         });
-    //     expect(res.status).toBe(200);
-    //     expect(res.body.userId).toBeDefined();
-    // });
 })

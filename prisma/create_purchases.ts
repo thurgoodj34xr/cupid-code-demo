@@ -1,11 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 const CreatePurchases = async (db: PrismaClient) => {
-    await db.purchases.upsert({
-        where: {
-            id: 1,
-        },
-        create: {
+    await db.purchases.create({
+        data: {
             userId: 1,
             total: 10,
             jobCost: 7,
@@ -13,14 +10,10 @@ const CreatePurchases = async (db: PrismaClient) => {
             profit: 5,
             details: "Panda Express",
         },
-        update: {}
     });
 
-    await db.purchases.upsert({
-        where: {
-            id: 2,
-        },
-        create: {
+    await db.purchases.create({
+        data: {
             id: 2,
             userId: 1,
             total: 15,
@@ -29,13 +22,9 @@ const CreatePurchases = async (db: PrismaClient) => {
             profit: 5,
             details: "Movie Tickets",
         },
-        update: {}
     });
-    await db.purchases.upsert({
-        where: {
-            id: 3,
-        },
-        create: {
+    await db.purchases.create({
+        data: {
             id: 3,
             userId: 1,
             total: 5,
@@ -44,7 +33,6 @@ const CreatePurchases = async (db: PrismaClient) => {
             profit: 5,
             details: "Flowers from Smiths",
         },
-        update: {}
     });
 }
 

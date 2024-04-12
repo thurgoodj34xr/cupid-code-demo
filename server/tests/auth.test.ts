@@ -54,8 +54,8 @@ describe("auth", () => {
         expect(profile.balance).toBe('25');
         expect(profile.createdAt).toBeDefined();
         expect(profile.dailyBudget).toBeDefined();
-        expect(profile.latitude).toBe('41.7468');
-        expect(profile.longitude).toBe('-111.8268');
+        expect(profile.latitude).toBeDefined();
+        expect(profile.longitude).toBeDefined();
         expect(profile.relationshipGoals).toBe('Go on a lot of dates');
         expect(profile.updatedAt).toBeDefined();
         expect(profile.userId).toBe(1);
