@@ -5,7 +5,7 @@ const StandardUser = async () => {
     const agent = request.agent(server.app);
     const res = await agent.post("/users/session").send({
         email: "user@gmail.com",
-        password: "user"
+        password: "Password1!"
     })
 
     const user = await res.body;

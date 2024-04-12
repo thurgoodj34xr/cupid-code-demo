@@ -56,7 +56,7 @@ const UserController = (db: PrismaClient) => {
         const passwordIsStrong = isStrongPassword(password);
         if (!passwordIsStrong.success) {
             res.send({ error: passwordIsStrong.message })
-            logError("user_controller.ts", "Password isnt strong enough")
+            logError("user_controller.ts", "Password isn't strong enough")
             return;
         }
 

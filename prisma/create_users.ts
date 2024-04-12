@@ -10,7 +10,7 @@ const CreateUsers = async (db: PrismaClient) => {
             firstName: "John",
             lastName: "Doe",
             email: "user@gmail.com",
-            password: bcryptjs.hashSync('user'),
+            password: bcryptjs.hashSync('Password1!'),
             photoUrl: "https://images.pexels.com/photos/1317712/pexels-photo-1317712.jpeg",
             profile: {
                 create: {
