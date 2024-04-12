@@ -4,10 +4,9 @@ import bcryptjs from "bcryptjs";
 const CreateAdmins = async (db: PrismaClient) => {
     await db.user.upsert({
         where: {
-            id: 15,
+            email: "admin@gmail.com",
         },
         create: {
-            id: 7,
             firstName: "ADMIN",
             lastName: "USER",
             email: "admin@gmail.com",
@@ -16,7 +15,6 @@ const CreateAdmins = async (db: PrismaClient) => {
             role: Role.ADMIN,
             admin: {
                 create: {
-                    id: 1,
                 }
             }
         },

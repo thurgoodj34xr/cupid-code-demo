@@ -48,6 +48,25 @@ describe("auth", () => {
         expect(res.body.userId).toBeDefined();
     }, 10000);
 
+    it('should create a new Cupid', async () => {
+
+        const emailString = generateRandomString(10);
+        const res = await agent.post("/users/create")
+            .send({
+                userType: 'Cupid',
+                firstName: 'John',
+                lastName: 'Doe',
+                email: emailString + '@example.com',
+                password: 'strongPassword123!',
+                age: 25,
+                budget: 100,
+                goals: 'Find a soulmate',
+                bio: 'I love long walks on the beach',
+            });
+        expect(res.status).toBe(200);
+        expect(res.body.userId).toBeDefined();
+    }, 10000);
+
     it('should not allow duplicate emails', async () => {
         const emailString = generateRandomString(10);
         const res = await agent.post("/users/create")
