@@ -125,3 +125,9 @@ Seed script is found in `prisma/seed.ts`. Update that script to add default data
 yarn seed
 # npm run seed
 ```
+
+### To run unit tests
+```bash
+yarn tests-ui
+```
+

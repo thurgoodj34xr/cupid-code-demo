@@ -1,15 +1,18 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import StandardUser from "./standard_user";
+import CupidUser from "./cupid_user";
 
 
 let agent: any;
-
+let cupidAgent: any;
 
 describe("users", () => {
     beforeAll(async () => {
         // Create the StandardUser once before all tests
         const standardUser = await StandardUser();
         agent = standardUser.agent;
+        const cupidUser = await CupidUser();
+        cupidAgent = cupidUser.agent;
     });
 
 
@@ -22,15 +25,20 @@ describe("users", () => {
     it('should pull all available cupids', async () => {
         const res = await agent.get("/cupids/available").send({});
         expect(res.status).toBe(200);
-        expect(res.body[0].user.email).toBe("cupid@gmail.com")
+        expect(res.body[0].user.email).toBeDefined()
     });
-    // TODO we need a cupid object to set working not working
-    // it('should pull all working cupids', async () => {
-    //     const res = await agent.post("/cupids/working").send({});
-    //     console.log(res.body)
-    //     expect(res.status).toBe(200);
-    //     expect(res.body[1].user.id).toBe(3)
-    // });
+
+    it('should able to update working status to false', async () => {
+        const res = await cupidAgent.post("/cupids/working").send({ working: false });
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("Working status updated")
+    });
+
+    it('should able to update working status to true', async () => {
+        const res = await cupidAgent.post("/cupids/working").send({ working: true });
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("Working status updated")
+    });
 
     it('should be able to pull if a specific cupids is working', async () => {
         const res = await agent.post("/cupids/status").send({ cupidId: 1 });

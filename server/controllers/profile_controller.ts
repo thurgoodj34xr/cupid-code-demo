@@ -16,14 +16,13 @@ const ProfileController = (db: PrismaClient) => {
         try {
             const user = await _repository.findById(req.user!!.id)
             const currentBalance = user!!.profile!!.balance.toNumber();
-            var workingChangeAmount = Math.abs(changeAmount)
-            const newBalance = currentBalance + workingChangeAmount;
+            const newBalance = currentBalance + changeAmount;
             if (newBalance < 0) {
                 res.send({ error: "Cannot Spend more money then you have!" })
                 return;
             }
             await _repository.updateBalance(req.user!!.id, newBalance)
-            await _purchasesRepository.record(req.user!!.id, null, workingChangeAmount, 0, 0, workingChangeAmount, "Cupid Bucks Purchase")
+            await _purchasesRepository.record(req.user!!.id, null, changeAmount, 0, 0, changeAmount, "Cupid Bucks Purchase")
             res.send({ newBalance });
             logInfo("profile_controller", `purchased ${changeAmount} cupid cash`, req.user!!)
             return;

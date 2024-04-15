@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import StandardUser from "./standard_user";
 
 import { randomBytes } from 'crypto';
+import CupidUser from "./cupid_user";
 
 // Function to generate a random string of a given length
 const generateRandomString = (length: number): string => {
