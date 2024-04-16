@@ -204,26 +204,26 @@ Additionally, quick links to other admin pages are provided on the Homepage for 
 ### View Users
 This page allows you to easily view users based on their roles. Simply select the desired role from the dropdown menu to see user names, photos, and counts for each user type. Please note that the Delete feature is not available in this app release.
 
-<img src="View Users.png" alt="View Users Icon" width="250"/>
+<img src="View Users.png" alt="View Users Icon" width="250"/>  
 <img src="ViewUsersPage.png" alt="View Users Page" width="500"/>  
 
 ### Logs
 This page allows you to monitor real-time activity within your app, including connected users and user actions such as password changes. Navigate to the app and click on Logs, or access it from the homepage.
 
-<img src="Logs.png" alt="Logs Icon" width="125"/> 
-<img src="LogsConnectedUsers.png" alt="Logs Connected Users" width="500"/>  
+<img src="Logs.png" alt="Logs Icon" width="125"/>   
+<img src="LogsConnectedUsers.png" alt="Logs Connected Users" width="500"/>   
 <img src="LogsExample.png" alt="Example of Logs" width="500"/>  
 
 ### My Account
 Use this page to update your personal information, including first and last name and email address.
 
-<img src="MyAccountAdmin.png" alt="My Account Icon" width="250"/> 
+<img src="MyAccountAdmin.png" alt="My Account Icon" width="250"/>  
 <img src="MyAccount.png" alt="My Account Page" width="500"/> 
 
 ### Change Password
 Use this page to change your current password.
 
-<img src="changePasswordAdmin.png" alt="Change Passwords Icon" width="250"/> 
+<img src="changePasswordAdmin.png" alt="Change Passwords Icon" width="250"/>  
 <img src="ChangePassword.png" alt="Change Password Page" width="500"/> 
 
 ## FAQ
