@@ -38,7 +38,7 @@ const CreateCupids = async (db: PrismaClient) => {
             role: Role.CUPID,
             cupid: {
                 create: {
-                    bio: "I have a cupid for 6 1onths now and love helping people find their true love!",
+                    bio: "I have a cupid for 6 months now and love helping people find their true love!",
                     latitude: 43.0246,
                     longitude: -111.7919,
                     working: true
