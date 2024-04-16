@@ -80,7 +80,7 @@ export default class JobRepository {
         return this.db.jobs.findMany({
             where: { cupidId, complete: false, started: true },
             include: { cupid: true, user: true },
-    });
+        });
     }
 
     startJob(id: number) {

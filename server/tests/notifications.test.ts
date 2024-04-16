@@ -6,6 +6,7 @@ describe("Notifcations", async () => {
         const { agent, user, token } = await StandardUser();
         const res = await agent.post("/notifications/all")
         const body = res.body;
+        console.log(body)
         expect(body[0]).toBeDefined();
     })
 

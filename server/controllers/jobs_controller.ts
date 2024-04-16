@@ -35,6 +35,7 @@ const JobsController = (db: PrismaClient) => {
     // Jobs by ID
     router.get('/:id', AuthMiddleware(db), async (req, res, next) => {
         const jobId = req.params.id;
+        console.log(jobId)
         var intJobId = parseInt(jobId)
         const job = await _repository.getJobById(intJobId);
         if (job) {
@@ -46,18 +47,25 @@ const JobsController = (db: PrismaClient) => {
 
     // Create new Job
     router.post('/create', AuthMiddleware(db), async (req, res, next) => {
-        const { cupidId, userId, name, details, cupidPayout, total } = req.body;
-        const user = await _userRepository.findById(userId);
-        if (!user || !user.profile || user.profile.latitude || user.profile.longitude) {
-            res.status(400).send('User Id not recognized by system');
-            return;
+        try {
+
+            const { cupidId, userId, name, details, cupidPayout, total } = req.body;
+            const user = await _userRepository.findById(userId);
+            if (!user || !user.profile) {
+
+                res.status(400).send('User Id not recognized by system');
+                return;
+            }
+            const userLat = Number(user.profile.latitude);
+            const userLong = Number(user.profile.longitude);
+            const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(userId), name, details, latitude: userLat, longitude: userLong, total, cupidPayout });
+            logInfo(`jobs_controller.ts`, `Created a new Job`, req.user!!);
+            jobStatus();
+            res.send(createdJob);
+        } catch (error) {
+            logError(`jobs_controller.ts`, `Error creating a new Job`, req.user!!);
+            res.status(500).send('Internal Server Error');
         }
-        const userLat = parseFloat(user.profile.latitude);
-        const userLong = parseFloat(user.profile.longitude);
-        const createdJob = await _repository.createJob({ cupidId: parseInt(cupidId), userId: parseInt(userId), name, details, latitude: userLat, longitude: userLong, total, cupidPayout });
-        logInfo(`jobs_controller.ts`, `Created a new Job`, req.user!!)
-        jobStatus();
-        res.send(createdJob);
     });
 
     // Update job by ID

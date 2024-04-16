@@ -25,15 +25,13 @@ describe("users", () => {
         expect(res.body[2]).toBeDefined()
     });
 
-    // TODO this throws an error
-    // it('should be able to create a job', async () => {
-    //     const res = await cupidAgent.get("/jobs/create").send({
-    //         cupidId: 2, userId: 1, name: "Cliff Jumping", details: "Near death experience", cupidPayout: 40, total: 180
-    //     });
-    //     console.log(res)
-    //     expect(res.status).toBe(200);
-    //     expect(res.body).toBeDefined()
-    // });
+    it('should be able to create a job', async () => {
+        const res = await cupidAgent.post("/jobs/create").send({
+            cupidId: 2, userId: 1, name: "Cliff Jumping", details: "Near death experience", cupidPayout: 40, total: 180
+        });
+        expect(res.status).toBe(200);
+        expect(res.body).toBeDefined()
+    });
 
     // it("should be able to delete a job", async () => {
     //     const res = await cupidAgent.get("/jobs/delete/4").send({})
