@@ -61,7 +61,6 @@ const JobsController = (db: PrismaClient) => {
     });
 
     // Update job by ID
-
     router.post('/update/:id', AuthMiddleware(db, [Role.ADMIN]), async (req, res, next) => {
         const jobId = req.params.id;
         var intJobId = parseInt(jobId)
