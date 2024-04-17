@@ -38,7 +38,7 @@ So, whether you're planning a cozy picnic under the stars or a daring adventure 
 
 ## Getting Started
 ### Installation and Set Up
-Please click [here](/README.md) for more information on set up.
+Please click [here](../README.md) for more information on set up.
 
 ## Standard Users
 ### Creating an Account
@@ -62,6 +62,12 @@ Ensure that you provide your relationship goals so that we can best serve you. P
 <img src="images/createAnAccountStandard.png" alt="An example of the creating an account filled out" width="500"/>
 
 ### Editing Account Information
+From the sidebar menu select **My Account** to edit account information and **Change Password** to change your password.
+
+<img src="images/passwordAndAccount.png" alt="changing you account info icons" width="500"/>
+
+Ensure that your changes are saved by hitting the blue **Update** button. 
+
 
 ### Adding Cupid Cash
 From the sidebar menu select **Add Cupid Cash**, as seen below.
@@ -106,7 +112,7 @@ Type in the text box and hit the blue arrow to send you message the AI. Dependin
 <img src="images/ChatEntry.png" alt="text entry with example text" width="500"/>
 
 Remember that your chat with the AI won't save and will be deleted once you leave the page. If you want to save some information please write it down else where. 
-
+ 
 
 ## Cupids 
 ### Cupid sign-up
