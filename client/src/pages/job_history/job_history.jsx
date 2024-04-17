@@ -12,7 +12,6 @@ function JobHistory() {
     const [successMessage, setSuccessMessage] = useState(null);
     return (
         <section className={classes.container}>
-            <h1>JobHistory</h1>
 
         </section>
     );
