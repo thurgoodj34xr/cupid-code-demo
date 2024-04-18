@@ -243,9 +243,13 @@ Use this page to change your current password.
   - ex. !@#$%?&*
 
 ### How does the AI date bot work?
+Our AI date bot harnesses the power of artificial intelligence (AI) to create sample conversations tailored to various date scenarios. Simply input your desired date activity, and the bot generates a realistic conversation based on that setting. It analyzes conversational patterns and social cues to simulate engaging interactions between two people. Whether you're planning a romantic dinner or a fun day out, our AI date bot helps you visualize how your date might unfold, making it easier to plan and prepare for memorable moments.
 ### Can I hire someone through Cupid Code to assist with my date?
+Yes, you can hire a Cupid through Cupid Code to assist with your date! Cupids are individuals who help enhance your date experience by bringing thoughtful gestures such as movie tickets, flowers, or any other items suggested by our AI during the date. Whether you want to add a touch of romance, surprise your date with a special gift, or simply ensure everything goes smoothly, our Cupids are here to make your date unforgettable. Just let us know your preferences, and we'll arrange for a Cupid to accompany you on your date and help create magical moments.
 ### How do I pay for the hired processes?
+When it comes to paying for our services, we've got you covered. You can use Cupid cash to settle the bill for the assistance provided by our Cupids. When signing up, just set your budget. If you need more funds later, simply add money using your credit or debit card. It's that easy! No hassle, no fuss—just smooth transactions, so you can focus on enjoying your date.
 ### How do I get technical support for the app?
+Contact support@cupid.com for technical support.
 
 
 ## Troubleshooting
