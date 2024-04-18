@@ -87,6 +87,7 @@ export default class CupidRepository {
         return this.db.cupid.findMany({
             where: {
                 working: true,
+                fired: false,
             },
             include: {
                 user: true,
@@ -95,8 +96,6 @@ export default class CupidRepository {
     }
 
     delete(profileId: number, cupidId: number) {
-        console.log(profileId)
-        console.log(cupidId)
         return this.db.hireCupid.delete({
             where: {
                 profileId_cupidId: {
@@ -105,5 +104,15 @@ export default class CupidRepository {
                 }
             }
         })
+    }
+    terminate(id: number, status: boolean) {
+        return this.db.cupid.update({
+            where: {
+                id,
+            },
+            data: {
+                fired: status,
+            }
+        });
     }
 }

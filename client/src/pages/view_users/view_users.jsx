@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+// ViewUsers.jsx
+import React, { useEffect, useState } from "react";
 import Api from "../../hooks/api";
 import useContext from "../../hooks/context";
 import PhotoCircle from "../../componets/photo_circle/photo_circle";
 import classes from "./view_users.module.css";
+import UserCard from "../../componets/userCard/user_card";
 import Accordion from "../../componets/accordion/Accordion";
+import TerminateCupid from "../../hooks/terminateCupid";
 
 function ViewUsers() {
   const [loading, setLoading] = useState(true);
@@ -20,69 +23,81 @@ function ViewUsers() {
     getUsers();
   }, []);
 
+  const handleTerminateUser = async (currentUser) => {
+    try {
+      // Call the TerminateCupid function
+      await TerminateCupid(currentUser.cupid.id, context);
+      // Remove the terminated user from the list
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== currentUser.id));
+    } catch (error) {
+      // Handle errors
+      console.error('Error terminating cupid:', error);
+    }
+  };
+
   // Filter users based on their roles
   const standardUsers = users.filter(user => user.role === 'STANDARD');
-  const cupidUsers = users.filter(user => user.role === 'CUPID');
+  const cupidUsers = users.filter(user => user.role === 'CUPID' && user.cupid.fired === false);
   const adminUsers = users.filter(user => user.role === 'ADMIN');
-  const standardUsersCount = users.filter(user => user.role === 'STANDARD').length;
-  const cupidUsersCount = users.filter(user => user.role === 'CUPID').length;
-  const adminUsersCount = users.filter(user => user.role === 'ADMIN').length;
-
+  const standardUsersCount = standardUsers.length;
+  const cupidUsersCount = cupidUsers.length;
+  const adminUsersCount = adminUsers.length;
 
   return loading ? null : (
     <>
       <div className="w-full">
         <Accordion items={[
-  { 
-    title: 'Standard Users', 
-    content: (
-      <>
-        <p className="bg-white pb-8">Total Count: {standardUsersCount}</p>
-        {standardUsers.map(user => <UserCard key={user.id} user={user} />)}
-      </>
-    )
-  },
-  { 
-    title: 'Cupids', 
-    content: (
-      <>
-        <p className="bg-white">Total Count: {cupidUsersCount}</p>
-        {cupidUsers.map(user => <UserCard key={user.id} user={user} />)}
-      </>
-    )
-  },
-  { 
-    title: 'Admins', 
-    content: (
-      <>
-        <p className="bg-white">Total Count: {adminUsersCount}</p>
-        {adminUsers.map(user => <UserCard key={user.id} user={user} />)}
-      </>
-    )
-  }
-]} />
-
+          {
+            title: 'Standard Users',
+            content: (
+              <>
+                <p className="bg-white pb-8">Total Count: {standardUsersCount}</p>
+                {standardUsers.map(user => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    actionPhrase={"Remove"}
+                    onActionClick={() => handleTerminateUser()}
+                  />
+                ))}
+              </>
+            )
+          },
+          {
+            title: 'Cupids',
+            content: (
+              <>
+                <p className="bg-white">Total Count: {cupidUsersCount}</p>
+                {cupidUsers.map(user => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    actionPhrase={"Terminate"}
+                    onActionClick={() => handleTerminateUser(user)}
+                  />
+                ))}
+              </>
+            )
+          },
+          {
+            title: 'Admins',
+            content: (
+              <>
+                <p className="bg-white">Total Count: {adminUsersCount}</p>
+                {adminUsers.map(user => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    actionPhrase={"Plus 1"}
+                    onActionClick={() => handleTerminateUser()}
+                  />
+                ))}
+              </>
+            )
+          }
+        ]} />
       </div>
-      {/* <p className="label">Current Users: {users.length}</p> */}
     </>
   );
 }
-
-// Component to render each user card
-const UserCard = ({ user }) => (
-  <div className={`flex row between bg-white p-20 br ycenter ${classes.userCard}`}>
-    <div className="flex row g-20">
-      <PhotoCircle url={user.photoUrl} />
-      <div className="flex col g-10 left">
-        <p>
-          {user.firstName} {user.lastName}
-        </p>
-        <p className="label">Email: {user.email}</p>
-      </div>
-    </div>
-    <p className="pointer">Delete</p>
-  </div>
-);
-
 export default ViewUsers;
-

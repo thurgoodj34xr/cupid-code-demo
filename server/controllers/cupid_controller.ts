@@ -95,6 +95,15 @@ const CupidController = (db: PrismaClient) => {
         }
     });
 
+    router.post("/terminate", AuthMiddleware(db, [Role.ADMIN]), async (req, res) => {
+        const { cupidId, terminate } = req.body;
+        console.log(cupidId)
+        await _repository.terminate(cupidId, terminate)
+        res.send({ message: "Terminated cupid number" + cupidId })
+        logInfo("cupid_controller.ts", `${terminate ? "terminated" : "reinstated"}`, cupidId)
+        cupidStatus();
+    });
+
 
 
     return router;

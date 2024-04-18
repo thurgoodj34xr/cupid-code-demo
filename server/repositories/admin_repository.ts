@@ -7,6 +7,10 @@ export default class AdminRepository {
     }
 
     getUsers() {
-        return this.db.user.findMany();
+        return this.db.user.findMany({
+            include: {
+                cupid: true
+            }
+        });
     }
 }
