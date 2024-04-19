@@ -196,7 +196,7 @@ Once you have completed a job, hit the **Complete** button. The completed job wi
 If you are an admin, please use the provided login credentials to access your account. For inquiries regarding admin login, please reach out to admin@cupid.com
 
 ### Admin Dashboard
-Upon logging in, you'll be directed to the admin dashboard where you can view key stastistics:
+Upon logging in, you'll be directed to the admin dashboard where you can view key statistics:
 * **Standard Users**: Total number of standard user accounts.
 * **Cupids**: Total number of cupid accounts.
 * **Admin**: Total number of admin accounts.

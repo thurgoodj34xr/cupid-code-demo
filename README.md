@@ -5,7 +5,7 @@
 - node
 - yarn
 - docker
-
+- *Note* All development was done on windows machines, while these features are designed to by OS agnostic Duckie Corp makes no guarantee about features on other platforms 
 ### Install Node
 
 Visit this website to install node
@@ -15,7 +15,7 @@ https://nodejs.org/en/download
 ```
 
 Once node is installed, make sure to add it as a alias to use it via terminal/console.
-To check that you did this correclty, run `npm --version`
+To check that you did this correctly, run `npm --version`
 
 ### Install yarn
 
@@ -81,7 +81,7 @@ https://www.docker.com/products/docker-desktop/
 ```
 
 After installation make sure you can run `docker --version` in your terminal/cmd
-to make sure the alias got setup correcty
+to make sure the alias got setup correct
 
 NOTE: IN ORDER TO RUN ANY DOCKER COMMANDS, DOCKER MUST BE OPEN & RUNNING
 
