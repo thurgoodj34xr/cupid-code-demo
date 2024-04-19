@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Api from "../../hooks/api";
 import useContext from "../../hooks/context";
-import PhotoCircle from "../../componets/photo_circle/photo_circle";
-import classes from "./view_users.module.css";
 import UserCard from "../../componets/userCard/user_card";
 import Accordion from "../../componets/accordion/Accordion";
 import TerminateCupid from "../../hooks/terminateCupid";
