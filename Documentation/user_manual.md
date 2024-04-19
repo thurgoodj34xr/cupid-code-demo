@@ -11,7 +11,8 @@ But wait, there's more! Ever wished for a trusty sidekick to guide you through t
 So, whether you're planning a cozy picnic under the stars or a daring adventure through the city streets, let Cupid Code be your digital wingman, transforming your nerdy fantasies into real-world romance.
 ## Table of Contents
 - [Getting Started](#getting-started)
-  - [Installation](#Installation-and-set-up)
+  - [Installation](#installation-and-set-up)
+  - [Demo](#demo)
 - [Standard Users](#standard-users)
   - [Create an Account](#creating-an-account)
   - [Editing Account Information](#editing-account-information)
@@ -40,6 +41,24 @@ So, whether you're planning a cozy picnic under the stars or a daring adventure 
 ## Getting Started
 ### Installation and Set Up
 Please refer to the [README](../README.md) to set up the entire cupid code system.
+
+### Demo 
+Please follow the following order:
+
+**Manager:** Sign in and use the [dashboard](#admin-dashboard) to see the overview of the business
+- Manager credentials
+  - Email: admin@gmail.com
+  - Password: admin
+
+**Dater:** [Create an account](#creating-an-account)
+
+**Cupid:** [Create an account](#cupid-sign-up) and [go live](#toggle-availability)
+
+**Dater:** Set up a date itinerary and order a cupid [intervention](#date-simulator)
+
+**Cupid:** [Accept](#starting-a-job) the job and complete the job
+
+**Manager:** [Terminate](#terminating-a-cupid) the cupid
 
 ## Standard Users
 ### Creating an Account
