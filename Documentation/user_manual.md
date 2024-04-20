@@ -50,11 +50,11 @@ Please follow the following order:
   - Email: admin@gmail.com
   - Password: admin
 
-**Dater:** [Create an account](#creating-an-account)
+**Dater:** [Create a user account](#creating-an-account)
 
-**Cupid:** [Create an account](#cupid-sign-up) and [go live](#toggle-availability)
+**Cupid:** [Create a cupid account](#cupid-sign-up) and [go live](#toggle-availability)
 
-**Dater:** Set up a date itinerary and order a cupid [intervention](#date-simulator)
+**Dater:** Set up a date itinerary and order a cupid intervention using the [date simulator](#date-simulator)
 
 **Cupid:** [Accept](#starting-a-job) the job and complete the job
 
