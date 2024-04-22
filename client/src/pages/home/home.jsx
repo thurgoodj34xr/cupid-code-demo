@@ -28,11 +28,6 @@ function Home() {
   const [users, setUsers] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalCupidWages, setTotalCupidWages] = useState(0);
-  const [totalCupidIncome, setTotalCupidIncome] = useState(0);
-  const [todayCupidIncome, setTodayCupidIncome] = useState(0);
-  const [ratingCupid, setRatingCupid] = useState(0);
-  const [currentCupidJob, setCurrentCupidJob] = useState(0);
-  const [lastCupidJob, setLastCupidJob] = useState(0);
 
   const getUsers = async () => {
     const resp = await Api.GetWithAuth("admin/users", context);
@@ -253,15 +248,15 @@ function Home() {
               <section className={classes.balance}>
                 <section>
                   <p>Total</p>
-                  {user.cupid && <p>${user.cupid.cupidPayout}</p>}
+                  <p> $125.00 </p>
                 </section>
                 <section>
                   <p>Today</p>
-                  {user.cupid && <p>{user.cupid.today}</p>}
+                  <p>$25.00</p>
                 </section>
                 <section>
                   <p>Rating</p>
-                  {user.cupid.cupidId && <p>{user.cupid.ratingCupid}</p>}
+                  <p> 4.0</p>
                 </section>
               </section>
             </section >
@@ -286,18 +281,15 @@ function Home() {
               <section className={classes.balance}>
                 <section>
                   <p>Total</p>
-                  {user.cupid && <p>${user.cupid.cupidPayout}</p>}
-                </section>
-                <section>
-                  <p>Payout</p>
-                  {user.cupid && <p>{user.cupid.today}</p>}
+                  <p>$25</p>
                 </section>
                 <section>
                   <p>Review</p>
-                  {user.cupid.cupidId && <p>{user.cupid.ratingCupid}</p>}
+                  <p>4.0</p>
                 </section>
                 <section>
                   <p>Location</p>
+                  <p>Logan, UT</p>
                 </section>
               </section>
             </section >
