@@ -53,7 +53,7 @@ Please follow the following order:
 
 **Manager:** Sign in and use the [dashboard](#admin-dashboard) to see the overview of the business. Then navigate to the logs page in order to see live logs from the server. As you work through this demo, leave this page open to have the full admin experience.
 
-NOTE: Because this app uses session tokens that are saved in the browser, you must use a second browser such as a different chrome user in order to be logged in as 2 differnt users at the same time. Idealy for this demo, you would have 3 browsers open for each account type; dater, cupid, admin.
+NOTE: Because this app uses session tokens that are saved in the browser, you must use a second browser such as a different chrome user in order to be logged in as 2 different users at the same time. Ideally for this demo, you would have 3 browsers open for each account type; dater, cupid, admin.
 
 <img src="images/layout.png">
 
@@ -64,7 +64,7 @@ NOTE: Because this app uses session tokens that are saved in the browser, you mu
 **Dater:** [Create a user account](#creating-an-account)
 Navigate to the [AI Page](#ai-chat) and chat with AI
 
-**Cupid:** [Create a cupid account](#cupid-sign-up) and [go live](#toggle-availability). Navigate to the Avaliable Jobs page in order to view incoming jobs
+**Cupid:** [Create a cupid account](#cupid-sign-up) and [go live](#toggle-availability). Navigate to the Available Jobs page in order to view incoming jobs
 
 **Dater:** Set up a date itinerary and order a cupid intervention using the [date simulator](#date-simulator)
 
