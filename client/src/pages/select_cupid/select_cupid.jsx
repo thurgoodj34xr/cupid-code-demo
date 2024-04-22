@@ -33,13 +33,6 @@ function SelectCupid() {
     },
   });
 
-  const { mutateAsync: render } = useMutation({
-    mutationFn: () => { },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["myCupid", "cupids"]);
-    },
-  });
-
   const { data: cupids } = useQuery({
     queryFn: async () => await api.get(`/cupids/available`),
     queryKey: ["cupids"],
@@ -55,7 +48,7 @@ function SelectCupid() {
 
   useEffect(() => {
     const callback = () => {
-      render();
+      queryClient.invalidateQueries(["myCupid", "cupids"]);
     };
     socket.on("cupidStatus", callback);
     socket.emit("cupidStatus");
@@ -68,7 +61,11 @@ function SelectCupid() {
     <section className="flex flex-col w-full overflow-y-auto gap-5">
       <p className="label left">Current Cupid</p>
       {myCupid && (
-        <CupidTile cupid={myCupid} onClick={() => fireCupid(myCupid.id)} user={user} />
+        <CupidTile
+          cupid={myCupid}
+          onClick={() => fireCupid(myCupid.id)}
+          user={user}
+        />
       )}
       <p className="label left">Available cupids</p>
       {cupids &&

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AppContext from "./componets/app_context";
 import Navbar from "./componets/navbar/navbar";
 import Notification from "./componets/notification/notification";
@@ -14,6 +14,7 @@ function App() {
   const [notification, setNotification] = useState("");
   const [accountT, setAccountT] = useState("Standard");
   const [socket, setSocket] = useState(null);
+  const navigate = useNavigate();
 
   const location = useLocation()
     .pathname.replace("/", "")
@@ -38,6 +39,22 @@ function App() {
       socket.emit("user", user);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("terminate", (id) => {
+        if (user.cupid && user.cupid.id == id) {
+          setUser(null);
+          setTokens(null);
+          localStorage.removeItem("token");
+          navigate("/");
+        }
+      });
+      return () => {
+        socket.off("terminate");
+      };
+    }
+  }, [socket, user]);
 
   function updateUser(user) {
     setUser(user);
@@ -150,7 +167,7 @@ function App() {
           </div>
         </AppContext.Provider>
       </MantineProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

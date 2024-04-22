@@ -4,6 +4,7 @@ import CupidRepository from "../repositories/cupid_repository";
 import AuthMiddleware from "../middleware/authentication";
 import UserRepository from "../repositories/user_repository";
 import HireCupidRepository from "../repositories/hire_cupid_repository";
+import "./../../global";
 
 const CupidController = (db: PrismaClient) => {
     const router = Router();
@@ -102,6 +103,7 @@ const CupidController = (db: PrismaClient) => {
         res.send({ message: "Terminated cupid number" + cupidId })
         logInfo("cupid_controller.ts", `${terminate ? "terminated" : "reinstated"}`, cupidId)
         cupidStatus();
+        terminateCupid(cupidId);
     });
 
 

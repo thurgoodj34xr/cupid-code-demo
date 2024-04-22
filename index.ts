@@ -18,7 +18,6 @@ import "./global";
 import HireCupidController from "./server/controllers/hire_cupid_controller";
 import JobsController from "./server/controllers/jobs_controller";
 dotenv.config();
-
 const DEBUG = process.env.NODE_ENV !== "production";
 const MANIFEST: Record<string, any> = DEBUG ? {} : JSON.parse(fs.readFileSync("static/.vite/manifest.json").toString())
 const db = new PrismaClient();

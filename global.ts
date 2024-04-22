@@ -8,6 +8,7 @@ declare global {
     export var logInfo: (fileName: string, msg: string, user?: User) => void;
     export var cupidStatus: () => void;
     export var jobStatus: () => void;
+    export var terminateCupid: (id: number) => void;
 }
 
 export { };
@@ -56,4 +57,8 @@ global.cupidStatus = () => {
 
 global.jobStatus = () => {
     io.io.emit("jobStatus")
+}
+
+global.terminateCupid = (id) => {
+    io.io.emit("terminate", id);
 }
