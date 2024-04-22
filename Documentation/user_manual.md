@@ -62,6 +62,7 @@ NOTE: Because this app uses session tokens that are saved in the browser, you mu
   - Password: admin
 
 **Dater:** [Create a user account](#creating-an-account)
+Navigate to the [AI Page](#ai-chat) and chat with AI
 
 **Cupid:** [Create a cupid account](#cupid-sign-up) and [go live](#toggle-availability). Navigate to the Avaliable Jobs page in order to view incoming jobs
 
