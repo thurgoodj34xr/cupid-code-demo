@@ -1,3 +1,6 @@
+# Context
+We were assigned to create an AI assisted Dating app. My main contributions were developing the back end with databases and routes that connect the frontend. This was done in coordination and planning with the members of my team that were developing the front end.
+
 ## Setup
 
 ### Prerequisites
